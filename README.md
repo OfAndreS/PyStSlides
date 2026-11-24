@@ -191,23 +191,49 @@ streamlit run examples/03_pitch_produto/app.py
 </details>
 
 <details>
-  <summary><strong>Uso Rápido em Novos Projetos</strong></summary>
+  <summary><strong>Como Estruturar e Usar em Novos Projetos</strong></summary>
 
 <br>
 
-Você pode instalar o `PyStSlides` diretamente do seu repositório GitHub em qualquer projeto de apresentação:
+Mantenha o `PyStSlides` isolado no próprio repositório como uma biblioteca reutilizável e crie cada apresentação em uma pasta/repositório separado.
+
+1 ) **Estrutura recomendada para uma apresentação que consome o pacote:**
 
 ```bash
-pip install git+https://github.com/OfAndreS/PyStSlides.git
+MinhaApresentacao/
+├── data/                       # Imagens, CSVs e arquivos de mídia da apresentação.
+├── src/
+│   ├── app.py                  # Arquivo principal que instancia Presentation.
+│   └── sections/               # Tópicos modularizados usando SlideSection.
+│       ├── __init__.py
+│       └── introducao.py
+├── requirements.txt            # Lista o PyStSlides e demais dependências.
+└── README.md
 ```
 
-Exemplo mínimo de uso no arquivo principal da sua apresentação:
+2 ) **Instale o `PyStSlides` no ambiente virtual da apresentação:**
+
+```bash
+# Via GitHub (recomendado para produção e Streamlit Cloud)
+pip install git+https://github.com/OfAndreS/PyStSlides.git
+
+# Ou em modo editável local (quando estiver evoluindo o pacote em paralelo)
+pip install -e ../PyStSlides
+```
+
+Você também pode declarar diretamente no `requirements.txt` da apresentação:
+
+```txt
+git+https://github.com/OfAndreS/PyStSlides.git
+```
+
+3 ) **Crie o ponto de entrada em `src/app.py`:**
 
 ```python
 from pathlib import Path
 from pystslides import HighlightSpan, Presentation
 
-ASSETS = Path(__file__).resolve().parent / "data"
+ASSETS = Path(__file__).resolve().parent.parent / "data"
 
 with Presentation(title="Data Discovery", assets_dir=ASSETS, show_toc=True) as deck:
     deck.cover(image="DataDiscovery.png")
@@ -223,6 +249,12 @@ with Presentation(title="Data Discovery", assets_dir=ASSETS, show_toc=True) as d
         "Contato: suporte@exemplo.com",
         spans=[HighlightSpan.from_score(9, 28, "EMAIL", 0.95)],
     )
+```
+
+4 ) **Execute a apresentação normalmente com Streamlit:**
+
+```bash
+streamlit run src/app.py
 ```
 
 </details>
