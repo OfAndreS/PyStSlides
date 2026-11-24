@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+  <defs>
+    <linearGradient id="canvasBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="520" rx="18" fill="url(#canvasBg)"/>
+  <text x="600" y="54" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#0f172a">Arquitetura Orientada a Objetos — PyStSlides</text>
+
+  <!-- Facade -->
+  <g filter="url(#shadow)">
+    <rect x="405" y="84" width="390" height="92" rx="14" fill="#0f172a"/>
+    <text x="600" y="122" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#f8fafc">Presentation (Fachada)</text>
+    <text x="600" y="152" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14" fill="#94a3b8">Context Manager • API Unificada • SlideSection</text>
+  </g>
+
+  <!-- Connector lines -->
+  <g stroke="#64748b" stroke-width="2.2" fill="none">
+    <path d="M 600 176 L 600 212"/>
+    <path d="M 185 212 L 1015 212"/>
+    <path d="M 185 212 L 185 242"/>
+    <path d="M 462 212 L 462 242"/>
+    <path d="M 738 212 L 738 242"/>
+    <path d="M 1015 212 L 1015 242"/>
+    <path d="M 185 352 L 185 384"/>
+    <path d="M 462 352 L 462 384"/>
+    <path d="M 738 352 L 738 384"/>
+    <path d="M 1015 352 L 1015 384"/>
+  </g>
+
+  <!-- Middle Layer: Renderers -->
+  <g filter="url(#shadow)">
+    <rect x="70" y="242" width="230" height="110" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="70" y="242" width="230" height="10" rx="5" fill="#ff4b4b"/>
+    <text x="185" y="282" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#0f172a">TypographyRenderer</text>
+    <text x="185" y="308" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" fill="#475569">topic • subtopic • cover</text>
+    <text x="185" y="328" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" fill="#475569">paragraph • callout • TOC</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="347" y="242" width="230" height="110" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="347" y="242" width="230" height="10" rx="5" fill="#38bdf8"/>
+    <text x="462" y="282" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#0f172a">MediaRenderer</text>
+    <text x="462" y="308" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" fill="#475569">image • image_gallery</text>
+    <text x="462" y="328" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" fill="#475569">mermaid • captions</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="623" y="242" width="230" height="110" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="623" y="242" width="230" height="10" rx="5" fill="#f97316"/>
+    <text x="738" y="282" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#0f172a">CodeRenderer</text>
+    <text x="738" y="308" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" fill="#475569">code_block • output_box</text>
+    <text x="738" y="328" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" fill="#475569">live_code (st.echo)</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="900" y="242" width="230" height="110" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="900" y="242" width="230" height="10" rx="5" fill="#22c55e"/>
+    <text x="1015" y="282" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#0f172a">DataRenderer</text>
+    <text x="1015" y="308" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" fill="#475569">highlighted_text</text>
+    <text x="1015" y="328" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" fill="#475569">styled_table • HighlightSpan</text>
+  </g>
+
+  <!-- Bottom Layer: Core Services -->
+  <g filter="url(#shadow)">
+    <rect x="70" y="384" width="230" height="86" rx="12" fill="#1e293b"/>
+    <text x="185" y="422" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#f8fafc">SectionTracker</text>
+    <text x="185" y="446" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12.5" fill="#94a3b8">Numeração 01 / 1.1 / 1.1.1 + Âncoras</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="347" y="384" width="230" height="86" rx="12" fill="#1e293b"/>
+    <text x="462" y="422" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#f8fafc">AssetManager</text>
+    <text x="462" y="446" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12.5" fill="#94a3b8">Resolução &amp; Validação de Mídia</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="623" y="384" width="230" height="86" rx="12" fill="#1e293b"/>
+    <text x="738" y="422" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#f8fafc">StyleInjector</text>
+    <text x="738" y="446" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12.5" fill="#94a3b8">CSS Global • Google Fonts</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="900" y="384" width="230" height="86" rx="12" fill="#1e293b"/>
+    <text x="1015" y="422" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#f8fafc">PresentationConfig</text>
+    <text x="1015" y="446" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12.5" fill="#94a3b8">Dataclasses de Tema &amp; Layout</text>
+  </g>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="320" viewBox="0 0 960 320">
+  <rect width="960" height="320" rx="16" fill="#0f172a"/>
+  <rect x="48" y="48" width="864" height="224" rx="12" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <text x="480" y="150" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="44" font-weight="700" fill="#f8fafc">Slide de Exemplo — PyStSlides</text>
+  <text x="480" y="198" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="20" fill="#94a3b8">Asset resolvido automaticamente pelo AssetManager</text>
+</svg>
