@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="300" viewBox="0 0 560 300">
+  <rect width="560" height="300" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <rect x="0" y="0" width="560" height="12" rx="6" fill="#0ea5e9"/>
+  <text x="32" y="56" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#0f172a">Triagem Automática de Incidentes</text>
+  <text x="32" y="84" font-family="Inter, Arial, sans-serif" font-size="14" fill="#64748b">Correlação de logs, deploys recentes e causa raiz sugerida.</text>
+  <rect x="32" y="116" width="496" height="44" rx="10" fill="#dcfce7" stroke="#86efac"/>
+  <text x="52" y="143" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#166534">✓ 84% menos alertas duplicados no Slack e PagerDuty</text>
+  <rect x="32" y="174" width="496" height="44" rx="10" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text x="52" y="201" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#0369a1">⚡ Causa raiz vinculada automaticamente ao commit</text>
+  <rect x="32" y="232" width="496" height="36" rx="10" fill="#ede9fe" stroke="#c4b5fd"/>
+  <text x="52" y="255" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#5b21b6">★ Runbook sugerido em 1 clique para o time de plantão</text>
+</svg>

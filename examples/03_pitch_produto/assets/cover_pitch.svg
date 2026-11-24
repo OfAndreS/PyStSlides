@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="360" viewBox="0 0 1080 360">
+  <defs>
+    <linearGradient id="pitchBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#312e81"/>
+      <stop offset="55%" stop-color="#4338ca"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="360" rx="20" fill="url(#pitchBg)"/>
+  <circle cx="920" cy="95" r="120" fill="#a78bfa" fill-opacity="0.18"/>
+  <circle cx="990" cy="290" r="85" fill="#38bdf8" fill-opacity="0.16"/>
+  <rect x="64" y="64" width="186" height="32" rx="16" fill="#ffffff" fill-opacity="0.14" stroke="#c7d2fe" stroke-width="1"/>
+  <text x="157" y="85" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#e0e7ff">PRODUCT PITCH • Q4</text>
+  <text x="64" y="168" font-family="Inter, Arial, sans-serif" font-size="52" font-weight="700" fill="#ffffff">PulseOps AI</text>
+  <text x="64" y="218" font-family="Inter, Arial, sans-serif" font-size="22" fill="#e0e7ff">Observabilidade preditiva para reduzir incidentes em produção em até 60%</text>
+  <g transform="translate(64, 264)">
+    <rect x="0" y="0" width="160" height="38" rx="10" fill="#ffffff" fill-opacity="0.15"/>
+    <text x="80" y="24" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff">99.98% Uptime</text>
+    <rect x="178" y="0" width="180" height="38" rx="10" fill="#ffffff" fill-opacity="0.15"/>
+    <text x="268" y="24" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff">&lt; 2 min MTTR</text>
+    <rect x="376" y="0" width="190" height="38" rx="10" fill="#ffffff" fill-opacity="0.15"/>
+    <text x="471" y="24" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff">Alertas Sem Ruído</text>
+  </g>
+</svg>

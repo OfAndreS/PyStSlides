@@ -29,17 +29,21 @@ class StyleInjector:
     font-family: '{t.font_family}', sans-serif !important;
 }}
 
-.pyst-divider {{
-    border: none;
-    border-top: {t.divider_thickness} solid {t.divider_color};
-    margin: 0.75rem 0;
+.stMarkdown hr.pyst-divider,
+hr.pyst-divider {{
+    border: none !important;
+    border-top: {t.divider_thickness} solid {t.divider_color} !important;
+    height: 0 !important;
+    opacity: 1 !important;
+    margin: 0.75rem 0 !important;
 }}
 
-.pyst-paragraph {{
-    font-size: {t.paragraph_font_size};
-    line-height: {t.paragraph_line_height};
-    text-align: {t.paragraph_align};
-    margin-bottom: 1rem;
+.stMarkdown p.pyst-paragraph,
+p.pyst-paragraph {{
+    font-size: {t.paragraph_font_size} !important;
+    line-height: {t.paragraph_line_height} !important;
+    text-align: {t.paragraph_align} !important;
+    margin-bottom: 1rem !important;
 }}
 
 .pyst-cover {{

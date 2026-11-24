@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="360" viewBox="0 0 1080 360">
+  <defs>
+    <linearGradient id="archBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="60%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0c4a6e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="360" rx="20" fill="url(#archBg)"/>
+  <circle cx="940" cy="80" r="110" fill="#38bdf8" fill-opacity="0.12"/>
+  <circle cx="1010" cy="290" r="85" fill="#818cf8" fill-opacity="0.12"/>
+  <rect x="64" y="64" width="156" height="32" rx="16" fill="#38bdf8" fill-opacity="0.18" stroke="#38bdf8" stroke-width="1"/>
+  <text x="142" y="85" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#7dd3fc">TECH TALK • 2026</text>
+  <text x="64" y="168" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="48" font-weight="700" fill="#f8fafc">Arquitetura de Microsserviços</text>
+  <text x="64" y="216" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" fill="#cbd5e1">Padrões modernos de resiliência, mensageria e escalabilidade</text>
+  <g transform="translate(64, 260)">
+    <rect x="0" y="0" width="130" height="38" rx="8" fill="#1e293b" stroke="#475569"/>
+    <text x="65" y="24" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" fill="#e2e8f0">API Gateway</text>
+    <path d="M 136 19 L 166 19" stroke="#38bdf8" stroke-width="2"/>
+    <rect x="172" y="0" width="130" height="38" rx="8" fill="#1e293b" stroke="#475569"/>
+    <text x="237" y="24" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" fill="#e2e8f0">Event Broker</text>
+    <path d="M 308 19 L 338 19" stroke="#38bdf8" stroke-width="2"/>
+    <rect x="344" y="0" width="140" height="38" rx="8" fill="#1e293b" stroke="#475569"/>
+    <text x="414" y="24" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" fill="#e2e8f0">Serviços Isolados</text>
+  </g>
+</svg>

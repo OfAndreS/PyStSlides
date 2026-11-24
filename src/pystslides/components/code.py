@@ -67,8 +67,6 @@ class CodeRenderer(BaseComponent):
         with create_container(self._st, border=bordered, center=center) as container:
             yield container
 
-    @contextmanager
-    def live_code(self, code_location: Literal["above", "below"] = "above") -> Iterator[None]:
-        """Context manager que encapsula `st.echo` para demonstrações executáveis."""
-        with self._st.echo(code_location=code_location):
-            yield
+    def live_code(self, code_location: Literal["above", "below"] = "above") -> Any:
+        """Retorna diretamente o context manager `st.echo` para preservar o frame do chamador."""
+        return self._st.echo(code_location=code_location)

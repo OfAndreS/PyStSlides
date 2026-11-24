@@ -72,12 +72,17 @@ PyStSlides/
 │   ├── architecture.svg             # Diagrama visual da arquitetura POO do pacote.
 │   └── banner.svg                   # Banner principal do repositório.
 ├── examples/
+│   ├── 01_arquitetura_software/     # Exemplo completo: Tech Talk de Microsserviços.
+│   ├── 02_privacidade_dados/        # Exemplo completo: Workshop Data Discovery & LGPD.
+│   ├── 03_pitch_produto/            # Exemplo completo: Pitch Executivo SaaS.
+│   ├── screenshots/                 # Prints reais das apresentações renderizadas no Streamlit.
 │   ├── assets/
 │   │   └── sample_cover.svg         # Asset de exemplo carregado pelo AssetManager.
 │   ├── sections/
 │   │   ├── __init__.py
 │   │   └── demo_section.py          # Exemplo de seção modularizada com SlideSection.
-│   └── demo_app.py                  # Apresentação de demonstração pronta para execução.
+│   ├── demo_app.py                  # Apresentação mínima de demonstração.
+│   └── README.md                    # Guia e galeria de prints dos exemplos completos.
 ├── src/
 │   └── pystslides/
 │       ├── __init__.py              # Exporta a API pública e a versão do pacote.
@@ -171,10 +176,16 @@ python -m venv .venv; .\.venv\Scripts\Activate.ps1
 pip install -e .
 ```
 
-5 ) **Execute a apresentação de demonstração:**
+5 ) **Execute um dos sites de slides de exemplo:**
 
 ```bash
+# Demonstração rápida
 streamlit run examples/demo_app.py
+
+# Exemplos completos (veja os prints em examples/README.md)
+streamlit run examples/01_arquitetura_software/app.py
+streamlit run examples/02_privacidade_dados/app.py
+streamlit run examples/03_pitch_produto/app.py
 ```
 
 </details>

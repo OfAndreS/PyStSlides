@@ -83,6 +83,15 @@ class TestMediaAndCodeComponents(unittest.TestCase):
         self.assertEqual(fake_st.calls_named("code")[0].args[0], "x = 1 + 1\nprint(x)")
         self.assertEqual(fake_st.calls_named("write")[0].args[0], 2)
 
+    def test_live_code_returns_echo_context_directly(self) -> None:
+        fake_st = FakeStreamlit()
+        renderer = CodeRenderer(fake_st, PresentationConfig())
+        with renderer.live_code(code_location="above"):
+            pass
+        echo_calls = fake_st.calls_named("echo")
+        self.assertEqual(len(echo_calls), 1)
+        self.assertEqual(echo_calls[0].kwargs["code_location"], "above")
+
 
 class TestDataComponent(unittest.TestCase):
     def test_apply_highlights_resolves_overlaps_and_escapes_html(self) -> None:

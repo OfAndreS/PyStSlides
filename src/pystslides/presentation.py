@@ -326,8 +326,8 @@ class Presentation:
         """Retorna um context manager de container para saídas customizadas."""
         return self._code.output_container(bordered=bordered, center=center)
 
-    def live_code(self, code_location: Literal["above", "below"] = "above") -> Iterator[None]:
-        """Retorna um context manager baseado em `st.echo`."""
+    def live_code(self, code_location: Literal["above", "below"] = "above") -> Any:
+        """Retorna o context manager `st.echo` diretamente para demonstrações ao vivo."""
         return self._code.live_code(code_location=code_location)
 
     # ------------------------------------------------------------------
