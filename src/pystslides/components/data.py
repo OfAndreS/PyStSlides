@@ -154,10 +154,13 @@ class DataRenderer(BaseComponent):
         self,
         text: str,
         spans: Sequence[HighlightSpan] = (),
+        *,
+        font_size: str | None = None,
     ) -> str:
         """Renderiza um texto com trechos destacados dentro de um card estilizado."""
         rendered_inner = apply_highlights(text, spans)
-        card_html = f'<div class="pyst-card">{rendered_inner}</div>'
+        style_attr = f' style="font-size: {font_size} !important;"' if font_size else ""
+        card_html = f'<div class="pyst-card"{style_attr}>{rendered_inner}</div>'
         self._st.markdown(card_html, unsafe_allow_html=True)
         return card_html
 

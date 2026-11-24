@@ -22,6 +22,10 @@ class PresentationTheme:
     paragraph_font_size: str = "25px"
     paragraph_line_height: float = 1.6
     paragraph_align: TextAlign = "justify"
+    code_font_size: str = "18px"
+    code_line_height: float = 1.55
+    card_font_size: str | None = None
+    table_font_size: str = "16px"
     divider_color: str = "#2B2B2B"
     divider_thickness: str = "2.5px"
     default_subtopic_spacing_px: int = 80

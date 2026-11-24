@@ -337,9 +337,11 @@ class Presentation:
         self,
         text: str,
         spans: Sequence[HighlightSpan] = (),
+        *,
+        font_size: str | None = None,
     ) -> str:
         """Renderiza um card de texto com marcações/etiquetas coloridas."""
-        return self._data.highlighted_text(text, spans=spans)
+        return self._data.highlighted_text(text, spans=spans, font_size=font_size)
 
     def styled_table(
         self,

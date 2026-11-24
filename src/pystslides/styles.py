@@ -23,6 +23,7 @@ class StyleInjector:
         """Gera o bloco `<style>` completo baseado no `PresentationTheme`."""
         t = self._theme
         font_import = f"@import url('{t.google_font_url}');\n" if t.google_font_url else ""
+        card_font_size = t.card_font_size or t.paragraph_font_size
 
         return f"""<style>
 {font_import}html, body, [class*="st-"] {{
@@ -68,9 +69,10 @@ p.pyst-paragraph {{
     color: #64748b;
 }}
 
+.stMarkdown .pyst-card,
 .pyst-card {{
-    font-size: 15px;
-    line-height: 2.2;
+    font-size: {card_font_size} !important;
+    line-height: 2.0 !important;
     padding: 24px;
     background-color: {t.card_background};
     color: {t.card_text_color};
@@ -78,6 +80,14 @@ p.pyst-paragraph {{
     border-radius: {t.card_border_radius};
     white-space: pre-wrap;
     margin-bottom: 20px;
+}}
+
+[data-testid="stCode"] pre,
+[data-testid="stCode"] code,
+.stCode pre,
+.stCode code {{
+    font-size: {t.code_font_size} !important;
+    line-height: {t.code_line_height} !important;
 }}
 
 .pyst-callout {{
@@ -94,7 +104,7 @@ p.pyst-paragraph {{
     border-collapse: separate;
     border-spacing: 0;
     font-family: '{t.font_family}', sans-serif;
-    font-size: 15px;
+    font-size: {t.table_font_size};
     text-align: left;
     background-color: {t.card_background};
     border: 1px solid {t.table_border_color};

@@ -32,6 +32,15 @@ class TestStyleInjector(unittest.TestCase):
         self.assertIn("Poppins", css)
         self.assertIn("#123456", css)
         self.assertIn(".pyst-table", css)
+        self.assertIn('[data-testid="stCode"] code', css)
+        # card_font_size=None herda paragraph_font_size por padrão
+        self.assertIn("font-size: 25px !important;", css)
+
+    def test_custom_code_and_card_font_sizes(self) -> None:
+        theme = PresentationTheme(code_font_size="22px", card_font_size="20px")
+        css = StyleInjector(theme).build_css()
+        self.assertIn("font-size: 22px !important;", css)
+        self.assertIn("font-size: 20px !important;", css)
 
 
 class TestMediaAndCodeComponents(unittest.TestCase):
@@ -106,6 +115,12 @@ class TestDataComponent(unittest.TestCase):
         self.assertIn("&lt;admin@site.com&gt; [EMAIL : 0.90]", rendered)
         self.assertNotIn("OVERLAP", rendered)
         self.assertIn("123 [DOC]", rendered)
+
+    def test_highlighted_text_supports_custom_font_size(self) -> None:
+        fake_st = FakeStreamlit()
+        renderer = DataRenderer(fake_st, PresentationConfig())
+        card_html = renderer.highlighted_text("Texto", font_size="28px")
+        self.assertIn('style="font-size: 28px !important;"', card_html)
 
     def test_styled_table_accepts_dict_and_list_of_dicts(self) -> None:
         fake_st = FakeStreamlit()
