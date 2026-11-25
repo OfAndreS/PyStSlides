@@ -70,8 +70,8 @@ class FakeStreamlit:
     def rerun(self) -> None:
         self.calls.append(RecordedCall("rerun"))
 
-    def columns(self, spec: Any) -> list[_DummyContext]:
-        self.calls.append(RecordedCall("columns", (spec,)))
+    def columns(self, spec: Any, **kwargs: Any) -> list[_DummyContext]:
+        self.calls.append(RecordedCall("columns", (spec,), kwargs))
         count = spec if isinstance(spec, int) else len(spec)
         return [_DummyContext(self.calls, f"col[{i}]") for i in range(count)]
 

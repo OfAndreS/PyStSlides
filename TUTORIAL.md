@@ -132,7 +132,7 @@ deck.cover(
 
 2 ) **Slides em duas colunas (`split_slide`):**
 
-Alterne `media_position` entre `"left"` e `"right"`, ou use `title_bottom=True` para posicionar o título abaixo do parágrafo:
+Alterne `media_position` entre `"left"` e `"right"`, defina a altura da mídia com `media_vertical_align` (`"top"`, `"center"` ou `"bottom"`) ou use `title_bottom=True` para posicionar o título abaixo do parágrafo:
 
 ```python
 deck.split_slide(
@@ -140,6 +140,7 @@ deck.split_slide(
     "A solução deve mapear bancos de dados, pastas compartilhadas e nuvem.",
     media="coverage_laptop.png",
     media_position="left",
+    media_vertical_align="bottom",  # "top" | "center" | "bottom"
     kicker="Cobertura",
 )
 
@@ -148,6 +149,7 @@ deck.split_slide(
     "Sistemas modernos aplicam medidas de segurança automaticamente.",
     media="remediation_analytics.png",
     media_position="right",
+    media_vertical_align="center",
     title_bottom=True,
     kicker="Automação",
 )
@@ -372,7 +374,16 @@ tema_customizado = PresentationTheme(
 )
 
 with Presentation(title="Minha Apresentação", theme=tema_customizado) as deck:
-    ...
+    deck.topic("Tema Personalizado")
+    deck.paragraph(
+        "Exemplo combinando Plus Jakarta Sans, divisores azuis nos tópicos e "
+        "callout clássico com borda lateral destacada."
+    )
+    deck.callout(
+        "Todos os parâmetros visuais ficam centralizados em PresentationTheme.",
+        title="Configuração única",
+        variant="info",
+    )
 ```
 
 | Atributo de `PresentationTheme` | Padrão | Efeito visual |
@@ -386,6 +397,7 @@ with Presentation(title="Minha Apresentação", theme=tema_customizado) as deck:
 | `topic_dividers` | `False` | Adiciona divisores horizontais acima e abaixo de cada tópico. |
 | `callout_minimal` | `True` | Usa card neutro `#fafafa` com ponto colorido em vez de barra grossa lateral. |
 | `clean_chrome` | `True` | Oculta toolbar, botão Deploy e rodapé padrão do Streamlit. |
+| `default_media_vertical_align` | `"top"` | Alinhamento vertical padrão da mídia (`"top"`, `"center"`, `"bottom"`) em `cover` e `split_slide`. |
 
 <div align="center">
   <img width="880" alt="Tema customizado com Plus Jakarta Sans e divisores" src="./assets/tutorial/step_05_tema.png" />

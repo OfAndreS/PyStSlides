@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from pystslides import HighlightSpan, Presentation, SlideSection
+from pystslides import HighlightSpan, Presentation, PresentationTheme, SlideSection
 
 from tests.fakes import FakeStreamlit
 
@@ -124,6 +124,62 @@ class TestPresentationFacade(unittest.TestCase):
             [s.formatted_title for s in deck.sections],
             ["Slide Dois", "Slide Tres"],
         )
+
+    def test_split_slide_and_cover_vertical_alignment_flags(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            img_path = Path(tmp) / "ilustracao.png"
+            img_path.write_bytes(b"img")
+
+            fake_st = FakeStreamlit()
+            theme = PresentationTheme(default_media_vertical_align="bottom")
+            with Presentation(
+                title="Alinhamento",
+                assets_dir=tmp,
+                auto_number=False,
+                theme=theme,
+                st_module=fake_st,
+            ) as deck:
+                deck.cover(
+                    title="Capa",
+                    image="ilustracao.png",
+                    image_position="right",
+                    image_vertical_align="center",
+                )
+                deck.split_slide(
+                    "No Topo",
+                    "Texto",
+                    media="ilustracao.png",
+                    media_vertical_align="top",
+                )
+                deck.split_slide(
+                    "No Meio",
+                    "Texto",
+                    media="ilustracao.png",
+                    media_vertical_align="center",
+                )
+                deck.split_slide(
+                    "Embaixo pelo Tema",
+                    "Texto",
+                    media="ilustracao.png",
+                )
+
+            col_calls = fake_st.calls_named("columns")
+            # col_calls[0] é o container central do __enter__
+            self.assertEqual(col_calls[1].kwargs, {"vertical_alignment": "center"})
+            self.assertEqual(col_calls[2].kwargs, {})
+            self.assertEqual(col_calls[3].kwargs, {"vertical_alignment": "center"})
+            self.assertEqual(col_calls[4].kwargs, {"vertical_alignment": "bottom"})
+
+    def test_create_columns_falls_back_when_vertical_alignment_unsupported(self) -> None:
+        class LegacyStreamlit(FakeStreamlit):
+            def columns(self, spec):  # type: ignore[override]
+                return super().columns(spec)
+
+        legacy_st = LegacyStreamlit()
+        with Presentation(title="Legacy", st_module=legacy_st) as deck:
+            deck.split_slide("Titulo", "Texto", media_vertical_align="bottom")
+
+        self.assertEqual(len(legacy_st.calls_named("columns")), 2)
 
 
 if __name__ == "__main__":

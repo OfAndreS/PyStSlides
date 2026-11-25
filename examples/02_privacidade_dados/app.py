@@ -32,6 +32,7 @@ def main() -> None:
             date="2026",
             image="discovery_cover.png",
             image_position="right",
+            image_vertical_align="center",
         )
 
         deck.split_slide(
@@ -40,6 +41,7 @@ def main() -> None:
             "dados, pastas compartilhadas, armazenamento em nuvem e estações locais.",
             media="coverage_laptop.png",
             media_position="left",
+            media_vertical_align="bottom",
             kicker="Cobertura",
         )
 
@@ -49,6 +51,7 @@ def main() -> None:
             "reduz alertas falsos e melhora a detecção em documentos digitalizados.",
             media="classification_network.png",
             media_position="right",
+            media_vertical_align="center",
             kicker="Classificação",
         )
 
@@ -58,6 +61,7 @@ def main() -> None:
             "documento, permitindo medir e priorizar os riscos mais urgentes.",
             media="access_desk.png",
             media_position="left",
+            media_vertical_align="bottom",
             kicker="Governança",
         )
 
@@ -67,6 +71,7 @@ def main() -> None:
             "automaticamente assim que detectam uma exposição.",
             media="remediation_analytics.png",
             media_position="right",
+            media_vertical_align="bottom",
             title_bottom=True,
             kicker="Automação",
         )

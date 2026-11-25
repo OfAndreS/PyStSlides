@@ -8,6 +8,21 @@ from typing import Any
 from pystslides.config import PresentationConfig, PresentationTheme
 
 
+def create_columns(
+    st_module: Any,
+    spec: Any,
+    *,
+    vertical_alignment: str = "top",
+) -> Any:
+    """Cria `st.columns` com alinhamento vertical compatível entre versões do Streamlit."""
+    if vertical_alignment != "top":
+        try:
+            return st_module.columns(spec, vertical_alignment=vertical_alignment)
+        except TypeError:
+            return st_module.columns(spec)
+    return st_module.columns(spec)
+
+
 def create_container(st_module: Any, *, border: bool = False, center: bool = False) -> Any:
     """Cria um `st.container` compatível com versões antigas e recentes do Streamlit."""
     if center:

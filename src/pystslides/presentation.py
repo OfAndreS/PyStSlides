@@ -7,12 +7,18 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Iterator, Literal, Mapping, Sequence
 
 from pystslides.assets import AssetManager
-from pystslides.components.base import create_container
+from pystslides.components.base import create_columns, create_container
 from pystslides.components.code import CodeRenderer
 from pystslides.components.data import DataRenderer, HighlightSpan
 from pystslides.components.media import ImageItem, MediaRenderer
 from pystslides.components.typography import CalloutVariant, TocLocation, TypographyRenderer
-from pystslides.config import PageLayout, PresentationConfig, PresentationTheme, TextAlign
+from pystslides.config import (
+    PageLayout,
+    PresentationConfig,
+    PresentationTheme,
+    TextAlign,
+    VerticalAlign,
+)
 from pystslides.numbering import SectionEntry, SectionTracker
 from pystslides.section import SlideSection
 from pystslides.styles import StyleInjector
@@ -276,6 +282,7 @@ class Presentation:
         caption: str = "",
         image_width: int | None = None,
         image_position: Literal["below", "right"] = "below",
+        image_vertical_align: VerticalAlign | None = None,
         kicker: str | None = None,
     ) -> None:
         """Renderiza o slide de capa com imagem abaixo ou em coluna lateral à direita."""
@@ -284,7 +291,12 @@ class Presentation:
             effective_kicker = kicker if kicker is not None else self._config.brand_label
             if effective_kicker:
                 self._typography.kicker(effective_kicker)
-            left_col, right_col = self._render_st.columns([1.2, 0.8])
+            v_align = image_vertical_align or self._config.theme.default_media_vertical_align
+            left_col, right_col = create_columns(
+                self._render_st,
+                [1.2, 0.8],
+                vertical_alignment=v_align,
+            )
             with left_col:
                 self._typography.cover_header(
                     title=title,
@@ -332,6 +344,7 @@ class Presentation:
         *,
         media: Any | Callable[[], None] | None = None,
         media_position: Literal["left", "right"] = "right",
+        media_vertical_align: VerticalAlign | None = None,
         title_bottom: bool = False,
         numbered: bool | None = None,
         kicker: str | None = None,
@@ -355,12 +368,21 @@ class Presentation:
             if effective_kicker:
                 self._typography.kicker(effective_kicker)
 
+            v_align = media_vertical_align or self._config.theme.default_media_vertical_align
             entry: SectionEntry | None = None
             if media_position == "left":
                 left_ratio, right_ratio = ratio[1], ratio[0]
-                media_col, text_col = self._render_st.columns([left_ratio, right_ratio])
+                media_col, text_col = create_columns(
+                    self._render_st,
+                    [left_ratio, right_ratio],
+                    vertical_alignment=v_align,
+                )
             else:
-                text_col, media_col = self._render_st.columns(list(ratio))
+                text_col, media_col = create_columns(
+                    self._render_st,
+                    list(ratio),
+                    vertical_alignment=v_align,
+                )
 
             def _render_body() -> None:
                 if body is None:

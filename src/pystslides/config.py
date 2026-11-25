@@ -9,6 +9,7 @@ from typing import Literal
 
 TextAlign = Literal["left", "center", "right", "justify"]
 PageLayout = Literal["centered", "wide"]
+VerticalAlign = Literal["top", "center", "bottom"]
 
 
 @dataclass
@@ -50,6 +51,7 @@ class PresentationTheme:
     divider_color: str = "#e5e7eb"
     divider_thickness: str = "1px"
     default_subtopic_spacing_px: int = 48
+    default_media_vertical_align: VerticalAlign = "top"
     paragraph_max_width: str = "62ch"
     callout_minimal: bool = True
     clean_chrome: bool = True
