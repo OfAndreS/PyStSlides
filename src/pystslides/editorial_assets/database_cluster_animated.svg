@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <style>
+    .rep-line { stroke-dasharray: 6 6; animation: flowDown 1.7s linear infinite; }
+    .sync-line { animation: flowSync 1.8s linear infinite; }
+    .status-bar { animation: barPulse 2.4s ease-in-out infinite; }
+    @keyframes flowDown {
+      to { stroke-dashoffset: -24; }
+    }
+    @keyframes flowSync {
+      to { stroke-dashoffset: -24; }
+    }
+    @keyframes barPulse {
+      0%, 100% { opacity: 0.65; }
+      50% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <!-- Banco primário no topo -->
+  <rect x="180" y="54" width="120" height="92" rx="14" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <ellipse cx="240" cy="70" rx="60" ry="15" fill="#3f7bde" stroke="#000000" stroke-width="2"/>
+  <rect x="206" y="102" width="68" height="10" rx="5" fill="#000000"/>
+  <rect class="status-bar" x="206" y="120" width="48" height="10" rx="5" fill="#579568"/>
+
+  <!-- Linhas de replicação -->
+  <line class="rep-line" x1="210" y1="146" x2="132" y2="210" stroke="#000000" stroke-width="2.2"/>
+  <line class="rep-line" x1="270" y1="146" x2="348" y2="210" stroke="#000000" stroke-width="2.2"/>
+  <line class="sync-line" x1="192" y1="256" x2="288" y2="256" stroke="#e19b4d" stroke-width="3" stroke-dasharray="6 6"/>
+
+  <!-- Réplica esquerda -->
+  <rect x="72" y="210" width="120" height="92" rx="14" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <ellipse cx="132" cy="226" rx="60" ry="15" fill="#579568" stroke="#000000" stroke-width="2"/>
+  <rect x="98" y="258" width="68" height="10" rx="5" fill="#e5e7eb"/>
+  <rect class="status-bar" x="98" y="276" width="46" height="10" rx="5" fill="#3f7bde"/>
+
+  <!-- Réplica direita -->
+  <rect x="288" y="210" width="120" height="92" rx="14" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <ellipse cx="348" cy="226" rx="60" ry="15" fill="#8461f0" stroke="#000000" stroke-width="2"/>
+  <rect x="314" y="258" width="68" height="10" rx="5" fill="#e5e7eb"/>
+  <rect class="status-bar" x="314" y="276" width="52" height="10" rx="5" fill="#e19b4d"/>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <style>
+    .lens { animation: scanMove 3.6s ease-in-out infinite; }
+    .check-ring { animation: checkPulse 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .up-arrow { animation: arrowLift 2.2s ease-in-out infinite; }
+    @keyframes scanMove {
+      0%, 100% { transform: translate(0px, 0px); }
+      50% { transform: translate(-8px, -4px); }
+    }
+    @keyframes checkPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    @keyframes arrowLift {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <!-- Cartão de verificação superior direito -->
+  <rect x="272" y="42" width="166" height="106" rx="10" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <rect x="292" y="64" width="46" height="9" rx="3" fill="#3f7bde"/>
+  <rect x="292" y="80" width="16" height="9" rx="3" fill="#579568"/>
+  <rect x="314" y="80" width="24" height="9" rx="3" fill="#3f7bde"/>
+  <rect x="292" y="114" width="26" height="8" rx="3" fill="#579568"/>
+  <g class="check-ring">
+    <circle cx="386" cy="95" r="30" stroke="#e19b4d" stroke-width="5.5"/>
+    <path d="M374 95l9 9 17-18" stroke="#e19b4d" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Barras verticais -->
+  <rect x="64" y="72" width="44" height="114" rx="6" fill="#3f7bde"/>
+  <rect x="120" y="42" width="44" height="144" rx="6" fill="#e19b4d"/>
+  <rect x="176" y="100" width="44" height="86" rx="6" fill="#579568"/>
+
+  <!-- Lupa azul grande -->
+  <g class="lens">
+    <circle cx="196" cy="140" r="54" stroke="#3f7bde" stroke-width="13"/>
+    <line x1="196" y1="194" x2="196" y2="288" stroke="#3f7bde" stroke-width="14" stroke-linecap="round"/>
+  </g>
+
+  <!-- Onda verde + setas finas -->
+  <path d="M56 320V220c20 0 34 56 58 56s34-40 60-40 36 46 60 46 28-24 52-24 30 32 46 62H56z" fill="#579568"/>
+  <line x1="104" y1="308" x2="104" y2="254" stroke="#000000" stroke-width="2"/>
+  <g class="up-arrow">
+    <line x1="130" y1="308" x2="130" y2="220" stroke="#000000" stroke-width="2"/>
+    <path d="M123 230l7-12 7 12h-14z" fill="#000000"/>
+  </g>
+  <line x1="156" y1="308" x2="156" y2="280" stroke="#000000" stroke-width="2"/>
+</svg>

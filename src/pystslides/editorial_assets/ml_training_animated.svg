@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <style>
+    .synapse { stroke-dasharray: 6 6; animation: synapseFlow 1.8s linear infinite; }
+    .layer { animation: layerPulse 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .l1 { animation-delay: 0s; }
+    .l2 { animation-delay: 0.45s; }
+    .l3 { animation-delay: 0.9s; }
+    @keyframes synapseFlow {
+      to { stroke-dashoffset: -24; }
+    }
+    @keyframes layerPulse {
+      0%, 100% { transform: scale(0.96); opacity: 0.88; }
+      50% { transform: scale(1.06); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <!-- Conexões entre camadas neurais -->
+  <g class="synapse" stroke="#000000" stroke-width="1.8">
+    <line x1="116" y1="114" x2="240" y2="94"/>
+    <line x1="116" y1="114" x2="240" y2="180"/>
+    <line x1="116" y1="246" x2="240" y2="180"/>
+    <line x1="116" y1="246" x2="240" y2="266"/>
+    <line x1="240" y1="94" x2="364" y2="140"/>
+    <line x1="240" y1="180" x2="364" y2="140"/>
+    <line x1="240" y1="180" x2="364" y2="220"/>
+    <line x1="240" y1="266" x2="364" y2="220"/>
+  </g>
+
+  <!-- Camada de entrada -->
+  <circle class="layer l1" cx="116" cy="114" r="22" fill="#3f7bde"/>
+  <circle class="layer l1" cx="116" cy="246" r="22" fill="#3f7bde"/>
+
+  <!-- Camada oculta -->
+  <circle cx="240" cy="94" r="22" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <circle class="layer l2" cx="240" cy="94" r="9" fill="#8461f0"/>
+  <circle class="layer l2" cx="240" cy="180" r="24" fill="#8461f0"/>
+  <circle cx="240" cy="266" r="22" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <circle class="layer l2" cx="240" cy="266" r="9" fill="#e19b4d"/>
+
+  <!-- Camada de saída -->
+  <g class="layer l3">
+    <circle cx="364" cy="140" r="24" fill="#579568"/>
+    <path d="M354 140l7 7 13-14" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <circle class="layer l3" cx="364" cy="220" r="22" fill="#e19b4d"/>
+</svg>

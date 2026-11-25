@@ -67,7 +67,7 @@ MinhaApresentacao/
 ├── assets/
 │   ├── discovery_cover.png
 │   ├── coverage_laptop.png
-│   └── ... (30 ilustrações PNG e SVG — veja ./ASSETS.md)
+│   └── ... (49 ilustrações PNG, SVG estáticos e SVG animados — veja ./ASSETS.md)
 └── app.py
 ```
 

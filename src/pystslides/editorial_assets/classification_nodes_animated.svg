@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <style>
+    .edge { stroke-dasharray: 6 6; animation: edgeFlow 2s linear infinite; }
+    .orb { animation: orbPulse 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .o1 { animation-delay: 0s; }
+    .o2 { animation-delay: 0.25s; }
+    .o3 { animation-delay: 0.5s; }
+    .o4 { animation-delay: 0.75s; }
+    .star { animation: twinkle 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .st2 { animation-delay: 1.2s; }
+    @keyframes edgeFlow {
+      to { stroke-dashoffset: -24; }
+    }
+    @keyframes orbPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.45; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <!-- 4 círculos azuis sobrepostos no topo direito -->
+  <circle class="orb o1" cx="322" cy="48" r="24" fill="#3f7bde"/>
+  <circle class="orb o2" cx="358" cy="48" r="24" fill="#3f7bde"/>
+  <circle class="orb o3" cx="394" cy="48" r="24" fill="#3f7bde"/>
+  <circle class="orb o4" cx="430" cy="48" r="24" fill="#3f7bde"/>
+
+  <!-- Arestas do grafo de classificação -->
+  <line class="edge" x1="142" y1="220" x2="246" y2="178" stroke="#579568" stroke-width="2.5"/>
+  <line class="edge" x1="246" y1="178" x2="196" y2="122" stroke="#579568" stroke-width="2.5"/>
+  <line class="edge" x1="246" y1="178" x2="328" y2="140" stroke="#579568" stroke-width="2.5"/>
+  <line class="edge" x1="246" y1="178" x2="220" y2="254" stroke="#579568" stroke-width="2.5"/>
+
+  <!-- Nós do grafo -->
+  <circle cx="142" cy="220" r="36" fill="#e19b4d"/>
+  <path d="M126 220l11 11 21-22" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <circle cx="196" cy="122" r="40" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <circle cx="196" cy="108" r="10" fill="#579568"/>
+  <path d="M178 144c0-11 8-18 18-18s18 7 18 18" fill="#579568"/>
+
+  <circle class="orb o2" cx="246" cy="178" r="18" fill="#8461f0"/>
+  <circle cx="218" cy="256" r="11" fill="#579568"/>
+
+  <!-- Gráfico de pizza violeta + verde -->
+  <circle cx="288" cy="88" r="28" fill="#8461f0"/>
+  <path d="M288 88V60a28 28 0 0 1 26 19L288 88z" fill="#579568"/>
+
+  <!-- Nó de pessoa âmbar -->
+  <circle cx="332" cy="138" r="28" fill="#e19b4d"/>
+  <circle cx="332" cy="128" r="7" fill="#ffffff"/>
+  <path d="M320 152c0-7 5-12 12-12s12 5 12 12" fill="#ffffff"/>
+
+  <!-- Nó auxiliar + estrelas -->
+  <circle cx="280" cy="276" r="12" fill="#e19b4d"/>
+  <path class="star" d="M108 148l3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7z" stroke="#e19b4d" stroke-width="1.8" fill="none"/>
+  <path class="star st2" d="M318 228l4 8 8 4-8 4-4 8-4-8-8-4 8-4 4-8z" stroke="#e19b4d" stroke-width="1.8" fill="none"/>
+</svg>

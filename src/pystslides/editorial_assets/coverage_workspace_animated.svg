@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <style>
+    .arrow { animation: arrowNudge 2.4s ease-in-out infinite; }
+    .b-dot { animation: dotPulse 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .p-dot { animation: maskPulse 2.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .d1 { animation-delay: 0s; }
+    .d2 { animation-delay: 0.25s; }
+    .d3 { animation-delay: 0.5s; }
+    .d4 { animation-delay: 0.75s; }
+    .d5 { animation-delay: 1s; }
+    @keyframes arrowNudge {
+      0%, 100% { transform: translateX(0px); }
+      50% { transform: translateX(-5px); }
+    }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 0.45; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+    @keyframes maskPulse {
+      0%, 100% { opacity: 0.55; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <!-- Seta decorativa verde topo direito -->
+  <path class="arrow" d="M438 42h-44l14-14h-18l-22 22 22 22h18l-14-14h44V42z" fill="#579568"/>
+
+  <!-- Balão de mensagem limpo -->
+  <rect x="204" y="48" width="160" height="82" rx="14" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <path d="M226 130l-4 22 24-22" fill="#ffffff" stroke="#000000" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="224" y="128" width="24" height="4" fill="#ffffff"/>
+  <line x1="226" y1="74" x2="294" y2="74" stroke="#8461f0" stroke-width="6" stroke-linecap="round"/>
+  <line x1="308" y1="74" x2="342" y2="74" stroke="#8461f0" stroke-width="6" stroke-linecap="round"/>
+  <line x1="226" y1="94" x2="342" y2="94" stroke="#e19b4d" stroke-width="4" stroke-linecap="round"/>
+  <line x1="226" y1="108" x2="320" y2="108" stroke="#e19b4d" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Envelope violeta + badge âmbar -->
+  <rect x="218" y="170" width="70" height="48" rx="6" fill="#8461f0"/>
+  <path d="M220 172l33 24 33-24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="288" cy="166" r="18" fill="#e19b4d"/>
+  <circle class="b-dot d1" cx="282" cy="166" r="2.5" fill="#ffffff"/>
+  <circle class="b-dot d2" cx="288" cy="166" r="2.5" fill="#ffffff"/>
+  <circle class="b-dot d3" cx="294" cy="166" r="2.5" fill="#ffffff"/>
+
+  <!-- Ícone de telefone azul -->
+  <path d="M352 160c-6-6-15-6-20 0l-6 7c-2 2-2 6 0 9l15 21c3 4 9 5 13 2l8-6c4-3 5-9 2-13l-12-20z" fill="#3f7bde"/>
+  <line x1="322" y1="158" x2="314" y2="152" stroke="#3f7bde" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="328" y1="150" x2="324" y2="141" stroke="#3f7bde" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Pílula de senha mascarada -->
+  <rect x="262" y="232" width="114" height="28" rx="14" fill="#e19b4d"/>
+  <circle class="p-dot d1" cx="283" cy="246" r="3.5" fill="#ffffff"/>
+  <circle class="p-dot d2" cx="301" cy="246" r="3.5" fill="#ffffff"/>
+  <circle class="p-dot d3" cx="319" cy="246" r="3.5" fill="#ffffff"/>
+  <circle class="p-dot d4" cx="337" cy="246" r="3.5" fill="#ffffff"/>
+  <circle class="p-dot d5" cx="355" cy="246" r="3.5" fill="#ffffff"/>
+
+  <!-- Laptop azul minimalista -->
+  <path d="M74 206h154l-26 96H48l26-96z" fill="#3f7bde"/>
+  <circle cx="138" cy="254" r="9" fill="#ffffff"/>
+  <line x1="40" y1="304" x2="210" y2="304" stroke="#3f7bde" stroke-width="6" stroke-linecap="round"/>
+</svg>

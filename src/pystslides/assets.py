@@ -10,7 +10,7 @@ from typing import Iterable, Literal, Sequence
 from pystslides.exceptions import AssetNotFoundError
 
 
-AssetKind = Literal["all", "png", "svg"]
+AssetKind = Literal["all", "png", "svg", "svg_static", "svg_animated"]
 
 
 DEFAULT_IMAGE_EXTENSIONS: tuple[str, ...] = (
@@ -85,13 +85,29 @@ def get_editorial_assets_dir() -> Path:
     return Path(__file__).resolve().parent / "editorial_assets"
 
 
-def export_editorial_assets(
-    destination: str | Path,
-    *,
-    kind: AssetKind = "all",
-    overwrite: bool = False,
-) -> list[Path]:
-    """Copia os assets editoriais incluídos no pacote para um diretório de destino."""
+def is_animated_svg(path: str | Path) -> bool:
+    """Indica se um arquivo é uma variante SVG animada (`*_animated.svg`)."""
+    candidate = Path(path)
+    return candidate.suffix.lower() == ".svg" and candidate.stem.lower().endswith("_animated")
+
+
+def _matches_asset_kind(path: Path, kind: AssetKind) -> bool:
+    ext = path.suffix.lower()
+    if kind == "all":
+        return ext in (".png", ".svg")
+    if kind == "png":
+        return ext == ".png"
+    if kind == "svg":
+        return ext == ".svg"
+    if kind == "svg_static":
+        return ext == ".svg" and not is_animated_svg(path)
+    if kind == "svg_animated":
+        return is_animated_svg(path)
+    raise ValueError(f"Tipo de asset inválido: {kind!r}.")
+
+
+def list_editorial_assets(*, kind: AssetKind = "all") -> list[Path]:
+    """Lista os assets editoriais empacotados filtrando por formato ou variante animada."""
     source_dir = get_editorial_assets_dir()
     if not source_dir.exists():
         raise AssetNotFoundError(
@@ -99,19 +115,26 @@ def export_editorial_assets(
             resolved_path=source_dir,
             base_dir=source_dir.parent,
         )
+    return [
+        src
+        for src in sorted(source_dir.iterdir(), key=lambda p: p.name.lower())
+        if src.is_file() and _matches_asset_kind(src, kind)
+    ]
 
-    extensions = (
-        (".png", ".svg")
-        if kind == "all"
-        else (f".{kind}",)
-    )
+
+def export_editorial_assets(
+    destination: str | Path,
+    *,
+    kind: AssetKind = "all",
+    overwrite: bool = False,
+) -> list[Path]:
+    """Copia os assets editoriais incluídos no pacote para um diretório de destino."""
+    sources = list_editorial_assets(kind=kind)
     target_dir = Path(destination).expanduser().resolve()
     target_dir.mkdir(parents=True, exist_ok=True)
 
     exported: list[Path] = []
-    for src in sorted(source_dir.iterdir(), key=lambda p: p.name.lower()):
-        if not src.is_file() or src.suffix.lower() not in extensions:
-            continue
+    for src in sources:
         dst = target_dir / src.name
         if dst.exists() and not overwrite:
             exported.append(dst)
@@ -136,9 +159,9 @@ def cli_export_assets(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--format",
         dest="kind",
-        choices=("all", "png", "svg"),
+        choices=("all", "png", "svg", "svg_static", "svg_animated"),
         default="all",
-        help="Filtra o formato exportado: all, png ou svg (padrão: all).",
+        help="Filtra o formato exportado: all, png, svg, svg_static ou svg_animated (padrão: all).",
     )
     parser.add_argument(
         "--overwrite",

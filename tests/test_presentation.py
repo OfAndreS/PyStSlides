@@ -267,6 +267,27 @@ class TestPresentationFacade(unittest.TestCase):
         self.assertTrue(any("pyst-container-marker pyst-border-grey" in m for m in markdowns))
         self.assertTrue(any("pyst-reveal-marker pyst-border-none" in m for m in markdowns))
 
+    def test_native_light_theme_options_applied_when_enabled(self) -> None:
+        class LightAwareFakeStreamlit(FakeStreamlit):
+            def __init__(self) -> None:
+                super().__init__()
+                self.options: dict[str, object] = {}
+
+            def set_option(self, key: str, value: object) -> None:
+                self.options[key] = value
+
+        st_enabled = LightAwareFakeStreamlit()
+        with Presentation(title="Tema Claro", st_module=st_enabled):
+            pass
+        self.assertEqual(st_enabled.options["theme.base"], "light")
+        self.assertEqual(st_enabled.options["theme.backgroundColor"], "#ffffff")
+        self.assertEqual(st_enabled.options["theme.textColor"], "#000000")
+
+        st_disabled = LightAwareFakeStreamlit()
+        with Presentation(title="Sem Forcar", force_light_theme=False, st_module=st_disabled):
+            pass
+        self.assertEqual(st_disabled.options, {})
+
 
 if __name__ == "__main__":
     unittest.main()

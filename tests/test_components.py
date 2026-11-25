@@ -40,6 +40,7 @@ class TestStyleInjector(unittest.TestCase):
     def test_default_editorial_theme_values_and_css(self) -> None:
         css = StyleInjector(PresentationTheme()).build_css()
         self.assertIn("DM Sans", css)
+        self.assertIn("color-scheme: light !important;", css)
         self.assertIn("background-color: #ffffff !important;", css)
         self.assertIn("font-size: 76px !important;", css)
         self.assertIn("font-size: 54px !important;", css)

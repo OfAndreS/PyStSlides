@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <style>
+    .m-dot { animation: milestonePulse 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .m1 { animation-delay: 0s; }
+    .m2 { animation-delay: 0.45s; }
+    .m3 { animation-delay: 0.9s; }
+    .m4 { animation-delay: 1.35s; }
+    .m-card { animation: cardFloat 3.4s ease-in-out infinite; }
+    @keyframes milestonePulse {
+      0%, 100% { transform: scale(1); }
+      45% { transform: scale(1.22); }
+    }
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-2px); }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <!-- Linha horizontal do roadmap -->
+  <line x1="56" y1="180" x2="424" y2="180" stroke="#000000" stroke-width="2.4" stroke-linecap="round"/>
+
+  <!-- Marco 1 (acima) -->
+  <line x1="112" y1="180" x2="112" y2="132" stroke="#000000" stroke-width="2"/>
+  <circle class="m-dot m1" cx="112" cy="180" r="10" fill="#3f7bde"/>
+  <g class="m-card">
+    <rect x="64" y="76" width="96" height="56" rx="10" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <rect x="78" y="96" width="54" height="8" rx="4" fill="#3f7bde"/>
+    <rect x="78" y="110" width="38" height="8" rx="4" fill="#e5e7eb"/>
+  </g>
+
+  <!-- Marco 2 (abaixo) -->
+  <line x1="204" y1="180" x2="204" y2="228" stroke="#000000" stroke-width="2"/>
+  <circle class="m-dot m2" cx="204" cy="180" r="10" fill="#579568"/>
+  <rect x="156" y="228" width="96" height="56" rx="10" fill="#579568"/>
+  <rect x="172" y="248" width="56" height="8" rx="4" fill="#ffffff"/>
+  <rect x="172" y="262" width="40" height="8" rx="4" fill="#ffffff" fill-opacity="0.7"/>
+
+  <!-- Marco 3 (acima) -->
+  <line x1="296" y1="180" x2="296" y2="132" stroke="#000000" stroke-width="2"/>
+  <circle class="m-dot m3" cx="296" cy="180" r="10" fill="#e19b4d"/>
+  <g class="m-card">
+    <rect x="248" y="76" width="96" height="56" rx="10" fill="#e19b4d"/>
+    <rect x="264" y="96" width="56" height="8" rx="4" fill="#ffffff"/>
+    <rect x="264" y="110" width="40" height="8" rx="4" fill="#ffffff" fill-opacity="0.7"/>
+  </g>
+
+  <!-- Marco 4 (abaixo) -->
+  <line x1="384" y1="180" x2="384" y2="228" stroke="#000000" stroke-width="2"/>
+  <circle class="m-dot m4" cx="384" cy="180" r="10" fill="#8461f0"/>
+  <rect x="336" y="228" width="96" height="56" rx="10" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <rect x="350" y="248" width="56" height="8" rx="4" fill="#8461f0"/>
+  <rect x="350" y="262" width="38" height="8" rx="4" fill="#e5e7eb"/>
+</svg>

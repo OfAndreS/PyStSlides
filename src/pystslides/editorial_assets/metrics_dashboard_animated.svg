@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <style>
+    .needle { animation: needleSwing 3.2s ease-in-out infinite; transform-origin: 156px 188px; }
+    .bar { animation: barBreath 2.8s ease-in-out infinite; transform-box: fill-box; transform-origin: bottom center; }
+    .b1 { animation-delay: 0s; }
+    .b2 { animation-delay: 0.3s; }
+    .b3 { animation-delay: 0.6s; }
+    .peak { animation: peakPulse 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes needleSwing {
+      0%, 100% { transform: rotate(-10deg); }
+      50% { transform: rotate(8deg); }
+    }
+    @keyframes barBreath {
+      0%, 100% { transform: scaleY(0.95); }
+      50% { transform: scaleY(1.04); }
+    }
+    @keyframes peakPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.22); }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <!-- Painel de métricas -->
+  <rect x="54" y="64" width="372" height="232" rx="14" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+
+  <!-- Velocímetro azul/verde -->
+  <path d="M98 188a58 58 0 0 1 116 0" stroke="#e5e7eb" stroke-width="14" stroke-linecap="round"/>
+  <path d="M98 188a58 58 0 0 1 92-47" stroke="#579568" stroke-width="14" stroke-linecap="round"/>
+  <line class="needle" x1="156" y1="188" x2="188" y2="146" stroke="#000000" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="156" cy="188" r="8" fill="#3f7bde"/>
+
+  <!-- Curva ascendente + barras -->
+  <rect class="bar b1" x="256" y="196" width="26" height="58" rx="5" fill="#8461f0"/>
+  <rect class="bar b2" x="296" y="164" width="26" height="90" rx="5" fill="#3f7bde"/>
+  <rect class="bar b3" x="336" y="126" width="26" height="128" rx="5" fill="#e19b4d"/>
+  <polyline points="248,176 298,136 352,96 384,84" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="peak" cx="384" cy="84" r="7" fill="#579568"/>
+</svg>

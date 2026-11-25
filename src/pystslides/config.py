@@ -117,4 +117,5 @@ class PresentationConfig:
     subtopic_format: str = "{number} ) {title}"
     show_toc: bool = False
     toc_title: str = "Sumário"
+    force_light_theme: bool = True
     theme: PresentationTheme = field(default_factory=PresentationTheme)

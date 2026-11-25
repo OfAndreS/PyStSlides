@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from contextlib import ExitStack, contextmanager, nullcontext
 from pathlib import Path
 from typing import Any, Callable, Iterable, Iterator, Literal, Mapping, Sequence
@@ -120,6 +121,7 @@ class Presentation:
         paginated: bool = False,
         show_toc: bool = False,
         toc_title: str = "Sumário",
+        force_light_theme: bool = True,
         theme: PresentationTheme | None = None,
         config: PresentationConfig | None = None,
         st_module: Any | None = None,
@@ -138,6 +140,7 @@ class Presentation:
                 paginated=paginated,
                 show_toc=show_toc,
                 toc_title=toc_title,
+                force_light_theme=force_light_theme,
                 theme=theme or PresentationTheme(),
             )
 
@@ -213,9 +216,50 @@ class Presentation:
     # ------------------------------------------------------------------
     # Ciclo de vida e Context Manager
     # ------------------------------------------------------------------
+    def _apply_native_light_theme(self) -> None:
+        """Força nativamente o tema claro/branco do Streamlit quando habilitado."""
+        if not self._config.force_light_theme:
+            return
+        t = self._config.theme
+        theme_options = {
+            "theme.base": "light",
+            "theme.backgroundColor": t.background_color,
+            "theme.secondaryBackgroundColor": "#fafafa",
+            "theme.textColor": t.text_color,
+            "theme.primaryColor": t.primary_color,
+        }
+        env_mapping = {
+            "STREAMLIT_THEME_BASE": "light",
+            "STREAMLIT_THEME_BACKGROUND_COLOR": t.background_color,
+            "STREAMLIT_THEME_SECONDARY_BACKGROUND_COLOR": "#fafafa",
+            "STREAMLIT_THEME_TEXT_COLOR": t.text_color,
+            "STREAMLIT_THEME_PRIMARY_COLOR": t.primary_color,
+        }
+        for env_key, env_val in env_mapping.items():
+            os.environ.setdefault(env_key, env_val)
+
+        set_option_fn = getattr(self._st, "set_option", None)
+        if callable(set_option_fn):
+            for opt_key, opt_val in theme_options.items():
+                try:
+                    set_option_fn(opt_key, opt_val)
+                except Exception:
+                    pass
+        try:
+            from streamlit import config as st_config
+
+            for opt_key, opt_val in theme_options.items():
+                try:
+                    st_config.set_option(opt_key, opt_val)
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
     def setup(self, *, configure_page: bool = True) -> Presentation:
         """Configura a página do Streamlit e injeta o CSS global uma única vez."""
         if not self._initialized:
+            self._apply_native_light_theme()
             if configure_page:
                 self._st.set_page_config(
                     page_title=self._config.title,

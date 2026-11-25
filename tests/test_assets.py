@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from pystslides.assets import (
@@ -11,6 +12,8 @@ from pystslides.assets import (
     cli_export_assets,
     export_editorial_assets,
     get_editorial_assets_dir,
+    is_animated_svg,
+    list_editorial_assets,
 )
 from pystslides.exceptions import AssetNotFoundError
 
@@ -64,7 +67,23 @@ class TestAssetManager(unittest.TestCase):
         editorial_dir = get_editorial_assets_dir()
         self.assertTrue(editorial_dir.is_dir())
         available = AssetManager(editorial_dir).list_images()
-        self.assertEqual(len(available), 30)
+        self.assertEqual(len(available), 49)
+
+        static_svgs = list_editorial_assets(kind="svg_static")
+        animated_svgs = list_editorial_assets(kind="svg_animated")
+        self.assertEqual(len(static_svgs), 19)
+        self.assertEqual(len(animated_svgs), 19)
+        self.assertEqual(
+            {f"{p.stem}_animated.svg" for p in static_svgs},
+            {p.name for p in animated_svgs},
+        )
+        for svg_path in animated_svgs:
+            self.assertTrue(is_animated_svg(svg_path))
+            content = svg_path.read_text(encoding="utf-8")
+            ET.fromstring(content)
+            self.assertIn("<style>", content)
+            self.assertIn("@keyframes", content)
+            self.assertIn("prefers-reduced-motion", content)
 
         catalog_path = Path(__file__).resolve().parent.parent / "ASSETS.md"
         catalog_text = catalog_path.read_text(encoding="utf-8")
@@ -76,11 +95,16 @@ class TestAssetManager(unittest.TestCase):
             self.assertTrue(png_only)
             self.assertTrue(all(p.suffix == ".png" and p.exists() for p in png_only))
 
+            animated_dir = Path(tmp) / "animated_only"
+            animated_exported = export_editorial_assets(animated_dir, kind="svg_animated")
+            self.assertEqual(len(animated_exported), 19)
+            self.assertTrue(all(is_animated_svg(p) for p in animated_exported))
+
             cli_dest = Path(tmp) / "cli_out"
             exit_code = cli_export_assets([str(cli_dest), "--format", "svg"])
             self.assertEqual(exit_code, 0)
             svg_files = list(cli_dest.glob("*.svg"))
-            self.assertEqual(len(svg_files), 19)
+            self.assertEqual(len(svg_files), 38)
 
 
 if __name__ == "__main__":

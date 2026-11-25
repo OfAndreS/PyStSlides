@@ -265,7 +265,14 @@ table.pyst-table tr:hover td {{
         )
 
         return f"""<style>
-{font_import}html, body, .stApp, [data-testid="stAppViewContainer"] {{
+{font_import}:root, html, body, .stApp, [data-testid="stAppViewContainer"] {{
+    color-scheme: light !important;
+    background-color: {t.background_color} !important;
+    color: {t.text_color} !important;
+}}
+
+[data-testid="stHeader"],
+[data-testid="stAppViewContainer"] > section {{
     background-color: {t.background_color} !important;
     color: {t.text_color} !important;
 }}

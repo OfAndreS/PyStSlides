@@ -93,7 +93,7 @@ PyStSlides/
 │       ├── __init__.py              # Exporta a API pública e a versão do pacote.
 │       ├── assets.py                # AssetManager + exportação/CLI dos assets editoriais.
 │       ├── config.py                # Dataclasses PresentationTheme e PresentationConfig.
-│       ├── editorial_assets/        # Pacote de 30 ilustrações PNG e SVG empacotadas.
+│       ├── editorial_assets/        # Pacote de 49 ilustrações (PNG, SVG estáticos e SVG animados).
 │       ├── exceptions.py            # Exceções customizadas do pacote.
 │       ├── numbering.py             # SectionTracker e SectionEntry (numeração + âncoras).
 │       ├── presentation.py          # Fachada Presentation (context manager e API unificada).
@@ -318,16 +318,16 @@ python -c "import pystslides; print(pystslides.__file__, pystslides.__version__)
 
 <br>
 
-O pacote já inclui **30 ilustrações editoriais** (`.png` e `.svg`) prontas para montar apresentações no mesmo estilo dos exemplos — veja a prévia completa em [ASSETS.md](./ASSETS.md).
+O pacote já inclui **49 ilustrações editoriais** (`11 PNG`, `19 SVG` estáticos e `19 SVG` animados com sufixo `_animated.svg`) prontas para montar apresentações no mesmo estilo dos exemplos — veja a prévia completa em [ASSETS.md](./ASSETS.md).
 
 1 ) **Exportar para a pasta do seu projeto após instalar o `PyStSlides` (recomendado):**
 
 ```bash
-# Copia todos os PNGs e SVGs para ./assets
+# Copia todos os PNGs e SVGs (estáticos e animados) para ./assets
 pystslides-assets ./assets
 
-# Ou usando o módulo Python diretamente (filtrando apenas PNG ou SVG)
-python -m pystslides.assets ./assets --format png
+# Ou usando o módulo Python diretamente (all, png, svg, svg_static ou svg_animated)
+python -m pystslides.assets ./assets --format svg_animated
 ```
 
 2 ) **Usar direto em código Python sem copiar arquivos manualmente:**
