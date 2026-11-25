@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <!-- Cadeado geométrico azul -->
+  <path d="M126 154v-36c0-28 22-50 50-50s50 22 50 50v36" stroke="#000000" stroke-width="14" stroke-linecap="round"/>
+  <rect x="96" y="150" width="160" height="136" rx="18" fill="#3f7bde"/>
+  <circle cx="176" cy="212" r="18" fill="#ffffff"/>
+  <rect x="170" y="222" width="12" height="28" rx="6" fill="#ffffff"/>
+
+  <!-- Checklist de auditoria -->
+  <rect x="228" y="102" width="176" height="172" rx="12" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <circle cx="264" cy="146" r="14" fill="#579568"/>
+  <path d="M258 146l4 4 9-9" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="292" y="140" width="84" height="10" rx="5" fill="#000000"/>
+
+  <circle cx="264" cy="190" r="14" fill="#579568"/>
+  <path d="M258 190l4 4 9-9" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="292" y="184" width="68" height="10" rx="5" fill="#e5e7eb"/>
+
+  <circle cx="264" cy="234" r="14" fill="#e19b4d"/>
+  <rect x="292" y="228" width="76" height="10" rx="5" fill="#e5e7eb"/>
+</svg>

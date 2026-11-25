@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <!-- Quadro colaborativo limpo -->
+  <rect x="64" y="54" width="352" height="248" rx="14" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <line x1="182" y1="78" x2="182" y2="282" stroke="#e5e7eb" stroke-width="2"/>
+  <line x1="298" y1="78" x2="298" y2="282" stroke="#e5e7eb" stroke-width="2"/>
+
+  <!-- Coluna 1 -->
+  <rect x="84" y="88" width="78" height="44" rx="8" fill="#3f7bde"/>
+  <rect x="84" y="146" width="78" height="44" rx="8" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+  <rect x="96" y="164" width="48" height="8" rx="4" fill="#e19b4d"/>
+
+  <!-- Coluna 2 -->
+  <rect x="200" y="88" width="78" height="44" rx="8" fill="#e19b4d"/>
+  <rect x="200" y="146" width="78" height="44" rx="8" fill="#8461f0"/>
+  <rect x="200" y="204" width="78" height="44" rx="8" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+  <rect x="212" y="222" width="44" height="8" rx="4" fill="#3f7bde"/>
+
+  <!-- Coluna 3 (Concluído) -->
+  <rect x="316" y="88" width="78" height="44" rx="8" fill="#579568"/>
+  <path d="M344 110l7 7 14-14" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="316" y="146" width="78" height="44" rx="8" fill="#579568"/>
+  <path d="M344 168l7 7 14-14" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

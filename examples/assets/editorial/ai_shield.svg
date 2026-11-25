@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <!-- Cartão de prompt à esquerda -->
+  <rect x="44" y="114" width="136" height="132" rx="12" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <rect x="64" y="140" width="84" height="10" rx="5" fill="#3f7bde"/>
+  <rect x="64" y="164" width="96" height="10" rx="5" fill="#e5e7eb"/>
+  <rect x="64" y="184" width="56" height="10" rx="5" fill="#e19b4d"/>
+  <rect x="64" y="204" width="76" height="10" rx="5" fill="#e5e7eb"/>
+
+  <!-- Fluxo passando pelo escudo -->
+  <line x1="180" y1="180" x2="216" y2="180" stroke="#000000" stroke-width="2.2"/>
+  <path d="M254 96l54 20v54c0 42-24 74-54 90-30-16-54-48-54-90v-54l54-20z" fill="#579568"/>
+  <circle cx="254" cy="172" r="22" fill="#ffffff"/>
+  <path d="M244 172l7 7 14-14" stroke="#579568" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="308" y1="180" x2="342" y2="180" stroke="#000000" stroke-width="2.2"/>
+
+  <!-- Estrela/Modelo IA violeta -->
+  <circle cx="388" cy="180" r="46" fill="#8461f0"/>
+  <path d="M388 150l7 23 23 7-23 7-7 23-7-23-23-7 23-7 7-23z" fill="#ffffff"/>
+  <path d="M342 104l4 8 8 4-8 4-4 8-4-8-8-4 8-4 4-8z" stroke="#e19b4d" stroke-width="1.8" fill="none"/>
+</svg>
