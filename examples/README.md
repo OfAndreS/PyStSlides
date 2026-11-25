@@ -1,6 +1,6 @@
 # Exemplos Completos de Sites de Slides — PyStSlides
 
-Esta pasta reúne implementações completas de apresentações criadas com o **PyStSlides**, além de ilustrações reutilizáveis no padrão editorial em `examples/assets/editorial/`.
+Esta pasta reúne implementações completas de apresentações criadas com o **PyStSlides**, utilizando as ilustrações editoriais incluídas no pacote (`pystslides-assets`).
 
 ## Como executar qualquer exemplo
 

@@ -6,14 +6,12 @@ Execute com:
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from sections.deteccao_pii import PiiDetectionSection
 
-from pystslides import Presentation
+from pystslides import Presentation, get_editorial_assets_dir
 
 
-ASSETS_DIR = Path(__file__).resolve().parent / "assets"
+ASSETS_DIR = get_editorial_assets_dir()
 
 
 def main() -> None:

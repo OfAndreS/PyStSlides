@@ -69,6 +69,9 @@
 
 ```bash
 PyStSlides/
+├── .github/
+│   └── workflows/
+│       └── tests.yml                # CI automatizado (unittest + compileall).
 ├── assets/
 │   ├── tutorial/                    # Screenshots de cada módulo do TUTORIAL.md.
 │   ├── architecture.svg             # Diagrama visual da arquitetura POO do pacote.
@@ -78,9 +81,6 @@ PyStSlides/
 │   ├── 02_privacidade_dados/        # Exemplo completo: Workshop Data Discovery & LGPD.
 │   ├── 03_pitch_produto/            # Exemplo completo: Pitch Executivo SaaS.
 │   ├── screenshots/                 # Prints reais das apresentações renderizadas no Streamlit.
-│   ├── assets/
-│   │   ├── editorial/               # Ilustrações PNG e SVG no padrão editorial flat.
-│   │   └── sample_cover.svg         # Asset de exemplo carregado pelo AssetManager.
 │   ├── sections/
 │   │   ├── __init__.py
 │   │   └── demo_section.py          # Exemplo de seção modularizada com SlideSection.
@@ -89,8 +89,9 @@ PyStSlides/
 ├── src/
 │   └── pystslides/
 │       ├── __init__.py              # Exporta a API pública e a versão do pacote.
-│       ├── assets.py                # AssetManager: resolução, validação e listagem de mídia.
+│       ├── assets.py                # AssetManager + exportação/CLI dos assets editoriais.
 │       ├── config.py                # Dataclasses PresentationTheme e PresentationConfig.
+│       ├── editorial_assets/        # Pacote de 22 ilustrações PNG e SVG empacotadas.
 │       ├── exceptions.py            # Exceções customizadas do pacote.
 │       ├── numbering.py             # SectionTracker e SectionEntry (numeração + âncoras).
 │       ├── presentation.py          # Fachada Presentation (context manager e API unificada).
@@ -98,14 +99,14 @@ PyStSlides/
 │       ├── styles.py                # StyleInjector: geração e injeção única de CSS global.
 │       └── components/
 │           ├── __init__.py
-│           ├── base.py              # BaseComponent e utilitário de container compatível.
+│           ├── base.py              # BaseComponent e utilitários de container/colunas.
 │           ├── code.py              # CodeRenderer: blocos de código, output_box e live_code.
 │           ├── data.py              # DataRenderer, HighlightSpan e tabelas HTML estilizadas.
 │           ├── media.py             # MediaRenderer: imagens, galerias e diagramas Mermaid.
 │           └── typography.py        # TypographyRenderer: tópicos, textos, callouts e TOC.
 ├── tests/
 │   ├── fakes.py                     # Dublê do Streamlit para testes unitários isolados.
-│   ├── test_assets.py               # Testes do AssetManager.
+│   ├── test_assets.py               # Testes do AssetManager e exportação de assets.
 │   ├── test_components.py           # Testes dos renderizadores de tipografia, mídia, código e dados.
 │   ├── test_numbering.py            # Testes da numeração hierárquica e âncoras únicas.
 │   └── test_presentation.py         # Testes integrados da fachada Presentation e SlideSection.
@@ -259,6 +260,75 @@ with Presentation(title="Data Discovery", assets_dir=ASSETS, show_toc=True) as d
 
 ```bash
 streamlit run src/app.py
+```
+
+</details>
+
+<details>
+  <summary><strong>Como Atualizar a Biblioteca no Seu Projeto (Conda / venv)</strong></summary>
+
+<br>
+
+1 ) **Atualizar a partir do GitHub no ambiente ativo (Conda ou `venv`):**
+
+```bash
+conda activate Streamlit   # ou ative seu venv
+pip install --upgrade --force-reinstall --no-deps git+https://github.com/OfAndreS/PyStSlides.git
+```
+
+2 ) **Atualizar direto do repositório local (sem esperar push no GitHub):**
+
+```bash
+# Modo editável (recomendado durante desenvolvimento)
+pip install -e /caminho/para/PyStSlides --no-deps
+
+# Ou reinstalação normal a partir da pasta local
+pip install --upgrade --force-reinstall --no-deps /caminho/para/PyStSlides
+```
+
+3 ) **Confirmar a versão e o local carregado pelo Python:**
+
+```bash
+python -c "import pystslides; print(pystslides.__file__, pystslides.__version__)"
+```
+
+</details>
+
+<details>
+  <summary><strong>Como Baixar os Assets Editoriais Rapidamente</strong></summary>
+
+<br>
+
+O pacote já inclui as **22 ilustrações editoriais** (`.png` e `.svg`) prontas para montar apresentações no mesmo estilo dos exemplos.
+
+1 ) **Exportar para a pasta do seu projeto após instalar o `PyStSlides` (recomendado):**
+
+```bash
+# Copia todos os PNGs e SVGs para ./assets
+pystslides-assets ./assets
+
+# Ou usando o módulo Python diretamente (filtrando apenas PNG ou SVG)
+python -m pystslides.assets ./assets --format png
+```
+
+2 ) **Usar direto em código Python sem copiar arquivos manualmente:**
+
+```python
+from pystslides import Presentation, export_editorial_assets, get_editorial_assets_dir
+
+# Opção A: usar direto do pacote instalado
+with Presentation(title="Minha Palestra", assets_dir=get_editorial_assets_dir()) as deck:
+    deck.cover(title="Minha Palestra", image="discovery_cover.png", image_position="right")
+
+# Opção B: copiar via código para uma pasta local
+export_editorial_assets("./assets", kind="all")
+```
+
+3 ) **Baixar apenas a pasta de assets do GitHub (sem instalar o pacote):**
+
+```bash
+git clone --filter=blob:none --no-checkout https://github.com/OfAndreS/PyStSlides.git temp-assets
+cd temp-assets && git sparse-checkout set src/pystslides/editorial_assets && git checkout
 ```
 
 </details>

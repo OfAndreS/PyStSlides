@@ -6,7 +6,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from pystslides.assets import AssetManager
+from pystslides.assets import (
+    AssetManager,
+    cli_export_assets,
+    export_editorial_assets,
+    get_editorial_assets_dir,
+)
 from pystslides.exceptions import AssetNotFoundError
 
 
@@ -54,6 +59,23 @@ class TestAssetManager(unittest.TestCase):
             manager = AssetManager(base)
             listed = [p.name for p in manager.list_images()]
             self.assertEqual(listed, ["01.jpg", "02.png"])
+
+    def test_editorial_assets_dir_and_export(self) -> None:
+        editorial_dir = get_editorial_assets_dir()
+        self.assertTrue(editorial_dir.is_dir())
+        available = AssetManager(editorial_dir).list_images()
+        self.assertEqual(len(available), 22)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            png_only = export_editorial_assets(tmp, kind="png")
+            self.assertTrue(png_only)
+            self.assertTrue(all(p.suffix == ".png" and p.exists() for p in png_only))
+
+            cli_dest = Path(tmp) / "cli_out"
+            exit_code = cli_export_assets([str(cli_dest), "--format", "svg"])
+            self.assertEqual(exit_code, 0)
+            svg_files = list(cli_dest.glob("*.svg"))
+            self.assertEqual(len(svg_files), 11)
 
 
 if __name__ == "__main__":

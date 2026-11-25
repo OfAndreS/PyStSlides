@@ -51,13 +51,21 @@ pip install -e .
 # pip install git+https://github.com/OfAndreS/PyStSlides.git
 ```
 
-2 ) **Organize uma pasta de projeto com um diretório para seus assets:**
+2 ) **Organize uma pasta de projeto e baixe os assets editoriais do pacote:**
+
+```bash
+mkdir -p MinhaApresentacao && cd MinhaApresentacao
+pystslides-assets ./assets
+```
+
+Estrutura gerada:
 
 ```bash
 MinhaApresentacao/
 ├── assets/
 │   ├── discovery_cover.png
-│   └── coverage_laptop.png
+│   ├── coverage_laptop.png
+│   └── ... (22 ilustrações PNG e SVG)
 └── app.py
 ```
 
