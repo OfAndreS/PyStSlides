@@ -120,10 +120,36 @@ class TestPresentationFacade(unittest.TestCase):
         self.assertFalse(any("Texto do slide tres." in m for m in markdowns))
         self.assertTrue(any("2 / 3" in m for m in markdowns))
         self.assertEqual(len(fake_st.calls_named("button")), 2)
+        self.assertEqual(len(fake_st.calls_named("sidebar.button")), 2)
         self.assertEqual(
             [s.formatted_title for s in deck.sections],
             ["Slide Dois", "Slide Tres"],
         )
+
+    def test_paginated_toc_click_and_new_slide_and_cover_without_title(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            img_path = Path(tmp) / "capa.png"
+            img_path.write_bytes(b"img")
+            fake_st = FakeStreamlit()
+            fake_st.button_clicks.add("pyst_toc_btn_1_pyst-slide-extra")
+
+            with Presentation(
+                title="Paginado TOC",
+                assets_dir=tmp,
+                auto_number=False,
+                brand_label="Marca",
+                paginated=True,
+                show_toc=True,
+                st_module=fake_st,
+            ) as deck:
+                deck.cover(subtitle="Somente subtítulo", image="capa.png", image_position="right")
+                deck.topic("Slide Principal")
+                deck.new_slide()
+                deck.subtopic("Slide Extra")
+
+            self.assertEqual(fake_st.session_state["pyst_slide_index"], 2)
+            self.assertEqual(len(fake_st.calls_named("rerun")), 1)
+            self.assertEqual(deck.sections[1].slide_index, 2)
 
     def test_split_slide_and_cover_vertical_alignment_flags(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -180,6 +206,28 @@ class TestPresentationFacade(unittest.TestCase):
             deck.split_slide("Titulo", "Texto", media_vertical_align="bottom")
 
         self.assertEqual(len(legacy_st.calls_named("columns")), 2)
+
+    def test_reveal_card_integration_and_paginated_mode(self) -> None:
+        fake_st = FakeStreamlit()
+        fake_st.session_state["pyst_slide_index"] = 1
+        fake_st.session_state["pyst_reveal_card_slide_2"] = True
+
+        with Presentation(
+            title="Interativo",
+            auto_number=False,
+            paginated=True,
+            st_module=fake_st,
+        ) as deck:
+            deck.topic("Slide Um")
+            deck.reveal_card("Pergunta 1", "Resposta 1", key="card_slide_1")
+            deck.topic("Slide Dois")
+            revealed = deck.reveal_card("Pergunta 2", "Resposta 2", key="card_slide_2")
+
+        self.assertTrue(revealed)
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertFalse(any("Pergunta 1" in m for m in markdowns))
+        self.assertTrue(any("Pergunta 2" in m for m in markdowns))
+        self.assertTrue(any("Resposta 2" in m for m in markdowns))
 
 
 if __name__ == "__main__":

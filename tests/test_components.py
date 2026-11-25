@@ -9,6 +9,7 @@ from pathlib import Path
 from pystslides.assets import AssetManager
 from pystslides.components.code import CodeRenderer
 from pystslides.components.data import DataRenderer, HighlightLevel, HighlightSpan, apply_highlights
+from pystslides.components.interactive import InteractiveRenderer
 from pystslides.components.media import MediaRenderer
 from pystslides.components.typography import TypographyRenderer
 from pystslides.config import PresentationConfig, PresentationTheme
@@ -62,6 +63,22 @@ class TestStyleInjector(unittest.TestCase):
         self.assertIn("border-bottom: 1.5px solid #000000 !important;", css)
         self.assertIn("font-size: 18px !important;", css)
         self.assertIn(".pyst-mark {", css)
+        self.assertIn(".pyst-reveal-marker", css)
+        self.assertIn(".pyst-reveal-answer", css)
+        self.assertIn(".pyst-bullets", css)
+        self.assertIn(".pyst-metrics-grid", css)
+        self.assertIn(".pyst-pagination-marker", css)
+
+    def test_theme_presets(self) -> None:
+        editorial = PresentationTheme.editorial()
+        compact = PresentationTheme.compact()
+        classic = PresentationTheme.classic()
+
+        self.assertEqual(editorial.topic_font_size, "54px")
+        self.assertEqual(compact.paragraph_font_size, "20px")
+        self.assertTrue(classic.topic_dividers)
+        self.assertFalse(classic.callout_minimal)
+        self.assertFalse(classic.table_rounded)
 
 
 class TestMediaAndCodeComponents(unittest.TestCase):
@@ -167,6 +184,20 @@ class TestDataComponent(unittest.TestCase):
         html_table = renderer.styled_table(FakeDataFrame())
         self.assertIn("<td>Valor</td>", html_table)
 
+    def test_metrics_renders_cards_with_accents(self) -> None:
+        fake_st = FakeStreamlit()
+        renderer = DataRenderer(fake_st, PresentationConfig())
+        grid_html = renderer.metrics(
+            [
+                ("MTTR", "< 7 min", "Piloto"),
+                ("SLA", "99.99%"),
+            ]
+        )
+        self.assertIn('class="pyst-metrics-grid"', grid_html)
+        self.assertIn("MTTR", grid_html)
+        self.assertIn("&lt; 7 min", grid_html)
+        self.assertIn("Piloto", grid_html)
+
 
 class TestTypographyComponent(unittest.TestCase):
     def test_render_toc_builds_nested_links(self) -> None:
@@ -204,6 +235,75 @@ class TestTypographyComponent(unittest.TestCase):
         self.assertTrue(any('<h1 class="pyst-topic-title">Amplitude de cobertura</h1>' == m for m in markdowns))
         self.assertTrue(any('class="pyst-callout-icon"' in m and "<svg" in m for m in markdowns))
         self.assertFalse(any('<hr class="pyst-divider">' in m for m in markdowns))
+
+    def test_bullets_and_callout_escape_html(self) -> None:
+        fake_st = FakeStreamlit()
+        renderer = TypographyRenderer(fake_st, PresentationConfig(), SectionTracker())
+        renderer.bullets(["Primeiro <b>item</b>", "Segundo"], marker="dot")
+        renderer.callout("Use <code>reveal_card</code>", escape_html=False)
+
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertTrue(any('class="pyst-bullets"' in m and "Primeiro <b>item</b>" in m for m in markdowns))
+        self.assertTrue(any('class="pyst-bullet-dot"' in m for m in markdowns))
+        self.assertTrue(any("<code>reveal_card</code>" in m for m in markdowns))
+
+
+class TestInteractiveComponent(unittest.TestCase):
+    def test_reveal_card_hides_answer_until_toggled(self) -> None:
+        fake_st = FakeStreamlit()
+        renderer = InteractiveRenderer(fake_st, PresentationConfig())
+
+        opened = renderer.reveal_card(
+            "Pergunta inicial",
+            "Resposta secreta",
+            title="Flashcard",
+            kicker="Arquitetura",
+            key="card_1",
+        )
+
+        self.assertFalse(opened)
+        self.assertFalse(fake_st.session_state["pyst_reveal_card_1"])
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertTrue(any("Pergunta inicial" in m and "pyst-reveal-marker" in m for m in markdowns))
+        self.assertFalse(any("Resposta secreta" in m for m in markdowns))
+        self.assertEqual(fake_st.calls_named("button")[0].args[0], "Revelar resposta")
+
+        fake_st.button_clicks.add("pyst_reveal_card_1_btn")
+        toggled = renderer.reveal_card(
+            "Pergunta inicial",
+            "Resposta secreta",
+            key="card_1",
+        )
+        self.assertTrue(toggled)
+        self.assertTrue(fake_st.session_state["pyst_reveal_card_1"])
+        self.assertEqual(len(fake_st.calls_named("rerun")), 1)
+
+    def test_reveal_card_renders_sequence_callable_and_escapes_html(self) -> None:
+        fake_st = FakeStreamlit()
+        renderer = InteractiveRenderer(fake_st, PresentationConfig())
+
+        opened = renderer.reveal_card(
+            "Qual <tag>?",
+            ["Linha <b>1</b>", "Linha 2"],
+            initially_revealed=True,
+            hide_label="Fechar",
+            escape_html=True,
+            key="seq",
+        )
+        self.assertTrue(opened)
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertTrue(any("Qual &lt;tag&gt;?" in m for m in markdowns))
+        self.assertTrue(any("Linha &lt;b&gt;1&lt;/b&gt;" in m for m in markdowns))
+        self.assertEqual(fake_st.calls_named("button")[0].args[0], "Fechar")
+
+        called = []
+        renderer.reveal_card(
+            "Callable?",
+            lambda: called.append("ok"),
+            initially_revealed=True,
+            key="fn",
+        )
+        self.assertEqual(called, ["ok"])
 
 
 if __name__ == "__main__":

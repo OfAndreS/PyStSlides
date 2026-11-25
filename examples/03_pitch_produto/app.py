@@ -44,6 +44,13 @@ def main() -> None:
             title="Resultados em piloto",
             variant="success",
         )
+        deck.metrics(
+            [
+                ("MTTR Médio", "< 7 min", "Antes: 42 min em produção"),
+                ("Ruído de Alertas", "-85%", "Triagem automática por deploy"),
+                ("SLA Garantido", "99.99%", "Cobertura contínua multi-região"),
+            ]
+        )
 
         deck.topic("Principais Recursos da Plataforma", kicker="Plataforma")
         deck.image_gallery(

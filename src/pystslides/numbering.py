@@ -18,6 +18,7 @@ class SectionEntry:
     title: str
     formatted_title: str
     anchor: str
+    slide_index: int | None = None
 
 
 class SectionTracker:
@@ -48,7 +49,13 @@ class SectionTracker:
         self._entries.clear()
         self._used_anchors.clear()
 
-    def register_topic(self, title: str, *, numbered: bool | None = None) -> SectionEntry:
+    def register_topic(
+        self,
+        title: str,
+        *,
+        numbered: bool | None = None,
+        slide_index: int | None = None,
+    ) -> SectionEntry:
         """Registra um tópico principal (nível 1) e retorna sua entrada formatada."""
         use_numbering = self._auto_number if numbered is None else numbered
 
@@ -68,6 +75,7 @@ class SectionTracker:
             title=title,
             formatted_title=formatted,
             anchor=anchor,
+            slide_index=slide_index,
         )
         self._entries.append(entry)
         return entry
@@ -78,6 +86,7 @@ class SectionTracker:
         *,
         level: int = 2,
         numbered: bool | None = None,
+        slide_index: int | None = None,
     ) -> SectionEntry:
         """Registra um sub-tópico de nível >= 2 (ex.: 4.1, 5.1.1)."""
         if level < 2:
@@ -109,6 +118,7 @@ class SectionTracker:
             title=title,
             formatted_title=formatted,
             anchor=anchor,
+            slide_index=slide_index,
         )
         self._entries.append(entry)
         return entry

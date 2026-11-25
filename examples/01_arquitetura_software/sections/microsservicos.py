@@ -66,3 +66,14 @@ class MicroservicesPracticeSection(SlideSection):
                 ],
             }
         )
+
+        presentation.reveal_card(
+            prompt="Quando vale manter um Monólito Modular antes de extrair microsserviços?",
+            answer=(
+                "Enquanto as fronteiras de domínio ainda mudam com frequência ou o time é "
+                "pequeno: você preserva deploy simples e evita latência e falhas parciais de rede."
+            ),
+            title="Critério de Decisão",
+            kicker="Discussão",
+            key="arch_decision",
+        )

@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" fill="none">
-  <rect x="1" y="1" width="1198" height="518" rx="16" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="540" viewBox="0 0 1200 540" fill="none">
+  <rect x="1" y="1" width="1198" height="538" rx="16" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
 
   <!-- Kicker e título editorial -->
   <g transform="translate(56, 36)">
@@ -14,68 +14,71 @@
   <text x="56" y="84" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="30" font-weight="400" fill="#000000" letter-spacing="-0.9">Arquitetura Orientada a Objetos — PyStSlides</text>
 
   <!-- Fachada Presentation -->
-  <rect x="380" y="108" width="440" height="86" rx="12" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
-  <circle cx="408" cy="139" r="5" fill="#3f7bde"/>
-  <text x="422" y="145" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="21" font-weight="500" fill="#000000">Presentation (Fachada)</text>
-  <text x="404" y="172" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="400" fill="#52525b">Context Manager • split_slide • paginated • SlideSection</text>
+  <rect x="330" y="108" width="540" height="86" rx="12" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+  <circle cx="358" cy="139" r="5" fill="#3f7bde"/>
+  <text x="374" y="145" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="21" font-weight="500" fill="#000000">Presentation (Fachada)</text>
+  <text x="354" y="172" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="400" fill="#52525b">Context Manager • split_slide • paginated • new_slide • SlideSection</text>
 
-  <!-- Linhas conectoras limpas -->
+  <!-- Linhas conectoras limpas para 5 renderers -->
   <g stroke="#d4d4d8" stroke-width="1.8">
     <line x1="600" y1="194" x2="600" y2="224"/>
-    <line x1="185" y1="224" x2="1015" y2="224"/>
-    <line x1="185" y1="224" x2="185" y2="248"/>
-    <line x1="462" y1="224" x2="462" y2="248"/>
-    <line x1="738" y1="224" x2="738" y2="248"/>
-    <line x1="1015" y1="224" x2="1015" y2="248"/>
-    <line x1="185" y1="364" x2="185" y2="394"/>
-    <line x1="462" y1="364" x2="462" y2="394"/>
-    <line x1="738" y1="364" x2="738" y2="394"/>
-    <line x1="1015" y1="364" x2="1015" y2="394"/>
+    <line x1="150" y1="224" x2="1050" y2="224"/>
+    <line x1="150" y1="224" x2="150" y2="248"/>
+    <line x1="375" y1="224" x2="375" y2="248"/>
+    <line x1="600" y1="224" x2="600" y2="248"/>
+    <line x1="825" y1="224" x2="825" y2="248"/>
+    <line x1="1050" y1="224" x2="1050" y2="248"/>
+    <line x1="185" y1="372" x2="185" y2="404"/>
+    <line x1="462" y1="372" x2="462" y2="404"/>
+    <line x1="738" y1="372" x2="738" y2="404"/>
+    <line x1="1015" y1="372" x2="1015" y2="404"/>
   </g>
 
-  <!-- Camada intermediária: Renderers -->
-  <!-- TypographyRenderer -->
-  <rect x="64" y="248" width="242" height="116" rx="12" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-  <circle cx="88" cy="278" r="5" fill="#3f7bde"/>
-  <text x="102" y="283" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#000000">TypographyRenderer</text>
-  <text x="84" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13.5" fill="#52525b">cover • topic • subtopic</text>
-  <text x="84" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13.5" fill="#52525b">kicker • callout • TOC</text>
+  <!-- Camada intermediária: 5 Renderers -->
+  <rect x="46" y="248" width="208" height="124" rx="12" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="68" cy="278" r="5" fill="#3f7bde"/>
+  <text x="82" y="283" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="15.5" font-weight="500" fill="#000000">TypographyRenderer</text>
+  <text x="64" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">cover • topic • subtopic</text>
+  <text x="64" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">bullets • callout • TOC</text>
 
-  <!-- MediaRenderer -->
-  <rect x="341" y="248" width="242" height="116" rx="12" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-  <circle cx="365" cy="278" r="5" fill="#579568"/>
-  <text x="379" y="283" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#000000">MediaRenderer</text>
-  <text x="361" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13.5" fill="#52525b">image • image_gallery</text>
-  <text x="361" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13.5" fill="#52525b">mermaid • captions</text>
+  <rect x="271" y="248" width="208" height="124" rx="12" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="293" cy="278" r="5" fill="#579568"/>
+  <text x="307" y="283" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="15.5" font-weight="500" fill="#000000">MediaRenderer</text>
+  <text x="289" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">image • image_gallery</text>
+  <text x="289" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">mermaid (SVG ao vivo)</text>
 
-  <!-- CodeRenderer -->
-  <rect x="617" y="248" width="242" height="116" rx="12" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-  <circle cx="641" cy="278" r="5" fill="#e19b4d"/>
-  <text x="655" y="283" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#000000">CodeRenderer</text>
-  <text x="637" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13.5" fill="#52525b">code_block • output_box</text>
-  <text x="637" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13.5" fill="#52525b">live_code (st.echo)</text>
+  <rect x="496" y="248" width="208" height="124" rx="12" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="518" cy="278" r="5" fill="#e19b4d"/>
+  <text x="532" y="283" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="15.5" font-weight="500" fill="#000000">CodeRenderer</text>
+  <text x="514" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">code_block • output_box</text>
+  <text x="514" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">live_code (st.echo)</text>
 
-  <!-- DataRenderer -->
-  <rect x="894" y="248" width="242" height="116" rx="12" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-  <circle cx="918" cy="278" r="5" fill="#8461f0"/>
-  <text x="932" y="283" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#000000">DataRenderer</text>
-  <text x="914" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13.5" fill="#52525b">highlighted_text</text>
-  <text x="914" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13.5" fill="#52525b">styled_table • HighlightSpan</text>
+  <rect x="721" y="248" width="208" height="124" rx="12" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="743" cy="278" r="5" fill="#8461f0"/>
+  <text x="757" y="283" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="15.5" font-weight="500" fill="#000000">DataRenderer</text>
+  <text x="739" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">highlighted_text • metrics</text>
+  <text x="739" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">styled_table • HighlightSpan</text>
+
+  <rect x="946" y="248" width="208" height="124" rx="12" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="968" cy="278" r="5" fill="#3f7bde"/>
+  <text x="982" y="283" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="15.5" font-weight="500" fill="#000000">InteractiveRenderer</text>
+  <text x="964" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">reveal_card (flashcards)</text>
+  <text x="964" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">estado em session_state</text>
 
   <!-- Camada inferior: Core Services -->
-  <rect x="64" y="394" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
-  <text x="84" y="428" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#000000">SectionTracker</text>
-  <text x="84" y="454" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">Numeração hierárquica &amp; âncoras</text>
+  <rect x="64" y="404" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
+  <text x="84" y="438" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#000000">SectionTracker</text>
+  <text x="84" y="464" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">Numeração, âncoras &amp; slides</text>
 
-  <rect x="341" y="394" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
-  <text x="361" y="428" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#000000">AssetManager</text>
-  <text x="361" y="454" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">Resolução e validação de mídia</text>
+  <rect x="341" y="404" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
+  <text x="361" y="438" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#000000">AssetManager</text>
+  <text x="361" y="464" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">Resolução e 22 assets editoriais</text>
 
-  <rect x="617" y="394" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
-  <text x="637" y="428" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#000000">StyleInjector</text>
-  <text x="637" y="454" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">CSS global • DM Sans • Tema</text>
+  <rect x="617" y="404" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
+  <text x="637" y="438" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#000000">StyleInjector</text>
+  <text x="637" y="464" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">CSS global • DM Sans • Tema</text>
 
-  <rect x="894" y="394" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
-  <text x="914" y="428" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#000000">PresentationConfig</text>
-  <text x="914" y="454" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">Dataclasses de tema e paginação</text>
+  <rect x="894" y="404" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
+  <text x="914" y="438" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#000000">PresentationConfig</text>
+  <text x="914" y="464" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">Presets de tema &amp; paginação</text>
 </svg>

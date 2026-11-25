@@ -9,7 +9,7 @@ from pystslides.presentation import Presentation
 from pystslides.section import SlideSection
 from pystslides.styles import StyleInjector
 
-__version__ = "1.2.0"
+__version__ = "1.5.0"
 
 __all__ = [
     "AssetManager",

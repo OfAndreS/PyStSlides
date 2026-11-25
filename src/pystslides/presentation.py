@@ -10,8 +10,14 @@ from pystslides.assets import AssetManager
 from pystslides.components.base import create_columns, create_container
 from pystslides.components.code import CodeRenderer
 from pystslides.components.data import DataRenderer, HighlightSpan
+from pystslides.components.interactive import InteractiveRenderer
 from pystslides.components.media import ImageItem, MediaRenderer
-from pystslides.components.typography import CalloutVariant, TocLocation, TypographyRenderer
+from pystslides.components.typography import (
+    BulletMarker,
+    CalloutVariant,
+    TocLocation,
+    TypographyRenderer,
+)
 from pystslides.config import (
     PageLayout,
     PresentationConfig,
@@ -44,6 +50,13 @@ class _GatedStreamlit:
     def __init__(self, st_module: Any, is_active: Callable[[], bool]) -> None:
         self._st = st_module
         self._is_active = is_active
+
+    def is_active(self) -> bool:
+        """Indica se o slide atual está ativo para renderização."""
+        return self._is_active()
+
+    def rerun(self) -> Any:
+        return self._st.rerun()
 
     @property
     def sidebar(self) -> Any:
@@ -153,6 +166,7 @@ class Presentation:
         self._media = MediaRenderer(self._render_st, self._config, self._assets)
         self._code = CodeRenderer(self._render_st, self._config)
         self._data = DataRenderer(self._render_st, self._config)
+        self._interactive = InteractiveRenderer(self._render_st, self._config)
 
         self._initialized = False
         self._context_stack: ExitStack | None = None
@@ -236,33 +250,44 @@ class Presentation:
         if total_slides <= 1 or not hasattr(self._st, "button"):
             return
         self._active_slide = min(max(self._active_slide, 0), total_slides - 1)
-        self._st.markdown('<hr class="pyst-divider">', unsafe_allow_html=True)
-        prev_col, info_col, next_col = self._st.columns([1.0, 2.0, 1.0])
-        with prev_col:
-            if self._st.button(
-                "← Anterior",
-                disabled=self._active_slide <= 0,
-                key="pyst_slide_prev",
-                use_container_width=True,
-            ):
-                self._st.session_state["pyst_slide_index"] = self._active_slide - 1
-                if hasattr(self._st, "rerun"):
-                    self._st.rerun()
-        with info_col:
+        with create_container(self._st, border=False):
             self._st.markdown(
-                f'<div class="pyst-nav-indicator">{self._active_slide + 1} / {total_slides}</div>',
+                '<span class="pyst-pagination-marker" aria-hidden="true"></span>'
+                '<hr class="pyst-divider">',
                 unsafe_allow_html=True,
             )
-        with next_col:
-            if self._st.button(
-                "Próximo →",
-                disabled=self._active_slide >= total_slides - 1,
-                key="pyst_slide_next",
-                use_container_width=True,
-            ):
-                self._st.session_state["pyst_slide_index"] = self._active_slide + 1
-                if hasattr(self._st, "rerun"):
-                    self._st.rerun()
+            prev_col, info_col, next_col = self._st.columns([1.0, 2.0, 1.0])
+            with prev_col:
+                if self._st.button(
+                    "← Anterior",
+                    disabled=self._active_slide <= 0,
+                    key="pyst_slide_prev",
+                    use_container_width=True,
+                ):
+                    self._st.session_state["pyst_slide_index"] = self._active_slide - 1
+                    if hasattr(self._st, "rerun"):
+                        self._st.rerun()
+            with info_col:
+                self._st.markdown(
+                    f'<div class="pyst-nav-indicator">{self._active_slide + 1} / {total_slides}</div>',
+                    unsafe_allow_html=True,
+                )
+            with next_col:
+                if self._st.button(
+                    "Próximo →",
+                    disabled=self._active_slide >= total_slides - 1,
+                    key="pyst_slide_next",
+                    use_container_width=True,
+                ):
+                    self._st.session_state["pyst_slide_index"] = self._active_slide + 1
+                    if hasattr(self._st, "rerun"):
+                        self._st.rerun()
+
+    def new_slide(self, *, divider: bool = False) -> None:
+        """Inicia explicitamente um novo slide no modo paginado (ou divisor opcional)."""
+        self._advance_slide()
+        if divider and not self._config.paginated:
+            self._typography.divider()
 
     # ------------------------------------------------------------------
     # Tipografia, estrutura e navegação
@@ -287,7 +312,8 @@ class Presentation:
     ) -> None:
         """Renderiza o slide de capa com imagem abaixo ou em coluna lateral à direita."""
         self._advance_slide()
-        if image is not None and image_position == "right" and title:
+        has_header = bool(title or subtitle or author or date)
+        if image is not None and image_position == "right":
             effective_kicker = kicker if kicker is not None else self._config.brand_label
             if effective_kicker:
                 self._typography.kicker(effective_kicker)
@@ -298,18 +324,19 @@ class Presentation:
                 vertical_alignment=v_align,
             )
             with left_col:
-                self._typography.cover_header(
-                    title=title,
-                    subtitle=subtitle,
-                    author=author,
-                    date=date,
-                    kicker="",
-                )
+                if has_header:
+                    self._typography.cover_header(
+                        title=title,
+                        subtitle=subtitle,
+                        author=author,
+                        date=date,
+                        kicker="",
+                    )
             with right_col:
                 self._media.image(image, caption=caption, width=image_width)
             return
 
-        if title:
+        if has_header:
             self._typography.cover_header(
                 title=title,
                 subtitle=subtitle,
@@ -330,11 +357,13 @@ class Presentation:
     ) -> SectionEntry:
         """Renderiza um tópico principal em estilo editorial limpo."""
         self._advance_slide()
+        slide_idx = max(self._slide_index, 0) if self._config.paginated else None
         return self._typography.topic(
             title,
             numbered=numbered,
             spacing_after_px=spacing_after_px,
             kicker=kicker,
+            slide_index=slide_idx,
         )
 
     def split_slide(
@@ -355,6 +384,7 @@ class Presentation:
         """Renderiza um slide editorial de duas colunas (texto e ilustração/mídia)."""
         self._advance_slide()
         self._in_split_slide = True
+        slide_idx = max(self._slide_index, 0) if self._config.paginated else None
         try:
             effective_kicker = (
                 kicker
@@ -397,11 +427,21 @@ class Presentation:
 
             with text_col:
                 if not title_bottom and title:
-                    entry = self._typography.topic(title, numbered=numbered, kicker="")
+                    entry = self._typography.topic(
+                        title,
+                        numbered=numbered,
+                        kicker="",
+                        slide_index=slide_idx,
+                    )
                 _render_body()
                 if title_bottom and title:
                     self._typography.spacer(24)
-                    entry = self._typography.topic(title, numbered=numbered, kicker="")
+                    entry = self._typography.topic(
+                        title,
+                        numbered=numbered,
+                        kicker="",
+                        slide_index=slide_idx,
+                    )
 
             with media_col:
                 if callable(media):
@@ -422,11 +462,13 @@ class Presentation:
         numbered: bool | None = None,
     ) -> SectionEntry:
         """Renderiza um sub-tópico hierárquico (ex.: 1.1, 1.1.1)."""
+        slide_idx = max(self._slide_index, 0) if self._config.paginated else None
         return self._typography.subtopic(
             title,
             level=level,
             spacing_px=spacing_px,
             numbered=numbered,
+            slide_index=slide_idx,
         )
 
     def paragraph(
@@ -445,15 +487,39 @@ class Presentation:
             escape_html=escape_html,
         )
 
+    def bullets(
+        self,
+        items: Sequence[str],
+        *,
+        marker: BulletMarker = "asterisk",
+        accent_color: str | None = None,
+        font_size: str | None = None,
+        escape_html: bool = False,
+    ) -> None:
+        """Renderiza uma lista editorial com marcadores geométricos coloridos."""
+        self._typography.bullets(
+            items,
+            marker=marker,
+            accent_color=accent_color,
+            font_size=font_size,
+            escape_html=escape_html,
+        )
+
     def callout(
         self,
         message: str,
         *,
         title: str | None = None,
         variant: CalloutVariant = "info",
+        escape_html: bool = True,
     ) -> None:
         """Renderiza um card de destaque/observação."""
-        self._typography.callout(message, title=title, variant=variant)
+        self._typography.callout(
+            message,
+            title=title,
+            variant=variant,
+            escape_html=escape_html,
+        )
 
     def divider(self, *, color: str | None = None, thickness: str | None = None) -> None:
         """Renderiza uma linha divisória estilizada."""
@@ -515,9 +581,15 @@ class Presentation:
         *,
         bordered: bool = True,
         caption: str | None = None,
+        height: int | None = None,
     ) -> str:
         """Renderiza um diagrama Mermaid formatado dentro de um container."""
-        return self._media.mermaid(diagram, bordered=bordered, caption=caption)
+        return self._media.mermaid(
+            diagram,
+            bordered=bordered,
+            caption=caption,
+            height=height,
+        )
 
     # ------------------------------------------------------------------
     # Código e demonstrações
@@ -580,6 +652,46 @@ class Presentation:
     ) -> str:
         """Renderiza uma tabela HTML estilizada com destaques opcionais por célula."""
         return self._data.styled_table(data, highlights=highlights)
+
+    def metrics(
+        self,
+        items: Sequence[tuple[str, str] | tuple[str, str, str]],
+        *,
+        columns: int | None = None,
+    ) -> str:
+        """Renderiza uma grade editorial de cartões de métricas/KPIs."""
+        return self._data.metrics(items, columns=columns)
+
+    # ------------------------------------------------------------------
+    # Componentes interativos
+    # ------------------------------------------------------------------
+    def reveal_card(
+        self,
+        prompt: str | None = None,
+        answer: str | Sequence[str] | Callable[[], None] = "",
+        *,
+        title: str | None = None,
+        kicker: str | None = None,
+        reveal_label: str = "Revelar resposta",
+        hide_label: str = "Ocultar resposta",
+        initially_revealed: bool = False,
+        accent_color: str | None = None,
+        key: str | None = None,
+        escape_html: bool = False,
+    ) -> bool:
+        """Renderiza um cartão de revelação (flashcard) com estado persistente."""
+        return self._interactive.reveal_card(
+            prompt=prompt,
+            answer=answer,
+            title=title,
+            kicker=kicker,
+            reveal_label=reveal_label,
+            hide_label=hide_label,
+            initially_revealed=initially_revealed,
+            accent_color=accent_color,
+            key=key,
+            escape_html=escape_html,
+        )
 
     # ------------------------------------------------------------------
     # Modularização de seções

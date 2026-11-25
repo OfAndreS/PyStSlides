@@ -403,6 +403,225 @@ h1.pyst-topic-title {{
     line-height: 1.75;
     white-space: nowrap;
 }}
+
+.pyst-reveal-marker {{
+    display: none;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-reveal-marker),
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] .pyst-reveal-marker) {{
+    background-color: {t.card_background} !important;
+    border: {t.card_border_width} solid {t.card_border_color} !important;
+    border-radius: {t.card_border_radius} !important;
+    padding: 22px 24px !important;
+    margin: 20px 0 24px 0 !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-reveal-marker) [data-testid="stButton"] button,
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] .pyst-reveal-marker) [data-testid="stButton"] button {{
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1.5px solid #000000 !important;
+    border-radius: 999px !important;
+    padding: 6px 18px !important;
+    font-family: {font_stack} !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.01em !important;
+    transition: background-color 0.15s ease, color 0.15s ease !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-reveal-marker) [data-testid="stButton"] button:hover,
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] .pyst-reveal-marker) [data-testid="stButton"] button:hover {{
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}}
+
+.pyst-reveal-header {{
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: {t.text_color};
+    margin-bottom: 10px;
+}}
+
+.pyst-reveal-kicker {{
+    font-size: 13px;
+    font-weight: 400;
+    color: {t.muted_text_color};
+    margin-left: auto;
+}}
+
+.stMarkdown p.pyst-reveal-prompt,
+p.pyst-reveal-prompt {{
+    font-size: 22px !important;
+    font-weight: 400 !important;
+    line-height: 1.48 !important;
+    letter-spacing: -0.015em !important;
+    color: {t.text_color} !important;
+    max-width: {t.paragraph_max_width} !important;
+    margin: 0 0 12px 0 !important;
+}}
+
+.pyst-reveal-answer {{
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+    color: {t.text_color};
+    background-color: #fafafa;
+    border-left: 3px solid {t.primary_color};
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    margin-top: 6px;
+}}
+
+.pyst-reveal-answer p {{
+    font-size: 19px !important;
+    line-height: 1.55 !important;
+    margin: 0 0 10px 0 !important;
+}}
+
+.pyst-reveal-answer p:last-child {{
+    margin-bottom: 0 !important;
+}}
+
+.stMarkdown ul.pyst-bullets,
+ul.pyst-bullets {{
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 0 1.4rem 0 !important;
+    max-width: {t.paragraph_max_width} !important;
+    font-size: {t.paragraph_font_size} !important;
+    line-height: {t.paragraph_line_height} !important;
+    letter-spacing: {t.paragraph_letter_spacing} !important;
+    color: {t.text_color} !important;
+}}
+
+.pyst-bullet-item {{
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 0.75rem;
+}}
+
+.pyst-bullet-item:last-child {{
+    margin-bottom: 0;
+}}
+
+.pyst-bullet-marker {{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.34em;
+    min-width: 16px;
+}}
+
+.pyst-bullet-dot {{
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    display: inline-block;
+}}
+
+.pyst-bullet-dash {{
+    width: 14px;
+    height: 2.5px;
+    border-radius: 2px;
+    display: inline-block;
+}}
+
+.pyst-metrics-grid {{
+    display: grid;
+    gap: 16px;
+    margin: 16px 0 24px 0;
+}}
+
+.pyst-metric-card {{
+    background-color: {t.card_background};
+    border: {t.card_border_width} solid {t.card_border_color};
+    border-radius: {t.card_border_radius};
+    padding: 18px 20px;
+}}
+
+.pyst-metric-accent {{
+    width: 28px;
+    height: 3.5px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+}}
+
+.pyst-metric-label {{
+    font-size: 14px;
+    font-weight: 500;
+    color: {t.muted_text_color};
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+}}
+
+.pyst-metric-value {{
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: {t.text_color};
+}}
+
+.pyst-metric-note {{
+    font-size: 14px;
+    color: {t.muted_text_color};
+    margin-top: 8px;
+}}
+
+.pyst-pagination-marker,
+.pyst-toc-nav-marker {{
+    display: none;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-pagination-marker) [data-testid="stButton"] button,
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] .pyst-pagination-marker) [data-testid="stButton"] button {{
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1.5px solid #000000 !important;
+    border-radius: 999px !important;
+    font-family: {font_stack} !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.01em !important;
+    transition: background-color 0.15s ease, color 0.15s ease !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-pagination-marker) [data-testid="stButton"] button:hover:not(:disabled),
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] .pyst-pagination-marker) [data-testid="stButton"] button:hover:not(:disabled) {{
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-pagination-marker) [data-testid="stButton"] button:disabled {{
+    border-color: #d4d4d8 !important;
+    color: #a1a1aa !important;
+}}
+
+[data-testid="stSidebar"] [data-testid="stVerticalBlock"]:has(.pyst-toc-nav-marker) [data-testid="stButton"] button {{
+    background: transparent !important;
+    border: none !important;
+    color: {t.muted_text_color} !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    padding: 4px 6px !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    min-height: 0 !important;
+}}
+
+[data-testid="stSidebar"] [data-testid="stVerticalBlock"]:has(.pyst-toc-nav-marker) [data-testid="stButton"] button:hover {{
+    color: {t.text_color} !important;
+    background-color: #f4f4f5 !important;
+}}
 </style>"""
 
     def inject(self, st_module: Any, *, force: bool = False) -> bool:

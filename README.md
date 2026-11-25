@@ -52,10 +52,10 @@
 |---|
 | <p align="justify"> Configuração de Tema e Layout Centralizado: <br> <br> - Configura automaticamente a página do Streamlit, injeta fontes e CSS global uma única vez e centraliza o conteúdo via context manager (`with Presentation(...) as deck:`). </p> |
 | <p align="justify"> Numeração Hierárquica e Sumário Automático: <br> <br> - Gera numeração automática para tópicos (`01 ) - Título`) e sub-tópicos multinível (`1.1 )`, `1.1.1 )`), além de registrar âncoras e montar um sumário clicável na barra lateral. </p> |
-| <p align="justify"> Tipografia, Capas e Callouts: <br> <br> - Padroniza parágrafos estilizados, cabeçalhos de capa, divisores horizontais, espaçamentos verticais em pixels e caixas de destaque (`info`, `success`, `warning`, `danger`). </p> |
+| <p align="justify"> Tipografia, Capas, Listas e Callouts: <br> <br> - Padroniza parágrafos, listas editoriais com marcadores geométricos (`bullets`), cabeçalhos de capa, divisores horizontais, espaçamentos em pixels e caixas de destaque (`info`, `success`, `warning`, `danger`). </p> |
 | <p align="justify"> Gerenciamento de Assets e Galerias de Imagens: <br> <br> - Resolve e valida caminhos de mídia a partir de um diretório base via `AssetManager`, oferecendo renderização de imagem única com borda/legenda e galerias em pilha vertical ou grade de colunas. </p> |
-| <p align="justify"> Diagramas Mermaid e Demonstrações de Código: <br> <br> - Remove indentação automaticamente em diagramas Mermaid e blocos de código, encapsulando resultados em containers estilizados e fornecendo suporte a `st.echo` (`live_code`). </p> |
-| <p align="justify"> Componentes Visuais de Dados Genéricos: <br> <br> - Disponibiliza marcação de trechos em texto (`HighlightSpan` / `highlighted_text`) com resolução automática de sobreposições e tabelas HTML estilizadas com efeito hover e destaques opcionais por célula. </p> |
+| <p align="justify"> Diagramas Mermaid e Demonstrações de Código: <br> <br> - Renderiza diagramas Mermaid em SVG diretamente no Streamlit, remove indentação automática em blocos de código, encapsula saídas estilizadas e fornece suporte a `st.echo` (`live_code`). </p> |
+| <p align="justify"> Componentes Visuais de Dados e Interatividade: <br> <br> - Disponibiliza marcação de trechos em texto (`HighlightSpan` / `highlighted_text`), cartões de KPIs (`metrics`), tabelas HTML com bordas arredondadas (`styled_table`) e cartões de revelação interativos (`reveal_card`). </p> |
 | <p align="justify"> Modularização com `SlideSection`: <br> <br> - Permite dividir apresentações extensas em classes/módulos independentes herdando de `SlideSection`, mantendo compartilhados o tema, a numeração e os assets. </p> |
 
 <br>
@@ -101,9 +101,10 @@ PyStSlides/
 │           ├── __init__.py
 │           ├── base.py              # BaseComponent e utilitários de container/colunas.
 │           ├── code.py              # CodeRenderer: blocos de código, output_box e live_code.
-│           ├── data.py              # DataRenderer, HighlightSpan e tabelas HTML estilizadas.
-│           ├── media.py             # MediaRenderer: imagens, galerias e diagramas Mermaid.
-│           └── typography.py        # TypographyRenderer: tópicos, textos, callouts e TOC.
+│           ├── data.py              # DataRenderer, HighlightSpan, metrics e tabelas HTML.
+│           ├── interactive.py       # InteractiveRenderer: reveal_card (flashcards).
+│           ├── media.py             # MediaRenderer: imagens, galerias e Mermaid em SVG.
+│           └── typography.py        # TypographyRenderer: tópicos, bullets, callouts e TOC.
 ├── tests/
 │   ├── fakes.py                     # Dublê do Streamlit para testes unitários isolados.
 │   ├── test_assets.py               # Testes do AssetManager e exportação de assets.
@@ -235,24 +236,39 @@ git+https://github.com/OfAndreS/PyStSlides.git
 3 ) **Crie o ponto de entrada em `src/app.py`:**
 
 ```python
-from pathlib import Path
-from pystslides import HighlightSpan, Presentation
+from pystslides import HighlightSpan, Presentation, get_editorial_assets_dir
 
-ASSETS = Path(__file__).resolve().parent.parent / "data"
+with Presentation(
+    title="Data Discovery",
+    assets_dir=get_editorial_assets_dir(),
+    auto_number=False,
+    brand_label="Data Discovery",
+    show_toc=True,
+) as deck:
+    deck.cover(
+        title="Data Discovery",
+        subtitle="Mapeamento e classificação de dados sensíveis",
+        image="discovery_cover.png",
+        image_position="right",
+    )
 
-with Presentation(title="Data Discovery", assets_dir=ASSETS, show_toc=True) as deck:
-    deck.cover(image="DataDiscovery.png")
-
-    deck.topic("Implementação ideal do Data Discovery")
-    deck.image("Mermaid.png")
-
-    deck.topic("Métodos utilizados")
-    deck.subtopic("Denylists")
-    deck.paragraph("Essa abordagem usa listas de palavras bloqueadas...")
+    deck.topic("Implementação do Data Discovery")
+    deck.bullets(
+        [
+            "Descoberta automática em bancos e nuvem",
+            "Classificação com modelos e regras",
+        ]
+    )
+    deck.mermaid("graph LR\n    Entrada --> Classificador --> Anonimizacao")
 
     deck.highlighted_text(
         "Contato: suporte@exemplo.com",
         spans=[HighlightSpan.from_score(9, 28, "EMAIL", 0.95)],
+    )
+    deck.reveal_card(
+        prompt="Por que mascarar antes de enviar prompts para LLMs externos?",
+        answer="Evita vazamento de dados pessoais (PII) para terceiros.",
+        title="Privacidade na prática",
     )
 ```
 

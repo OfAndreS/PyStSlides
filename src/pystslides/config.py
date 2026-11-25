@@ -68,6 +68,34 @@ class PresentationTheme:
     table_hover_bg: str = "#fafafa"
     column_ratios: tuple[float, float, float] = (0.75, 8.5, 0.75)
 
+    @classmethod
+    def editorial(cls) -> PresentationTheme:
+        """Retorna o tema editorial padrão (DM Sans, alto contraste e bordas #000000)."""
+        return cls()
+
+    @classmethod
+    def compact(cls) -> PresentationTheme:
+        """Retorna uma variação mais compacta ideal para telas menores ou conteúdo denso."""
+        return cls(
+            cover_title_font_size="60px",
+            cover_subtitle_font_size="20px",
+            topic_font_size="44px",
+            subtopic_font_size="28px",
+            paragraph_font_size="20px",
+            table_font_size="16px",
+            default_subtopic_spacing_px=32,
+        )
+
+    @classmethod
+    def classic(cls) -> PresentationTheme:
+        """Retorna uma variação clássica com divisores em tópicos e callouts com barra lateral."""
+        return cls(
+            topic_dividers=True,
+            callout_minimal=False,
+            table_rounded=False,
+            divider_color="#3f7bde",
+        )
+
 
 @dataclass
 class PresentationConfig:

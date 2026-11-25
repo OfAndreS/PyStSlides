@@ -30,11 +30,19 @@ class _DummyContext:
 
 
 class _FakeSidebar:
-    def __init__(self, recorder: list[RecordedCall]) -> None:
+    def __init__(self, recorder: list[RecordedCall], button_clicks: set[str]) -> None:
         self._recorder = recorder
+        self._button_clicks = button_clicks
 
     def markdown(self, body: str, **kwargs: Any) -> None:
         self._recorder.append(RecordedCall("sidebar.markdown", (body,), kwargs))
+
+    def button(self, label: str, **kwargs: Any) -> bool:
+        self._recorder.append(RecordedCall("sidebar.button", (label,), kwargs))
+        key = kwargs.get("key")
+        if key and key in self._button_clicks:
+            return True
+        return label in self._button_clicks
 
 
 class FakeStreamlit:
@@ -42,7 +50,8 @@ class FakeStreamlit:
 
     def __init__(self) -> None:
         self.calls: list[RecordedCall] = []
-        self.sidebar = _FakeSidebar(self.calls)
+        self.button_clicks: set[str] = set()
+        self.sidebar = _FakeSidebar(self.calls, self.button_clicks)
         self.session_state: dict[str, Any] = {}
 
     def set_page_config(self, **kwargs: Any) -> None:
@@ -65,7 +74,10 @@ class FakeStreamlit:
 
     def button(self, label: str, **kwargs: Any) -> bool:
         self.calls.append(RecordedCall("button", (label,), kwargs))
-        return False
+        key = kwargs.get("key")
+        if key and key in self.button_clicks:
+            return True
+        return label in self.button_clicks
 
     def rerun(self) -> None:
         self.calls.append(RecordedCall("rerun"))

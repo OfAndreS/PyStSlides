@@ -291,6 +291,39 @@ deck.styled_table(
   <img width="880" alt="Texto marcado, callout, tabela estilizada e live_code" src="./assets/tutorial/step_03_dados_codigo.png" />
 </div>
 
+5 ) **Cartões de revelação interativos (`reveal_card`), listas (`bullets`) e KPIs (`metrics`):**
+
+Para perguntas ao vivo, flashcards ou ocultação de spoilers antes da explicação oral, use `deck.reveal_card(...)` (suporta texto, lista de parágrafos ou função `callable` com código/gráficos), além de `deck.bullets([...])` e `deck.metrics([...])`:
+
+```python
+deck.bullets(
+    [
+        "Desacoplamento temporal via eventos",
+        "Contratos imutáveis entre domínios",
+    ]
+)
+
+deck.metrics(
+    [
+        ("MTTR Médio", "< 7 min", "Redução de 83% em piloto"),
+        ("Cobertura", "99.4%", "Bancos, buckets e endpoints"),
+    ]
+)
+
+deck.reveal_card(
+    prompt="Por que evitar banco de dados compartilhado entre microsserviços?",
+    answer="Cria acoplamento temporal e de esquema, impedindo deploys independentes.",
+    title="Flashcard de Arquitetura",
+    kicker="Pergunta 01",
+    reveal_label="Revelar resposta",
+    hide_label="Ocultar resposta",
+)
+```
+
+<div align="center">
+  <img width="880" alt="Cartão de revelação interativo no estilo editorial" src="./assets/tutorial/step_03_reveal_card.png" />
+</div>
+
 </details>
 
 <br>
@@ -376,10 +409,12 @@ tema_customizado = PresentationTheme(
     google_font_url="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap",
     paragraph_font_size="22px",
     paragraph_max_width="68ch",
+    divider_color="#3f7bde",
     topic_dividers=True,
     callout_minimal=False,
     clean_chrome=True,
 )
+# Ou use um preset pronto: PresentationTheme.editorial() | .compact() | .classic()
 
 with Presentation(title="Minha Apresentação", theme=tema_customizado) as deck:
     deck.topic("Tema Personalizado")
@@ -402,6 +437,9 @@ with Presentation(title="Minha Apresentação", theme=tema_customizado) as deck:
 | `topic_font_size` | `"54px"` | Tamanho dos títulos de tópico (`H1`). |
 | `paragraph_font_size` | `"24px"` | Tamanho base do texto corrido e cards. |
 | `paragraph_max_width` | `"62ch"` | Limita a largura da linha para leitura confortável. |
+| `table_font_size` | `"18px"` | Tamanho da fonte das tabelas HTML. |
+| `code_font_size` | `"16px"` | Tamanho da fonte dos blocos de código. |
+| `card_border_color` | `"#000000"` | Cor da borda de cards, callouts, tabelas, KPIs e `reveal_card`. |
 | `topic_dividers` | `False` | Adiciona divisores horizontais acima e abaixo de cada tópico. |
 | `callout_minimal` | `True` | Usa card branco com borda `#000000` (`1.5px`) e asterisco colorido em vez de barra lateral. |
 | `table_rounded` | `True` | Renderiza tabela editorial com bordas arredondadas `#000000` (`12px`) em vez de tabela aberta. |

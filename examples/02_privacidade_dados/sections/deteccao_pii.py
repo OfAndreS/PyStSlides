@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import streamlit as st
+
 from pystslides import HighlightLevel, HighlightSpan, Presentation, SlideSection
 
 
@@ -17,6 +19,14 @@ class PiiDetectionSection(SlideSection):
             "detectada, colorindo automaticamente conforme a pontuação de confiança."
         )
 
+        high_threshold = st.slider(
+            "Limiar mínimo para confiança ALTA (verde)",
+            min_value=0.55,
+            max_value=0.98,
+            value=0.75,
+            step=0.05,
+        )
+
         email_sample = (
             "Olá RH, sou Eduardo Pereira Silva de Curitiba. "
             "Meu telefone é (41) 98765-1234, e-mail eduardo@empresa.com.br "
@@ -24,7 +34,13 @@ class PiiDetectionSection(SlideSection):
         )
         def span_for(substring: str, label: str, score: float) -> HighlightSpan:
             start = email_sample.index(substring)
-            return HighlightSpan.from_score(start, start + len(substring), label, score)
+            return HighlightSpan.from_score(
+                start,
+                start + len(substring),
+                label,
+                score,
+                high_threshold=high_threshold,
+            )
 
         spans = [
             span_for("Eduardo Pereira Silva", "PERSON", 0.94),
@@ -82,4 +98,15 @@ class PiiDetectionSection(SlideSection):
             f"**Original:** `{texto}`",
             f"**Protegido:** `{mascarado}`",
             as_markdown=True,
+        )
+
+        presentation.reveal_card(
+            prompt="Por que não depender apenas de expressões regulares em pipelines de LGPD?",
+            answer=(
+                "Regex captura padrões rígidos como CPF e e-mail, mas precisa ser combinada "
+                "com modelos de NER e contexto para detectar nomes, cargos e dados não estruturados."
+            ),
+            title="Boas práticas de detecção",
+            kicker="LGPD",
+            key="lgpd_regex_vs_ner",
         )

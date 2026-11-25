@@ -42,11 +42,31 @@ class ArchitectureDemoSection(SlideSection):
 
         presentation.styled_table(
             {
-                "Componente": ["TypographyRenderer", "MediaRenderer", "DataRenderer"],
+                "Componente": ["TypographyRenderer", "MediaRenderer", "DataRenderer", "InteractiveRenderer"],
                 "Responsabilidade": [
-                    "Tópicos, sub-tópicos, parágrafos e TOC",
-                    "Imagens, galerias e diagramas Mermaid",
-                    "Destaques em texto e tabelas estilizadas",
+                    "Tópicos, sub-tópicos, listas, callouts e TOC",
+                    "Imagens, galerias e diagramas Mermaid em SVG",
+                    "Destaques em texto, KPIs e tabelas estilizadas",
+                    "Cartões de revelação interativos com session_state",
                 ],
             }
+        )
+
+        presentation.subtopic("Cartão de revelação ao vivo")
+        presentation.reveal_card(
+            prompt="Como reutilizar seções inteiras entre apresentações diferentes?",
+            answer=lambda: presentation.code_block(
+                """
+                class MinhaSecao(SlideSection):
+                    title = "Arquitetura"
+                    def render(self, deck: Presentation) -> None:
+                        deck.bullets(["Modular", "Tipado", "Reutilizável"])
+                """,
+                language="python",
+            ),
+            title="Modularização com SlideSection",
+            kicker="Flashcard",
+            reveal_label="Revelar código",
+            hide_label="Ocultar código",
+            key="demo_reveal",
         )

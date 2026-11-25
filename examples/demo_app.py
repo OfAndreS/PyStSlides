@@ -6,6 +6,7 @@ Execute com:
 
 from __future__ import annotations
 
+import streamlit as st
 from sections.demo_section import ArchitectureDemoSection
 
 from pystslides import Presentation, get_editorial_assets_dir
@@ -15,11 +16,13 @@ ASSETS_DIR = get_editorial_assets_dir()
 
 
 def main() -> None:
+    paginated_mode = st.sidebar.toggle("Modo paginado", value=False)
     with Presentation(
         title="PyStSlides — Apresentação de Exemplo",
         assets_dir=ASSETS_DIR,
         auto_number=False,
         brand_label="PyStSlides",
+        paginated=paginated_mode,
         show_toc=True,
     ) as deck:
         deck.cover(
@@ -59,6 +62,13 @@ def main() -> None:
         deck.paragraph(
             "Os tópicos e sub-tópicos suportam numeração automática ou títulos editoriais "
             "limpos, facilitando reordenar slides sem quebrar a apresentação."
+        )
+        deck.bullets(
+            [
+                "Tipografia editorial configurada em um único tema (`PresentationTheme`).",
+                "Sumário lateral com navegação direta mesmo no modo paginado.",
+                "Componentes interativos como cartões de revelação (`reveal_card`).",
+            ]
         )
 
         deck.subtopic("Exemplo de código em bloco")

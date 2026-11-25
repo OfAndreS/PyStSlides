@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import html
-from typing import Any, Literal
+from typing import Any, Literal, Sequence
 
 from pystslides.components.base import BaseComponent
 from pystslides.config import PresentationConfig, TextAlign
@@ -11,6 +11,7 @@ from pystslides.numbering import SectionEntry, SectionTracker
 
 
 CalloutVariant = Literal["info", "success", "warning", "danger", "neutral"]
+BulletMarker = Literal["asterisk", "dot", "dash"]
 TocLocation = Literal["sidebar", "main"]
 
 _CALLOUT_STYLES: dict[CalloutVariant, tuple[str, str, str]] = {
@@ -47,13 +48,6 @@ class TypographyRenderer(BaseComponent):
     ) -> None:
         super().__init__(st_module, config)
         self._tracker = tracker
-        self._kicker_index = 0
-
-    def _next_accent_color(self) -> str:
-        palette = self.theme.accent_colors or (self.theme.primary_color,)
-        color = palette[self._kicker_index % len(palette)]
-        self._kicker_index += 1
-        return color
 
     def kicker(self, label: str, *, accent_color: str | None = None) -> None:
         """Renderiza o cabeçalho discreto no topo esquerdo com ícone geométrico colorido."""
@@ -97,7 +91,7 @@ class TypographyRenderer(BaseComponent):
 
     def cover_header(
         self,
-        title: str,
+        title: str | None = None,
         *,
         subtitle: str | None = None,
         author: str | None = None,
@@ -117,7 +111,9 @@ class TypographyRenderer(BaseComponent):
         if effective_kicker:
             self.kicker(effective_kicker)
 
-        parts = [f'<h1 class="pyst-cover-title">{html.escape(title)}</h1>']
+        parts: list[str] = []
+        if title:
+            parts.append(f'<h1 class="pyst-cover-title">{html.escape(title)}</h1>')
         if subtitle:
             parts.append(f'<div class="pyst-cover-subtitle">{html.escape(subtitle)}</div>')
 
@@ -125,10 +121,11 @@ class TypographyRenderer(BaseComponent):
         if meta_items:
             parts.append(f'<div class="pyst-cover-meta">{" • ".join(meta_items)}</div>')
 
-        self._st.markdown(
-            f'<div class="pyst-cover">{"".join(parts)}</div>',
-            unsafe_allow_html=True,
-        )
+        if parts:
+            self._st.markdown(
+                f'<div class="pyst-cover">{"".join(parts)}</div>',
+                unsafe_allow_html=True,
+            )
 
     def topic(
         self,
@@ -137,9 +134,10 @@ class TypographyRenderer(BaseComponent):
         numbered: bool | None = None,
         spacing_after_px: int = 0,
         kicker: str | None = None,
+        slide_index: int | None = None,
     ) -> SectionEntry:
         """Renderiza um tópico principal em estilo editorial limpo com numeração opcional."""
-        entry = self._tracker.register_topic(title, numbered=numbered)
+        entry = self._tracker.register_topic(title, numbered=numbered, slide_index=slide_index)
         self._st.markdown(f'<div id="{entry.anchor}"></div>', unsafe_allow_html=True)
 
         effective_kicker = (
@@ -173,9 +171,15 @@ class TypographyRenderer(BaseComponent):
         level: int = 2,
         spacing_px: int | None = None,
         numbered: bool | None = None,
+        slide_index: int | None = None,
     ) -> SectionEntry:
         """Renderiza um sub-tópico hierárquico com espaçamento superior padronizado."""
-        entry = self._tracker.register_subtopic(title, level=level, numbered=numbered)
+        entry = self._tracker.register_subtopic(
+            title,
+            level=level,
+            numbered=numbered,
+            slide_index=slide_index,
+        )
         effective_spacing = (
             self.theme.default_subtopic_spacing_px if spacing_px is None else spacing_px
         )
@@ -213,16 +217,56 @@ class TypographyRenderer(BaseComponent):
             unsafe_allow_html=True,
         )
 
+    def bullets(
+        self,
+        items: Sequence[str],
+        *,
+        marker: BulletMarker = "asterisk",
+        accent_color: str | None = None,
+        font_size: str | None = None,
+        escape_html: bool = False,
+    ) -> None:
+        """Renderiza uma lista editorial limpa com marcadores geométricos coloridos."""
+        if not items:
+            return
+        palette = self.theme.accent_colors or (self.theme.primary_color,)
+        list_style = f' style="font-size: {font_size};"' if font_size else ""
+        rows: list[str] = []
+        for idx, item in enumerate(items):
+            color = accent_color or palette[idx % len(palette)]
+            if marker == "asterisk":
+                marker_html = _build_asterisk_svg(color, size=14)
+            elif marker == "dot":
+                marker_html = (
+                    f'<span class="pyst-bullet-dot" style="background-color: {color};"></span>'
+                )
+            else:
+                marker_html = (
+                    f'<span class="pyst-bullet-dash" style="background-color: {color};"></span>'
+                )
+            content = html.escape(item) if escape_html else item
+            rows.append(
+                f'<li class="pyst-bullet-item">'
+                f'<span class="pyst-bullet-marker" aria-hidden="true">{marker_html}</span>'
+                f'<span>{content}</span></li>'
+            )
+        self._st.markdown(
+            f'<ul class="pyst-bullets"{list_style}>{"".join(rows)}</ul>',
+            unsafe_allow_html=True,
+        )
+
     def callout(
         self,
         message: str,
         *,
         title: str | None = None,
         variant: CalloutVariant = "info",
+        escape_html: bool = True,
     ) -> None:
         """Renderiza uma caixa de destaque estilizada para notas, alertas ou dicas."""
         bg_color, text_color, accent_color = _CALLOUT_STYLES[variant]
         icon_svg = _build_asterisk_svg(accent_color, size=15)
+        body_text = html.escape(message) if escape_html else message
         if self.theme.callout_minimal:
             header_html = (
                 f'<div class="pyst-callout-header">'
@@ -232,12 +276,12 @@ class TypographyRenderer(BaseComponent):
                 else ""
             )
             body_html = (
-                f"<div>{html.escape(message)}</div>"
+                f"<div>{body_text}</div>"
                 if title
                 else (
                     f'<div style="display:flex;align-items:flex-start;gap:10px;">'
                     f'<span class="pyst-callout-icon" style="margin-top:4px;">{icon_svg}</span>'
-                    f"<span>{html.escape(message)}</span></div>"
+                    f"<span>{body_text}</span></div>"
                 )
             )
             markup = f'<div class="pyst-callout">{header_html}{body_html}</div>'
@@ -249,11 +293,13 @@ class TypographyRenderer(BaseComponent):
                 if title
                 else ""
             )
+            radius = self.theme.card_border_radius
             markup = (
                 f'<div class="pyst-callout" '
                 f'style="background-color: {bg_color}; color: {text_color}; '
-                f'border: none; border-left: 4px solid {accent_color};">'
-                f"{title_html}<div>{html.escape(message)}</div></div>"
+                f"border: none; border-left: 4px solid {accent_color}; "
+                f'border-radius: 0 {radius} {radius} 0;">'
+                f"{title_html}<div>{body_text}</div></div>"
             )
         self._st.markdown(markup, unsafe_allow_html=True)
 
@@ -275,6 +321,34 @@ class TypographyRenderer(BaseComponent):
             lines.append(f"{indent}- [{entry.formatted_title}](#{entry.anchor})")
 
         toc_markdown = "\n".join(lines)
+
+        if (
+            self._config.paginated
+            and location == "sidebar"
+            and hasattr(self._st.sidebar, "button")
+            and hasattr(self._st, "session_state")
+        ):
+            active_slide = int(self._st.session_state.get("pyst_slide_index", 0))
+            self._st.sidebar.markdown(
+                f'<span class="pyst-toc-nav-marker" aria-hidden="true"></span>### {heading}',
+                unsafe_allow_html=True,
+            )
+            for idx, entry in enumerate(entries):
+                if entry.slide_index is None:
+                    continue
+                prefix = "  " * max(entry.level - 1, 0)
+                is_current = entry.slide_index == active_slide and entry.level == 1
+                label = f"{prefix}{'• ' if is_current else ''}{entry.formatted_title}"
+                if self._st.sidebar.button(
+                    label,
+                    key=f"pyst_toc_btn_{idx}_{entry.anchor}",
+                    use_container_width=True,
+                ):
+                    self._st.session_state["pyst_slide_index"] = entry.slide_index
+                    if hasattr(self._st, "rerun"):
+                        self._st.rerun()
+            return toc_markdown
+
         target = self._st.sidebar if location == "sidebar" else self._st
         target.markdown(toc_markdown)
         return toc_markdown

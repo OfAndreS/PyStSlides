@@ -39,6 +39,14 @@ class BaseComponent(ABC):
     def __init__(self, st_module: Any, config: PresentationConfig) -> None:
         self._st = st_module
         self._config = config
+        self._accent_index = 0
+
+    def _next_accent_color(self) -> str:
+        """Retorna a próxima cor de acento da paleta configurada no tema."""
+        palette = self.theme.accent_colors or (self.theme.primary_color,)
+        color = palette[self._accent_index % len(palette)]
+        self._accent_index += 1
+        return color
 
     @property
     def st(self) -> Any:

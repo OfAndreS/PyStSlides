@@ -207,3 +207,37 @@ class DataRenderer(BaseComponent):
         )
         self._st.markdown(table_html, unsafe_allow_html=True)
         return table_html
+
+    def metrics(
+        self,
+        items: Sequence[tuple[str, str] | tuple[str, str, str]],
+        *,
+        columns: int | None = None,
+    ) -> str:
+        """Renderiza uma grade editorial de cartões de métricas/KPIs."""
+        if not items:
+            return ""
+        col_count = max(1, columns or min(len(items), 3))
+        palette = self.theme.accent_colors or (self.theme.primary_color,)
+        cards_html: list[str] = []
+        for idx, item in enumerate(items):
+            label = str(item[0])
+            value = str(item[1])
+            note = str(item[2]) if len(item) >= 3 else ""
+            accent = palette[idx % len(palette)]
+            note_html = f'<div class="pyst-metric-note">{html.escape(note)}</div>' if note else ""
+            cards_html.append(
+                '<div class="pyst-metric-card">'
+                f'<div class="pyst-metric-accent" style="background-color: {accent};"></div>'
+                f'<div class="pyst-metric-label">{html.escape(label)}</div>'
+                f'<div class="pyst-metric-value">{html.escape(value)}</div>'
+                f"{note_html}"
+                "</div>"
+            )
+        grid_html = (
+            f'<div class="pyst-metrics-grid" '
+            f'style="grid-template-columns: repeat({col_count}, minmax(0, 1fr));">'
+            f"{''.join(cards_html)}</div>"
+        )
+        self._st.markdown(grid_html, unsafe_allow_html=True)
+        return grid_html
