@@ -10,7 +10,7 @@ from pystslides.assets import AssetManager
 from pystslides.components.base import create_columns, create_container
 from pystslides.components.code import CodeRenderer
 from pystslides.components.data import DataRenderer, HighlightSpan
-from pystslides.components.interactive import InteractiveRenderer
+from pystslides.components.interactive import ContentBlock, InteractiveRenderer
 from pystslides.components.media import ImageItem, MediaRenderer
 from pystslides.components.typography import (
     BulletMarker,
@@ -668,7 +668,7 @@ class Presentation:
     def reveal_card(
         self,
         prompt: str | None = None,
-        answer: str | Sequence[str] | Callable[[], None] = "",
+        answer: ContentBlock = "",
         *,
         title: str | None = None,
         kicker: str | None = None,
@@ -691,6 +691,118 @@ class Presentation:
             accent_color=accent_color,
             key=key,
             escape_html=escape_html,
+        )
+
+    def quiz(
+        self,
+        question: str,
+        options: Sequence[str],
+        *,
+        answer_index: int = 0,
+        explanation: str | None = None,
+        title: str | None = None,
+        kicker: str | None = "Quiz",
+        submit_label: str = "Verificar resposta",
+        accent_color: str | None = None,
+        key: str | None = None,
+        escape_html: bool = False,
+    ) -> bool | None:
+        """Renderiza um questionário de múltipla escolha com verificação imediata."""
+        return self._interactive.quiz(
+            question,
+            options,
+            answer_index=answer_index,
+            explanation=explanation,
+            title=title,
+            kicker=kicker,
+            submit_label=submit_label,
+            accent_color=accent_color,
+            key=key,
+            escape_html=escape_html,
+        )
+
+    def quiz_summary(
+        self,
+        *,
+        title: str = "Resumo dos Questionários",
+        kicker: str | None = "Desempenho",
+        empty_message: str = "Nenhum questionário foi registrado ainda nesta apresentação.",
+        accent_color: str | None = None,
+    ) -> tuple[int, int]:
+        """Exibe o placar consolidado de todos os quizzes da apresentação."""
+        return self._interactive.quiz_summary(
+            title=title,
+            kicker=kicker,
+            empty_message=empty_message,
+            accent_color=accent_color,
+        )
+
+    def step_tabs(
+        self,
+        steps: Sequence[tuple[str, ContentBlock]],
+        *,
+        title: str | None = None,
+        kicker: str | None = None,
+        accent_color: str | None = None,
+        key: str | None = None,
+        escape_html: bool = False,
+    ) -> int:
+        """Renderiza um seletor horizontal de etapas (stepper) em card editorial."""
+        return self._interactive.step_tabs(
+            steps,
+            title=title,
+            kicker=kicker,
+            accent_color=accent_color,
+            key=key,
+            escape_html=escape_html,
+        )
+
+    def compare_toggle(
+        self,
+        left_label: str,
+        left_content: ContentBlock,
+        right_label: str,
+        right_content: ContentBlock,
+        *,
+        title: str | None = None,
+        kicker: str | None = "Comparativo",
+        default_side: Literal["left", "right"] = "left",
+        accent_color: str | None = None,
+        key: str | None = None,
+        escape_html: bool = False,
+    ) -> Literal["left", "right"]:
+        """Alterna dinamicamente entre dois cenários no mesmo card editorial."""
+        return self._interactive.compare_toggle(
+            left_label,
+            left_content,
+            right_label,
+            right_content,
+            title=title,
+            kicker=kicker,
+            default_side=default_side,
+            accent_color=accent_color,
+            key=key,
+            escape_html=escape_html,
+        )
+
+    def checklist(
+        self,
+        items: Sequence[str],
+        *,
+        title: str | None = "Checklist de Prontidão",
+        kicker: str | None = "Autoavaliação",
+        default_checked: Sequence[bool] | None = None,
+        accent_color: str | None = None,
+        key: str | None = None,
+    ) -> list[bool]:
+        """Renderiza uma lista de verificação interativa com barra de progresso."""
+        return self._interactive.checklist(
+            items,
+            title=title,
+            kicker=kicker,
+            default_checked=default_checked,
+            accent_color=accent_color,
+            key=key,
         )
 
     # ------------------------------------------------------------------

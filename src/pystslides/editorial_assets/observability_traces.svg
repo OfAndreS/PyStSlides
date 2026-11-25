@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <!-- Painel de traces distribuídos -->
+  <rect x="48" y="58" width="384" height="244" rx="16" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <line x1="168" y1="84" x2="168" y2="276" stroke="#e5e7eb" stroke-width="2"/>
+  <line x1="278" y1="84" x2="278" y2="276" stroke="#e5e7eb" stroke-width="2"/>
+
+  <!-- Spans horizontais de latência -->
+  <rect x="78" y="96" width="318" height="22" rx="11" fill="#3f7bde"/>
+  <rect x="116" y="138" width="154" height="22" rx="11" fill="#579568"/>
+  <rect x="176" y="180" width="182" height="22" rx="11" fill="#8461f0"/>
+  <rect x="266" y="222" width="128" height="22" rx="11" fill="#e19b4d"/>
+
+  <!-- Ponto de anomalia -->
+  <circle cx="378" cy="233" r="16" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <circle cx="378" cy="233" r="7" fill="#e19b4d"/>
+</svg>

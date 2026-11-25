@@ -18,6 +18,9 @@ streamlit run examples/02_privacidade_dados/app.py
 
 # 03 — Pitch Executivo de Produto SaaS (Tema Editorial + Roadmap Mermaid)
 streamlit run examples/03_pitch_produto/app.py
+
+# 04 — Workshop Interativo (Quizzes, Placar, Stepper, Comparador e Checklist)
+streamlit run examples/04_workshop_interativo/app.py
 ```
 
 ---
@@ -25,12 +28,12 @@ streamlit run examples/03_pitch_produto/app.py
 ## Prévia dos Resultados
 
 ### 1. Arquitetura de Microsserviços (`01_arquitetura_software`)
-- Capa customizada, sumário lateral automático, diagrama Mermaid em SVG, galeria em 2 colunas com bordas, seção modular (`SlideSection`), bloco de código com saída, tabela editorial arredondada e cartão interativo (`reveal_card`).
+- Capa customizada, sumário lateral automático, diagrama Mermaid em SVG, galeria em 2 colunas com bordas, seção modular (`SlideSection`), bloco de código com saída, tabela editorial arredondada, `reveal_card` e seção interativa de resiliência (`step_tabs`, `compare_toggle`, `quiz`).
 
 ![Arquitetura de Microsserviços](./screenshots/01_arquitetura_software.png)
 
 ### 2. Workshop Data Discovery & LGPD (`02_privacidade_dados`)
-- Capa e 4 slides em duas colunas (`split_slide`) com as ilustrações editoriais, fluxo Mermaid de proteção de LLMs, `st.slider` interativo de confiança para `highlighted_text`, `styled_table`, callout, `live_code` (`st.echo`) e `reveal_card` de boas práticas.
+- Capa e 4 slides em duas colunas (`split_slide`) com as ilustrações editoriais, fluxo Mermaid de proteção de LLMs, `st.slider` interativo de confiança para `highlighted_text`, `styled_table`, callout, `live_code` (`st.echo`), `reveal_card`, `checklist` LGPD, `quiz` e `quiz_summary`.
 
 ![Workshop Data Discovery & LGPD](./screenshots/02_privacidade_dados.png)
 
@@ -38,5 +41,10 @@ streamlit run examples/03_pitch_produto/app.py
 - Tema editorial limpo (**DM Sans**) com kicker de marca, callout de impacto, grade de KPIs (`metrics`), galeria de recursos em 2 colunas, comparativo de planos em tabela estilizada e roadmap horizontal em Mermaid.
 
 ![Pitch Executivo de Produto](./screenshots/03_pitch_produto.png)
+
+### 4. Workshop Interativo (`04_workshop_interativo`)
+- Ilustrações editoriais próprias (`cover_interactive.svg`, `flow_stepper.svg`, `quiz_diagram.svg`), toggle de modo paginado na sidebar, `metrics`, `step_tabs` com código e Mermaid, `compare_toggle` com `highlighted_text`, `reveal_card`, dois `quiz` com explicação, `checklist` e `quiz_summary`.
+
+![Workshop Interativo](./screenshots/04_workshop_interativo.png)
 
 > Dica: execute também `streamlit run examples/demo_app.py` para testar o toggle de **modo paginado** na barra lateral com navegação direta pelo sumário, listas `bullets` e `reveal_card` com código.

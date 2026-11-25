@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <!-- Conexões entre camadas neurais -->
+  <g stroke="#000000" stroke-width="1.8">
+    <line x1="116" y1="114" x2="240" y2="94"/>
+    <line x1="116" y1="114" x2="240" y2="180"/>
+    <line x1="116" y1="246" x2="240" y2="180"/>
+    <line x1="116" y1="246" x2="240" y2="266"/>
+    <line x1="240" y1="94" x2="364" y2="140"/>
+    <line x1="240" y1="180" x2="364" y2="140"/>
+    <line x1="240" y1="180" x2="364" y2="220"/>
+    <line x1="240" y1="266" x2="364" y2="220"/>
+  </g>
+
+  <!-- Camada de entrada -->
+  <circle cx="116" cy="114" r="22" fill="#3f7bde"/>
+  <circle cx="116" cy="246" r="22" fill="#3f7bde"/>
+
+  <!-- Camada oculta -->
+  <circle cx="240" cy="94" r="22" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <circle cx="240" cy="94" r="9" fill="#8461f0"/>
+  <circle cx="240" cy="180" r="24" fill="#8461f0"/>
+  <circle cx="240" cy="266" r="22" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <circle cx="240" cy="266" r="9" fill="#e19b4d"/>
+
+  <!-- Camada de saída -->
+  <circle cx="364" cy="140" r="24" fill="#579568"/>
+  <path d="M354 140l7 7 13-14" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="364" cy="220" r="22" fill="#e19b4d"/>
+</svg>

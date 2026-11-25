@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <!-- Produtor à esquerda -->
+  <rect x="44" y="132" width="102" height="96" rx="12" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <circle cx="95" cy="166" r="14" fill="#3f7bde"/>
+  <rect x="66" y="194" width="58" height="10" rx="5" fill="#000000"/>
+
+  <!-- Barramento central de eventos -->
+  <line x1="146" y1="180" x2="188" y2="180" stroke="#000000" stroke-width="2.2"/>
+  <rect x="188" y="136" width="104" height="88" rx="44" fill="#8461f0"/>
+  <circle cx="218" cy="180" r="10" fill="#ffffff"/>
+  <circle cx="240" cy="180" r="10" fill="#e19b4d"/>
+  <circle cx="262" cy="180" r="10" fill="#579568"/>
+
+  <!-- Consumidores à direita -->
+  <line x1="292" y1="180" x2="338" y2="108" stroke="#000000" stroke-width="2.2"/>
+  <line x1="292" y1="180" x2="338" y2="252" stroke="#000000" stroke-width="2.2"/>
+
+  <rect x="338" y="68" width="98" height="80" rx="12" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <rect x="358" y="94" width="58" height="10" rx="5" fill="#579568"/>
+  <rect x="358" y="114" width="42" height="10" rx="5" fill="#e5e7eb"/>
+
+  <rect x="338" y="212" width="98" height="80" rx="12" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <rect x="358" y="238" width="58" height="10" rx="5" fill="#e19b4d"/>
+  <rect x="358" y="258" width="46" height="10" rx="5" fill="#e5e7eb"/>
+</svg>

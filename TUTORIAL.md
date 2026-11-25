@@ -16,8 +16,10 @@
   <a href="#primeiros-passos">Primeiros Passos</a> •
   <a href="#layout-editorial-e-paginacao">Layout Editorial</a> •
   <a href="#componentes-visuais">Componentes</a> •
+  <a href="#componentes-interativos">Interatividade</a> •
   <a href="#modularizacao-e-assets">Modularização</a> •
   <a href="#personalizacao-de-tema">Tema</a> •
+  <a href="./ASSETS.md">Catálogo de Assets</a> •
   <a href="./README.md">README</a>
 </p>
 
@@ -65,7 +67,7 @@ MinhaApresentacao/
 ├── assets/
 │   ├── discovery_cover.png
 │   ├── coverage_laptop.png
-│   └── ... (22 ilustrações PNG e SVG)
+│   └── ... (30 ilustrações PNG e SVG — veja ./ASSETS.md)
 └── app.py
 ```
 
@@ -322,6 +324,110 @@ deck.reveal_card(
 
 <div align="center">
   <img width="880" alt="Cartão de revelação interativo no estilo editorial" src="./assets/tutorial/step_03_reveal_card.png" />
+</div>
+
+</details>
+
+<br>
+
+-----
+
+<br>
+
+## **Componentes Interativos**
+<br>
+
+<details open>
+  <summary><strong>Quizzes, Placar, Stepper, Comparador, Checklist e Widgets do Streamlit</strong></summary>
+
+<br>
+
+Todos os componentes interativos mantêm a moldura `#000000` (`1.5px`), fonte `DM Sans`, asteriscos coloridos e persistência automática em `st.session_state` (inclusive quando `paginated=True`).
+
+1 ) **Questionários e placar final (`quiz` e `quiz_summary`):**
+
+```python
+deck.quiz(
+    "Qual componente evita sobrecarga em serviços degradados?",
+    ["Timeout maior", "Circuit Breaker", "Banco compartilhado"],
+    answer_index=1,
+    explanation="O Circuit Breaker interrompe chamadas falhas e protege o serviço.",
+    title="Questão 01",
+    key="q_resiliencia",
+)
+
+# Ao final da apresentação ou da seção:
+deck.quiz_summary(title="Placar Consolidado")
+```
+
+2 ) **Seletor de etapas (`step_tabs`) e comparador (`compare_toggle`):**
+
+Ambos aceitam texto simples, lista de parágrafos ou função `callable` (para renderizar código, Mermaid ou `highlighted_text` dentro da aba selecionada):
+
+```python
+deck.step_tabs(
+    [
+        ("Descoberta", "Mapeia bancos e arquivos sensíveis."),
+        ("Mascaramento", lambda: deck.code_block("masked = mask_cpf(cpf)")),
+    ],
+    title="Pipeline em Etapas",
+    key="pipeline_steps",
+)
+
+deck.compare_toggle(
+    "Antes (Exposto)",
+    "Prompt com CPF real enviado para API externa.",
+    "Depois (Protegido)",
+    "Prompt mascarado com tokens efêmeros.",
+    title="Proxy de Privacidade",
+    key="proxy_cmp",
+)
+```
+
+<div align="center">
+  <img width="880" alt="Stepper interativo, quiz e placar no PyStSlides" src="./assets/tutorial/step_06_quiz_stepper.png" />
+</div>
+
+3 ) **Checklist interativa (`checklist`) e `reveal_card` com `callable`:**
+
+```python
+deck.checklist(
+    [
+        "Catálogo de dados sensíveis mapeado",
+        "Mascaramento automático antes de LLMs",
+        "Alertas integrados a runbooks",
+    ],
+    title="Checklist de Prontidão",
+    default_checked=[True, False, False],
+    key="readiness_chk",
+)
+
+deck.reveal_card(
+    prompt="Como encapsular uma seção reutilizável?",
+    answer=lambda: deck.code_block("class MinhaSecao(SlideSection): ..."),
+    title="Boas Práticas",
+    key="reveal_fn",
+)
+```
+
+4 ) **Combinando widgets nativos do Streamlit (`st.slider` e `st.sidebar.toggle`):**
+
+```python
+import streamlit as st
+from pystslides import HighlightSpan, Presentation
+
+paginado = st.sidebar.toggle("Modo paginado", value=False)
+limiar = st.slider("Limiar mínimo para nível ALTO", 0.55, 0.98, 0.75, 0.05)
+
+with Presentation(title="Demo Interativa", paginated=paginado, show_toc=True) as deck:
+    deck.highlighted_text(
+        "Contato: ana@empresa.com",
+        spans=[HighlightSpan.from_score(9, 24, "EMAIL", 0.90, high_threshold=limiar)],
+    )
+```
+
+<div align="center">
+  <img width="880" alt="Comparador, checklist interativa e placar no PyStSlides" src="./assets/tutorial/step_06_compare_checklist.png" />
 </div>
 
 </details>

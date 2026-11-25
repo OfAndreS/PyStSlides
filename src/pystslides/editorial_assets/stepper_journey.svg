@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <rect x="48" y="64" width="384" height="232" rx="16" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <line x1="146" y1="162" x2="210" y2="162" stroke="#000000" stroke-width="2.2"/>
+  <line x1="270" y1="162" x2="334" y2="162" stroke="#000000" stroke-width="2.2"/>
+
+  <circle cx="116" cy="162" r="30" fill="#3f7bde"/>
+  <text x="116" y="169" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="19" font-weight="500" fill="#ffffff">01</text>
+
+  <circle cx="240" cy="162" r="30" fill="#e19b4d"/>
+  <text x="240" y="169" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="19" font-weight="500" fill="#ffffff">02</text>
+
+  <circle cx="364" cy="162" r="30" fill="#579568"/>
+  <text x="364" y="169" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="19" font-weight="500" fill="#ffffff">03</text>
+
+  <rect x="82" y="222" width="68" height="10" rx="5" fill="#000000"/>
+  <rect x="206" y="222" width="68" height="10" rx="5" fill="#52525b"/>
+  <rect x="330" y="222" width="68" height="10" rx="5" fill="#52525b"/>
+</svg>

@@ -229,6 +229,24 @@ class TestPresentationFacade(unittest.TestCase):
         self.assertTrue(any("Pergunta 2" in m for m in markdowns))
         self.assertTrue(any("Resposta 2" in m for m in markdowns))
 
+    def test_interactive_suite_on_presentation_facade(self) -> None:
+        fake_st = FakeStreamlit()
+        fake_st.session_state["pyst_quiz_q_fac_submitted"] = True
+        fake_st.session_state["pyst_quiz_q_fac_correct"] = True
+
+        with Presentation(title="Interativo Completo", auto_number=False, st_module=fake_st) as deck:
+            res = deck.quiz("Pergunta?", ["A", "B"], answer_index=0, key="q_fac")
+            idx = deck.step_tabs([("Etapa 1", "Conteúdo 1"), ("Etapa 2", "Conteúdo 2")], key="st_fac")
+            side = deck.compare_toggle("Lado A", "A", "Lado B", "B", key="cmp_fac")
+            checks = deck.checklist(["Item A"], default_checked=[True], key="chk_fac")
+            summary = deck.quiz_summary()
+
+        self.assertTrue(res)
+        self.assertEqual(idx, 0)
+        self.assertEqual(side, "left")
+        self.assertEqual(checks, [True])
+        self.assertEqual(summary, (1, 1))
+
 
 if __name__ == "__main__":
     unittest.main()

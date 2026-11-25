@@ -305,6 +305,73 @@ class TestInteractiveComponent(unittest.TestCase):
         )
         self.assertEqual(called, ["ok"])
 
+    def test_quiz_submission_feedback_and_summary(self) -> None:
+        fake_st = FakeStreamlit()
+        renderer = InteractiveRenderer(fake_st, PresentationConfig())
+
+        pending = renderer.quiz(
+            "Qual porta padrão do HTTP?",
+            ["80", "443"],
+            answer_index=0,
+            explanation="HTTP usa 80; HTTPS usa 443.",
+            key="q1",
+        )
+        self.assertIsNone(pending)
+
+        fake_st.radio_values["pyst_quiz_q1_choice"] = "80"
+        fake_st.button_clicks.add("pyst_quiz_q1_submit")
+        correct = renderer.quiz(
+            "Qual porta padrão do HTTP?",
+            ["80", "443"],
+            answer_index=0,
+            explanation="HTTP usa 80; HTTPS usa 443.",
+            key="q1",
+        )
+        self.assertTrue(correct)
+
+        fake_st.button_clicks.clear()
+        fake_st.radio_values["pyst_quiz_q2_choice"] = "Errada"
+        fake_st.button_clicks.add("pyst_quiz_q2_submit")
+        wrong = renderer.quiz(
+            "Segunda pergunta?",
+            ["Certa", "Errada"],
+            answer_index=0,
+            key="q2",
+        )
+        self.assertFalse(wrong)
+
+        fake_st.button_clicks.clear()
+        score, total = renderer.quiz_summary()
+        self.assertEqual((score, total), (1, 2))
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertTrue(any("1</strong> de <strong>2</strong> acertos" in m for m in markdowns))
+
+    def test_step_tabs_compare_toggle_and_checklist(self) -> None:
+        fake_st = FakeStreamlit()
+        renderer = InteractiveRenderer(fake_st, PresentationConfig())
+
+        fake_st.button_clicks.add("pyst_stepper_s1_tab_1")
+        active = renderer.step_tabs(
+            [("Coleta", "Passo 1"), ("Análise", "Passo 2")],
+            title="Pipeline",
+            key="s1",
+        )
+        self.assertEqual(active, 1)
+        self.assertEqual(fake_st.session_state["pyst_stepper_s1"], 1)
+
+        fake_st.button_clicks.clear()
+        fake_st.button_clicks.add("pyst_compare_c1_right")
+        side = renderer.compare_toggle("Antes", "Texto A", "Depois", "Texto B", key="c1")
+        self.assertEqual(side, "right")
+        self.assertEqual(fake_st.session_state["pyst_compare_c1"], "right")
+
+        fake_st.checkbox_values["pyst_check_chk_item_0"] = True
+        fake_st.checkbox_values["pyst_check_chk_item_1"] = False
+        states = renderer.checklist(["Item 1", "Item 2"], key="chk")
+        self.assertEqual(states, [True, False])
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertTrue(any("1</strong> de <strong>2</strong> itens concluídos" in m for m in markdowns))
+
 
 if __name__ == "__main__":
     unittest.main()

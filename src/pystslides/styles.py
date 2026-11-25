@@ -404,12 +404,16 @@ h1.pyst-topic-title {{
     white-space: nowrap;
 }}
 
-.pyst-reveal-marker {{
+.pyst-reveal-marker,
+.pyst-quiz-marker,
+.pyst-stepper-marker,
+.pyst-compare-marker,
+.pyst-checklist-marker {{
     display: none;
 }}
 
-[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-reveal-marker),
-[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] .pyst-reveal-marker) {{
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker)),
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker)) {{
     background-color: {t.card_background} !important;
     border: {t.card_border_width} solid {t.card_border_color} !important;
     border-radius: {t.card_border_radius} !important;
@@ -417,8 +421,8 @@ h1.pyst-topic-title {{
     margin: 20px 0 24px 0 !important;
 }}
 
-[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-reveal-marker) [data-testid="stButton"] button,
-[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] .pyst-reveal-marker) [data-testid="stButton"] button {{
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker)) [data-testid="stButton"] button,
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker)) [data-testid="stButton"] button {{
     background-color: #ffffff !important;
     color: #000000 !important;
     border: 1.5px solid #000000 !important;
@@ -431,10 +435,124 @@ h1.pyst-topic-title {{
     transition: background-color 0.15s ease, color 0.15s ease !important;
 }}
 
-[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-reveal-marker) [data-testid="stButton"] button:hover,
-[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] .pyst-reveal-marker) [data-testid="stButton"] button:hover {{
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker)) [data-testid="stButton"] button:hover,
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] :is(.pyst-stepper-marker, .pyst-compare-marker)) [data-testid="stButton"] button[data-testid="stBaseButton-primary"],
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker)) [data-testid="stButton"] button:hover {{
     background-color: #000000 !important;
     color: #ffffff !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-quiz-marker) [data-testid="stRadio"] label p,
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-checklist-marker) [data-testid="stCheckbox"] label p {{
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    color: {t.text_color} !important;
+}}
+
+.pyst-quiz-feedback {{
+    border-left: 4px solid #579568;
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    margin-top: 10px;
+    font-size: 17px;
+    line-height: 1.5;
+}}
+
+.pyst-quiz-feedback-title {{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 15px;
+}}
+
+.pyst-quiz-explanation {{
+    margin-top: 6px;
+    font-size: 16px;
+    opacity: 0.92;
+}}
+
+.pyst-summary-score {{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 20px;
+    color: {t.text_color};
+    margin: 6px 0 10px 0;
+}}
+
+.pyst-summary-answered {{
+    font-size: 14px;
+    color: {t.muted_text_color};
+}}
+
+.pyst-progress-track {{
+    width: 100%;
+    height: 8px;
+    background-color: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 8px 0 14px 0;
+}}
+
+.pyst-progress-fill {{
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.25s ease;
+}}
+
+.pyst-summary-list {{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+}}
+
+.pyst-summary-row {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 16px;
+}}
+
+.pyst-summary-row:last-child {{
+    border-bottom: none;
+}}
+
+.pyst-summary-q {{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: {t.text_color};
+}}
+
+.pyst-summary-badge {{
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+}}
+
+.pyst-interactive-body {{
+    font-size: 19px;
+    line-height: 1.55;
+    color: {t.text_color};
+    padding: 4px 0;
+}}
+
+.pyst-interactive-body p {{
+    font-size: 19px !important;
+    line-height: 1.55 !important;
+    margin: 0 0 10px 0 !important;
+}}
+
+.pyst-checklist-footer {{
+    margin-top: 10px;
+    font-size: 15px;
+    color: {t.muted_text_color};
 }}
 
 .pyst-reveal-header {{

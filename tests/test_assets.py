@@ -64,7 +64,12 @@ class TestAssetManager(unittest.TestCase):
         editorial_dir = get_editorial_assets_dir()
         self.assertTrue(editorial_dir.is_dir())
         available = AssetManager(editorial_dir).list_images()
-        self.assertEqual(len(available), 22)
+        self.assertEqual(len(available), 30)
+
+        catalog_path = Path(__file__).resolve().parent.parent / "ASSETS.md"
+        catalog_text = catalog_path.read_text(encoding="utf-8")
+        for asset in available:
+            self.assertIn(asset.name, catalog_text)
 
         with tempfile.TemporaryDirectory() as tmp:
             png_only = export_editorial_assets(tmp, kind="png")
@@ -75,7 +80,7 @@ class TestAssetManager(unittest.TestCase):
             exit_code = cli_export_assets([str(cli_dest), "--format", "svg"])
             self.assertEqual(exit_code, 0)
             svg_files = list(cli_dest.glob("*.svg"))
-            self.assertEqual(len(svg_files), 11)
+            self.assertEqual(len(svg_files), 19)
 
 
 if __name__ == "__main__":

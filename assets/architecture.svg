@@ -62,8 +62,8 @@
   <rect x="946" y="248" width="208" height="124" rx="12" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
   <circle cx="968" cy="278" r="5" fill="#3f7bde"/>
   <text x="982" y="283" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="15.5" font-weight="500" fill="#000000">InteractiveRenderer</text>
-  <text x="964" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">reveal_card (flashcards)</text>
-  <text x="964" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">estado em session_state</text>
+  <text x="964" y="314" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">quiz • quiz_summary</text>
+  <text x="964" y="336" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">step_tabs • compare • reveal</text>
 
   <!-- Camada inferior: Core Services -->
   <rect x="64" y="404" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
@@ -72,7 +72,7 @@
 
   <rect x="341" y="404" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
   <text x="361" y="438" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#000000">AssetManager</text>
-  <text x="361" y="464" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">Resolução e 22 assets editoriais</text>
+  <text x="361" y="464" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#52525b">Resolução e 30 assets editoriais</text>
 
   <rect x="617" y="404" width="242" height="84" rx="12" fill="#fafafa" stroke="#e5e7eb" stroke-width="1.5"/>
   <text x="637" y="438" font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#000000">StyleInjector</text>

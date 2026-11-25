@@ -9,6 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from sections.microsservicos import MicroservicesPracticeSection
+from sections.resiliencia_interativa import ResilienceInteractiveSection
 
 from pystslides import Presentation
 
@@ -80,6 +81,7 @@ def main() -> None:
         )
 
         deck.add_section(MicroservicesPracticeSection())
+        deck.add_section(ResilienceInteractiveSection())
 
 
 if __name__ == "__main__":

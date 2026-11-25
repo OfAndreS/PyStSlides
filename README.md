@@ -23,6 +23,7 @@
 
 <p align="center">
   <a href="./TUTORIAL.md">Tutorial</a> •
+  <a href="./ASSETS.md">Catálogo de Assets</a> •
   <a href="#estrutura-do-projeto">Estrutura do Projeto</a> •
   <a href="#tecnologias">Tecnologias</a> •
   <a href="#como-executar">Como Executar</a>
@@ -55,7 +56,7 @@
 | <p align="justify"> Tipografia, Capas, Listas e Callouts: <br> <br> - Padroniza parágrafos, listas editoriais com marcadores geométricos (`bullets`), cabeçalhos de capa, divisores horizontais, espaçamentos em pixels e caixas de destaque (`info`, `success`, `warning`, `danger`). </p> |
 | <p align="justify"> Gerenciamento de Assets e Galerias de Imagens: <br> <br> - Resolve e valida caminhos de mídia a partir de um diretório base via `AssetManager`, oferecendo renderização de imagem única com borda/legenda e galerias em pilha vertical ou grade de colunas. </p> |
 | <p align="justify"> Diagramas Mermaid e Demonstrações de Código: <br> <br> - Renderiza diagramas Mermaid em SVG diretamente no Streamlit, remove indentação automática em blocos de código, encapsula saídas estilizadas e fornece suporte a `st.echo` (`live_code`). </p> |
-| <p align="justify"> Componentes Visuais de Dados e Interatividade: <br> <br> - Disponibiliza marcação de trechos em texto (`HighlightSpan` / `highlighted_text`), cartões de KPIs (`metrics`), tabelas HTML com bordas arredondadas (`styled_table`) e cartões de revelação interativos (`reveal_card`). </p> |
+| <p align="justify"> Componentes Visuais de Dados e Interatividade: <br> <br> - Disponibiliza marcação de trechos em texto (`HighlightSpan` / `highlighted_text`), cartões de KPIs (`metrics`), tabelas HTML arredondadas (`styled_table`), cartões de revelação (`reveal_card`), questionários com placar (`quiz` / `quiz_summary`), etapas (`step_tabs`), comparador (`compare_toggle`) e `checklist`. </p> |
 | <p align="justify"> Modularização com `SlideSection`: <br> <br> - Permite dividir apresentações extensas em classes/módulos independentes herdando de `SlideSection`, mantendo compartilhados o tema, a numeração e os assets. </p> |
 
 <br>
@@ -80,6 +81,7 @@ PyStSlides/
 │   ├── 01_arquitetura_software/     # Exemplo completo: Tech Talk de Microsserviços.
 │   ├── 02_privacidade_dados/        # Exemplo completo: Workshop Data Discovery & LGPD.
 │   ├── 03_pitch_produto/            # Exemplo completo: Pitch Executivo SaaS.
+│   ├── 04_workshop_interativo/      # Exemplo completo: Quizzes, Stepper, Comparador e Checklist.
 │   ├── screenshots/                 # Prints reais das apresentações renderizadas no Streamlit.
 │   ├── sections/
 │   │   ├── __init__.py
@@ -91,7 +93,7 @@ PyStSlides/
 │       ├── __init__.py              # Exporta a API pública e a versão do pacote.
 │       ├── assets.py                # AssetManager + exportação/CLI dos assets editoriais.
 │       ├── config.py                # Dataclasses PresentationTheme e PresentationConfig.
-│       ├── editorial_assets/        # Pacote de 22 ilustrações PNG e SVG empacotadas.
+│       ├── editorial_assets/        # Pacote de 30 ilustrações PNG e SVG empacotadas.
 │       ├── exceptions.py            # Exceções customizadas do pacote.
 │       ├── numbering.py             # SectionTracker e SectionEntry (numeração + âncoras).
 │       ├── presentation.py          # Fachada Presentation (context manager e API unificada).
@@ -102,7 +104,7 @@ PyStSlides/
 │           ├── base.py              # BaseComponent e utilitários de container/colunas.
 │           ├── code.py              # CodeRenderer: blocos de código, output_box e live_code.
 │           ├── data.py              # DataRenderer, HighlightSpan, metrics e tabelas HTML.
-│           ├── interactive.py       # InteractiveRenderer: reveal_card (flashcards).
+│           ├── interactive.py       # InteractiveRenderer: quiz, step_tabs, compare_toggle, checklist e reveal_card.
 │           ├── media.py             # MediaRenderer: imagens, galerias e Mermaid em SVG.
 │           └── typography.py        # TypographyRenderer: tópicos, bullets, callouts e TOC.
 ├── tests/
@@ -192,6 +194,7 @@ streamlit run examples/demo_app.py
 streamlit run examples/01_arquitetura_software/app.py
 streamlit run examples/02_privacidade_dados/app.py
 streamlit run examples/03_pitch_produto/app.py
+streamlit run examples/04_workshop_interativo/app.py
 ```
 
 </details>
@@ -315,7 +318,7 @@ python -c "import pystslides; print(pystslides.__file__, pystslides.__version__)
 
 <br>
 
-O pacote já inclui as **22 ilustrações editoriais** (`.png` e `.svg`) prontas para montar apresentações no mesmo estilo dos exemplos.
+O pacote já inclui **30 ilustrações editoriais** (`.png` e `.svg`) prontas para montar apresentações no mesmo estilo dos exemplos — veja a prévia completa em [ASSETS.md](./ASSETS.md).
 
 1 ) **Exportar para a pasta do seu projeto após instalar o `PyStSlides` (recomendado):**
 

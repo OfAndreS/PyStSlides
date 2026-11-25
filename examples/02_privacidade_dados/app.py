@@ -7,6 +7,7 @@ Execute com:
 from __future__ import annotations
 
 from sections.deteccao_pii import PiiDetectionSection
+from sections.governanca_quiz import GovernanceQuizSection
 
 from pystslides import Presentation, get_editorial_assets_dir
 
@@ -98,6 +99,7 @@ def main() -> None:
         )
 
         deck.add_section(PiiDetectionSection())
+        deck.add_section(GovernanceQuizSection())
 
 
 if __name__ == "__main__":

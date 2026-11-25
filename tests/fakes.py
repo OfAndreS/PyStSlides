@@ -51,6 +51,8 @@ class FakeStreamlit:
     def __init__(self) -> None:
         self.calls: list[RecordedCall] = []
         self.button_clicks: set[str] = set()
+        self.radio_values: dict[str, Any] = {}
+        self.checkbox_values: dict[str, bool] = {}
         self.sidebar = _FakeSidebar(self.calls, self.button_clicks)
         self.session_state: dict[str, Any] = {}
 
@@ -78,6 +80,21 @@ class FakeStreamlit:
         if key and key in self.button_clicks:
             return True
         return label in self.button_clicks
+
+    def radio(self, label: str, options: Any, **kwargs: Any) -> Any:
+        self.calls.append(RecordedCall("radio", (label, list(options)), kwargs))
+        key = kwargs.get("key")
+        if key and key in self.radio_values:
+            return self.radio_values[key]
+        idx = int(kwargs.get("index", 0))
+        return list(options)[idx]
+
+    def checkbox(self, label: str, **kwargs: Any) -> bool:
+        self.calls.append(RecordedCall("checkbox", (label,), kwargs))
+        key = kwargs.get("key")
+        if key and key in self.checkbox_values:
+            return self.checkbox_values[key]
+        return bool(kwargs.get("value", False))
 
     def rerun(self) -> None:
         self.calls.append(RecordedCall("rerun"))
