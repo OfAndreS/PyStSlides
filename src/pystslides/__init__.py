@@ -1,6 +1,6 @@
 """PyStSlides: pacote orientado a objetos sobre Streamlit para apresentações em código."""
 
-from pystslides.assets import AssetManager
+from pystslides.assets import AssetManager, export_editorial_assets, get_editorial_assets_dir
 from pystslides.components.data import HighlightLevel, HighlightSpan, apply_highlights
 from pystslides.config import PresentationConfig, PresentationTheme
 from pystslides.exceptions import AssetNotFoundError, InvalidSectionLevelError, PyStSlidesError
@@ -27,4 +27,6 @@ __all__ = [
     "StyleInjector",
     "__version__",
     "apply_highlights",
+    "export_editorial_assets",
+    "get_editorial_assets_dir",
 ]

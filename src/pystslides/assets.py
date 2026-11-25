@@ -2,10 +2,15 @@
 
 from __future__ import annotations
 
+import argparse
+import shutil
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Literal, Sequence
 
 from pystslides.exceptions import AssetNotFoundError
+
+
+AssetKind = Literal["all", "png", "svg"]
 
 
 DEFAULT_IMAGE_EXTENSIONS: tuple[str, ...] = (
@@ -73,3 +78,82 @@ class AssetManager:
             if path.is_file() and path.suffix.lower() in normalized_exts
         ]
         return sorted(images, key=lambda p: p.name.lower())
+
+
+def get_editorial_assets_dir() -> Path:
+    """Retorna o diretório empacotado com os assets editoriais padrão do PyStSlides."""
+    return Path(__file__).resolve().parent / "editorial_assets"
+
+
+def export_editorial_assets(
+    destination: str | Path,
+    *,
+    kind: AssetKind = "all",
+    overwrite: bool = False,
+) -> list[Path]:
+    """Copia os assets editoriais incluídos no pacote para um diretório de destino."""
+    source_dir = get_editorial_assets_dir()
+    if not source_dir.exists():
+        raise AssetNotFoundError(
+            filename="editorial_assets",
+            resolved_path=source_dir,
+            base_dir=source_dir.parent,
+        )
+
+    extensions = (
+        (".png", ".svg")
+        if kind == "all"
+        else (f".{kind}",)
+    )
+    target_dir = Path(destination).expanduser().resolve()
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    exported: list[Path] = []
+    for src in sorted(source_dir.iterdir(), key=lambda p: p.name.lower()):
+        if not src.is_file() or src.suffix.lower() not in extensions:
+            continue
+        dst = target_dir / src.name
+        if dst.exists() and not overwrite:
+            exported.append(dst)
+            continue
+        shutil.copy2(src, dst)
+        exported.append(dst)
+    return exported
+
+
+def cli_export_assets(argv: Sequence[str] | None = None) -> int:
+    """CLI para exportar rapidamente os assets editoriais para uma pasta local."""
+    parser = argparse.ArgumentParser(
+        prog="pystslides-assets",
+        description="Copia o pacote de ilustrações editoriais do PyStSlides para uma pasta.",
+    )
+    parser.add_argument(
+        "destination",
+        nargs="?",
+        default="assets",
+        help="Diretório de destino para os assets (padrão: ./assets).",
+    )
+    parser.add_argument(
+        "--format",
+        dest="kind",
+        choices=("all", "png", "svg"),
+        default="all",
+        help="Filtra o formato exportado: all, png ou svg (padrão: all).",
+    )
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Sobrescreve arquivos existentes no destino.",
+    )
+    args = parser.parse_args(argv)
+    files = export_editorial_assets(
+        args.destination,
+        kind=args.kind,
+        overwrite=args.overwrite,
+    )
+    print(f"{len(files)} assets disponíveis em: {Path(args.destination).expanduser().resolve()}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(cli_export_assets())

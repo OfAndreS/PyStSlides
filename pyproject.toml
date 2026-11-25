@@ -34,6 +34,9 @@ dev = [
     "ruff>=0.4.0",
 ]
 
+[project.scripts]
+pystslides-assets = "pystslides.assets:cli_export_assets"
+
 [project.urls]
 Homepage = "https://github.com/OfAndreS/PyStSlides"
 Repository = "https://github.com/OfAndreS/PyStSlides"
@@ -41,6 +44,9 @@ Issues = "https://github.com/OfAndreS/PyStSlides/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+pystslides = ["editorial_assets/*.png", "editorial_assets/*.svg"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
