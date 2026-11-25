@@ -5,8 +5,8 @@ from __future__ import annotations
 import html
 from typing import Any, Literal, Sequence
 
-from pystslides.components.base import BaseComponent
-from pystslides.config import PresentationConfig, TextAlign
+from pystslides.components.base import BaseComponent, resolve_border_style
+from pystslides.config import BorderStyle, PresentationConfig, TextAlign
 from pystslides.numbering import SectionEntry, SectionTracker
 
 
@@ -262,11 +262,14 @@ class TypographyRenderer(BaseComponent):
         title: str | None = None,
         variant: CalloutVariant = "info",
         escape_html: bool = True,
+        border: BorderStyle | None = None,
     ) -> None:
         """Renderiza uma caixa de destaque estilizada para notas, alertas ou dicas."""
         bg_color, text_color, accent_color = _CALLOUT_STYLES[variant]
         icon_svg = _build_asterisk_svg(accent_color, size=15)
         body_text = html.escape(message) if escape_html else message
+        resolved_border = resolve_border_style(border, theme=self.theme)
+        border_cls = f" pyst-border-{resolved_border}" if border is not None else ""
         if self.theme.callout_minimal:
             header_html = (
                 f'<div class="pyst-callout-header">'
@@ -284,7 +287,7 @@ class TypographyRenderer(BaseComponent):
                     f"<span>{body_text}</span></div>"
                 )
             )
-            markup = f'<div class="pyst-callout">{header_html}{body_html}</div>'
+            markup = f'<div class="pyst-callout{border_cls}">{header_html}{body_html}</div>'
         else:
             title_html = (
                 f'<div class="pyst-callout-header" style="color: {text_color};">'
@@ -294,10 +297,19 @@ class TypographyRenderer(BaseComponent):
                 else ""
             )
             radius = self.theme.card_border_radius
+            if border is not None and resolved_border == "none":
+                inline_border = "border: none;"
+            elif border is not None and resolved_border == "grey":
+                inline_border = (
+                    f"border: {self.theme.grey_border_width} solid {self.theme.grey_border_color}; "
+                    f"border-left: 4px solid {accent_color};"
+                )
+            else:
+                inline_border = f"border: none; border-left: 4px solid {accent_color};"
             markup = (
                 f'<div class="pyst-callout" '
                 f'style="background-color: {bg_color}; color: {text_color}; '
-                f"border: none; border-left: 4px solid {accent_color}; "
+                f"{inline_border} "
                 f'border-radius: 0 {radius} {radius} 0;">'
                 f"{title_html}<div>{body_text}</div></div>"
             )

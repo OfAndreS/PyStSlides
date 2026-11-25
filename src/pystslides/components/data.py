@@ -7,7 +7,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Mapping, Sequence
 
-from pystslides.components.base import BaseComponent
+from pystslides.components.base import BaseComponent, resolve_border_style
+from pystslides.config import BorderStyle
 
 
 class HighlightLevel(Enum):
@@ -170,11 +171,17 @@ class DataRenderer(BaseComponent):
         spans: Sequence[HighlightSpan] = (),
         *,
         font_size: str | None = None,
+        border: BorderStyle | None = None,
     ) -> str:
         """Renderiza um texto com trechos destacados dentro de um card estilizado."""
         rendered_inner = apply_highlights(text, spans)
+        border_cls = (
+            f" pyst-border-{resolve_border_style(border, theme=self.theme)}"
+            if border is not None
+            else ""
+        )
         style_attr = f' style="font-size: {font_size} !important;"' if font_size else ""
-        card_html = f'<div class="pyst-card"{style_attr}>{rendered_inner}</div>'
+        card_html = f'<div class="pyst-card{border_cls}"{style_attr}>{rendered_inner}</div>'
         self._st.markdown(card_html, unsafe_allow_html=True)
         return card_html
 
@@ -183,10 +190,16 @@ class DataRenderer(BaseComponent):
         data: Mapping[str, Sequence[Any]] | Sequence[Mapping[str, Any]] | Any,
         *,
         highlights: Mapping[tuple[str, int], Sequence[HighlightSpan]] | None = None,
+        border: BorderStyle | None = None,
     ) -> str:
         """Renderiza uma tabela HTML com bordas arredondadas, hover e destaques opcionais."""
         columns, rows = _normalize_table_data(data)
         highlight_map = highlights or {}
+        border_cls = (
+            f" pyst-border-{resolve_border_style(border, theme=self.theme)}"
+            if border is not None
+            else ""
+        )
 
         header_cells = "".join(f"<th>{html.escape(col)}</th>" for col in columns)
         body_rows: list[str] = []
@@ -200,7 +213,7 @@ class DataRenderer(BaseComponent):
             body_rows.append(f"<tr>{''.join(cells_html)}</tr>")
 
         table_html = (
-            '<table class="pyst-table">'
+            f'<table class="pyst-table{border_cls}">'
             f"<thead><tr>{header_cells}</tr></thead>"
             f"<tbody>{''.join(body_rows)}</tbody>"
             "</table>"
@@ -213,12 +226,18 @@ class DataRenderer(BaseComponent):
         items: Sequence[tuple[str, str] | tuple[str, str, str]],
         *,
         columns: int | None = None,
+        border: BorderStyle | None = None,
     ) -> str:
         """Renderiza uma grade editorial de cartões de métricas/KPIs."""
         if not items:
             return ""
         col_count = max(1, columns or min(len(items), 3))
         palette = self.theme.accent_colors or (self.theme.primary_color,)
+        border_cls = (
+            f" pyst-border-{resolve_border_style(border, theme=self.theme)}"
+            if border is not None
+            else ""
+        )
         cards_html: list[str] = []
         for idx, item in enumerate(items):
             label = str(item[0])
@@ -227,7 +246,7 @@ class DataRenderer(BaseComponent):
             accent = palette[idx % len(palette)]
             note_html = f'<div class="pyst-metric-note">{html.escape(note)}</div>' if note else ""
             cards_html.append(
-                '<div class="pyst-metric-card">'
+                f'<div class="pyst-metric-card{border_cls}">'
                 f'<div class="pyst-metric-accent" style="background-color: {accent};"></div>'
                 f'<div class="pyst-metric-label">{html.escape(label)}</div>'
                 f'<div class="pyst-metric-value">{html.escape(value)}</div>'

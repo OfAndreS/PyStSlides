@@ -19,6 +19,7 @@ from pystslides.components.typography import (
     TypographyRenderer,
 )
 from pystslides.config import (
+    BorderStyle,
     PageLayout,
     PresentationConfig,
     PresentationTheme,
@@ -512,6 +513,7 @@ class Presentation:
         title: str | None = None,
         variant: CalloutVariant = "info",
         escape_html: bool = True,
+        border: BorderStyle | None = None,
     ) -> None:
         """Renderiza um card de destaque/observação."""
         self._typography.callout(
@@ -519,6 +521,7 @@ class Presentation:
             title=title,
             variant=variant,
             escape_html=escape_html,
+            border=border,
         )
 
     def divider(self, *, color: str | None = None, thickness: str | None = None) -> None:
@@ -549,6 +552,7 @@ class Presentation:
         width: int | None = None,
         bordered: bool = False,
         center: bool = True,
+        border: BorderStyle | None = None,
     ) -> None:
         """Renderiza uma imagem a partir de nome de asset, `Path`, URL ou objeto PIL."""
         self._media.image(
@@ -557,6 +561,7 @@ class Presentation:
             width=width,
             bordered=bordered,
             center=center,
+            border=border,
         )
 
     def image_gallery(
@@ -566,6 +571,7 @@ class Presentation:
         columns: int = 1,
         bordered: bool = False,
         width: int | None = None,
+        border: BorderStyle | None = None,
     ) -> None:
         """Renderiza múltiplas imagens em pilha vertical ou grade de colunas."""
         self._media.image_gallery(
@@ -573,6 +579,7 @@ class Presentation:
             columns=columns,
             bordered=bordered,
             width=width,
+            border=border,
         )
 
     def mermaid(
@@ -582,6 +589,7 @@ class Presentation:
         bordered: bool = True,
         caption: str | None = None,
         height: int | None = None,
+        border: BorderStyle | None = None,
     ) -> str:
         """Renderiza um diagrama Mermaid formatado dentro de um container."""
         return self._media.mermaid(
@@ -589,6 +597,7 @@ class Presentation:
             bordered=bordered,
             caption=caption,
             height=height,
+            border=border,
         )
 
     # ------------------------------------------------------------------
@@ -603,6 +612,8 @@ class Presentation:
         bordered_output: bool = True,
         output_as_markdown: bool = False,
         line_numbers: bool = False,
+        border: BorderStyle | None = None,
+        output_border: BorderStyle | None = None,
     ) -> str:
         """Renderiza um bloco de código limpo com saída opcional."""
         return self._code.code_block(
@@ -612,6 +623,8 @@ class Presentation:
             bordered_output=bordered_output,
             output_as_markdown=output_as_markdown,
             line_numbers=line_numbers,
+            border=border,
+            output_border=output_border,
         )
 
     def output_box(
@@ -619,13 +632,25 @@ class Presentation:
         *items: Any,
         bordered: bool = True,
         as_markdown: bool = False,
+        border: BorderStyle | None = None,
     ) -> None:
         """Exibe resultados em um container padronizado com borda."""
-        self._code.output_box(*items, bordered=bordered, as_markdown=as_markdown)
+        self._code.output_box(
+            *items,
+            bordered=bordered,
+            as_markdown=as_markdown,
+            border=border,
+        )
 
-    def output_container(self, *, bordered: bool = True, center: bool = False) -> Iterator[Any]:
+    def output_container(
+        self,
+        *,
+        bordered: bool = True,
+        center: bool = False,
+        border: BorderStyle | None = None,
+    ) -> Iterator[Any]:
         """Retorna um context manager de container para saídas customizadas."""
-        return self._code.output_container(bordered=bordered, center=center)
+        return self._code.output_container(bordered=bordered, center=center, border=border)
 
     def live_code(self, code_location: Literal["above", "below"] = "above") -> Any:
         """Retorna o context manager `st.echo` diretamente para demonstrações ao vivo."""
@@ -640,27 +665,30 @@ class Presentation:
         spans: Sequence[HighlightSpan] = (),
         *,
         font_size: str | None = None,
+        border: BorderStyle | None = None,
     ) -> str:
         """Renderiza um card de texto com marcações/etiquetas coloridas."""
-        return self._data.highlighted_text(text, spans=spans, font_size=font_size)
+        return self._data.highlighted_text(text, spans=spans, font_size=font_size, border=border)
 
     def styled_table(
         self,
         data: Mapping[str, Sequence[Any]] | Sequence[Mapping[str, Any]] | Any,
         *,
         highlights: Mapping[tuple[str, int], Sequence[HighlightSpan]] | None = None,
+        border: BorderStyle | None = None,
     ) -> str:
         """Renderiza uma tabela HTML estilizada com destaques opcionais por célula."""
-        return self._data.styled_table(data, highlights=highlights)
+        return self._data.styled_table(data, highlights=highlights, border=border)
 
     def metrics(
         self,
         items: Sequence[tuple[str, str] | tuple[str, str, str]],
         *,
         columns: int | None = None,
+        border: BorderStyle | None = None,
     ) -> str:
         """Renderiza uma grade editorial de cartões de métricas/KPIs."""
-        return self._data.metrics(items, columns=columns)
+        return self._data.metrics(items, columns=columns, border=border)
 
     # ------------------------------------------------------------------
     # Componentes interativos
@@ -678,6 +706,7 @@ class Presentation:
         accent_color: str | None = None,
         key: str | None = None,
         escape_html: bool = False,
+        border: BorderStyle | None = None,
     ) -> bool:
         """Renderiza um cartão de revelação (flashcard) com estado persistente."""
         return self._interactive.reveal_card(
@@ -691,6 +720,7 @@ class Presentation:
             accent_color=accent_color,
             key=key,
             escape_html=escape_html,
+            border=border,
         )
 
     def quiz(
@@ -706,6 +736,7 @@ class Presentation:
         accent_color: str | None = None,
         key: str | None = None,
         escape_html: bool = False,
+        border: BorderStyle | None = None,
     ) -> bool | None:
         """Renderiza um questionário de múltipla escolha com verificação imediata."""
         return self._interactive.quiz(
@@ -719,6 +750,7 @@ class Presentation:
             accent_color=accent_color,
             key=key,
             escape_html=escape_html,
+            border=border,
         )
 
     def quiz_summary(
@@ -728,6 +760,7 @@ class Presentation:
         kicker: str | None = "Desempenho",
         empty_message: str = "Nenhum questionário foi registrado ainda nesta apresentação.",
         accent_color: str | None = None,
+        border: BorderStyle | None = None,
     ) -> tuple[int, int]:
         """Exibe o placar consolidado de todos os quizzes da apresentação."""
         return self._interactive.quiz_summary(
@@ -735,6 +768,7 @@ class Presentation:
             kicker=kicker,
             empty_message=empty_message,
             accent_color=accent_color,
+            border=border,
         )
 
     def step_tabs(
@@ -746,6 +780,7 @@ class Presentation:
         accent_color: str | None = None,
         key: str | None = None,
         escape_html: bool = False,
+        border: BorderStyle | None = None,
     ) -> int:
         """Renderiza um seletor horizontal de etapas (stepper) em card editorial."""
         return self._interactive.step_tabs(
@@ -755,6 +790,7 @@ class Presentation:
             accent_color=accent_color,
             key=key,
             escape_html=escape_html,
+            border=border,
         )
 
     def compare_toggle(
@@ -770,6 +806,7 @@ class Presentation:
         accent_color: str | None = None,
         key: str | None = None,
         escape_html: bool = False,
+        border: BorderStyle | None = None,
     ) -> Literal["left", "right"]:
         """Alterna dinamicamente entre dois cenários no mesmo card editorial."""
         return self._interactive.compare_toggle(
@@ -783,6 +820,7 @@ class Presentation:
             accent_color=accent_color,
             key=key,
             escape_html=escape_html,
+            border=border,
         )
 
     def checklist(
@@ -794,6 +832,7 @@ class Presentation:
         default_checked: Sequence[bool] | None = None,
         accent_color: str | None = None,
         key: str | None = None,
+        border: BorderStyle | None = None,
     ) -> list[bool]:
         """Renderiza uma lista de verificação interativa com barra de progresso."""
         return self._interactive.checklist(
@@ -803,6 +842,7 @@ class Presentation:
             default_checked=default_checked,
             accent_color=accent_color,
             key=key,
+            border=border,
         )
 
     # ------------------------------------------------------------------

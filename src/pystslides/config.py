@@ -10,6 +10,7 @@ from typing import Literal
 TextAlign = Literal["left", "center", "right", "justify"]
 PageLayout = Literal["centered", "wide"]
 VerticalAlign = Literal["top", "center", "bottom"]
+BorderStyle = Literal["black", "grey", "none"]
 
 
 @dataclass
@@ -52,6 +53,7 @@ class PresentationTheme:
     divider_thickness: str = "1px"
     default_subtopic_spacing_px: int = 48
     default_media_vertical_align: VerticalAlign = "top"
+    default_border: BorderStyle = "black"
     paragraph_max_width: str = "62ch"
     callout_minimal: bool = True
     table_rounded: bool = True
@@ -61,6 +63,8 @@ class PresentationTheme:
     card_border_color: str = "#000000"
     card_border_width: str = "1.5px"
     card_border_radius: str = "12px"
+    grey_border_color: str = "#d6d6d9"
+    grey_border_width: str = "1px"
     table_header_bg: str = "#ffffff"
     table_header_color: str = "#000000"
     table_border_color: str = "#e5e7eb"

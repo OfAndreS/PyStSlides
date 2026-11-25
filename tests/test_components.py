@@ -75,10 +75,27 @@ class TestStyleInjector(unittest.TestCase):
         classic = PresentationTheme.classic()
 
         self.assertEqual(editorial.topic_font_size, "54px")
+        self.assertEqual(editorial.default_border, "black")
         self.assertEqual(compact.paragraph_font_size, "20px")
         self.assertTrue(classic.topic_dividers)
         self.assertFalse(classic.callout_minimal)
         self.assertFalse(classic.table_rounded)
+
+    def test_border_styles_css_and_theme_default_border(self) -> None:
+        default_css = StyleInjector(PresentationTheme()).build_css()
+        self.assertIn('[data-testid="stCode"]', default_css)
+        self.assertIn(".pyst-table.pyst-border-grey", default_css)
+        self.assertIn(".pyst-table.pyst-border-none", default_css)
+        self.assertIn(".pyst-code-marker.pyst-border-grey", default_css)
+        self.assertIn(".pyst-container-marker.pyst-border-black", default_css)
+        self.assertIn("1px solid #d6d6d9 !important;", default_css)
+
+        grey_css = StyleInjector(PresentationTheme(default_border="grey")).build_css()
+        self.assertIn("border: 1px solid #d6d6d9 !important;", grey_css)
+
+        none_css = StyleInjector(PresentationTheme(default_border="none")).build_css()
+        self.assertIn("table.pyst-table {\n    width: 100% !important;", none_css)
+        self.assertIn("border: none !important;", none_css)
 
 
 class TestMediaAndCodeComponents(unittest.TestCase):
@@ -115,6 +132,53 @@ class TestMediaAndCodeComponents(unittest.TestCase):
             self.assertEqual(images[1].kwargs["caption"], "")
             self.assertEqual(len(fake_st.calls_named("columns")), 1)
 
+    def test_mermaid_vertical_detection_height_and_borders(self) -> None:
+        class FakeComponentsV1:
+            def __init__(self) -> None:
+                self.calls: list[tuple[str, dict[str, object]]] = []
+
+            def html(self, doc: str, **kwargs: object) -> None:
+                self.calls.append((doc, kwargs))
+
+        class FakeComponents:
+            def __init__(self) -> None:
+                self.v1 = FakeComponentsV1()
+
+        fake_st = FakeStreamlit()
+        fake_st.components = FakeComponents()  # type: ignore[attr-defined]
+        renderer = MediaRenderer(fake_st, PresentationConfig())
+
+        # LR com rótulos contendo TD/BT não deve ser tratado como vertical
+        self.assertFalse(renderer._is_vertical_mermaid("graph LR\n    BTN[Botão] --> HTTP_TD[Endpoint]"))
+        self.assertTrue(renderer._is_vertical_mermaid("flowchart TD\n    A --> B"))
+        self.assertTrue(renderer._is_vertical_mermaid("graph bt\n    A --> B"))
+
+        # Diagrama TD curto não fica preso no antigo piso de 580px
+        renderer.mermaid("graph TD\n    A --> B", border="grey")
+        # Diagrama BT longo ultrapassa o antigo teto de 780px
+        long_bt = "flowchart BT\n" + "\n".join(f"    N{i} --> N{i + 1}" for i in range(10))
+        renderer.mermaid(long_bt, border="none")
+        # Altura explícita desativa autoHeight no JS
+        renderer.mermaid("graph LR\n    A --> B", height=320)
+
+        calls = fake_st.components.v1.calls  # type: ignore[attr-defined]
+        self.assertEqual(len(calls), 3)
+        short_doc, short_kw = calls[0]
+        long_doc, long_kw = calls[1]
+        fixed_doc, fixed_kw = calls[2]
+
+        self.assertLess(int(short_kw["height"]), 580)  # type: ignore[arg-type]
+        self.assertGreater(int(long_kw["height"]), 780)  # type: ignore[arg-type]
+        self.assertEqual(fixed_kw["height"], 320)
+        self.assertIn("const autoHeight = true;", short_doc)
+        self.assertIn("const autoHeight = false;", fixed_doc)
+        self.assertIn("ResizeObserver", short_doc)
+        self.assertIn("MutationObserver", short_doc)
+
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertTrue(any("pyst-container-marker pyst-border-grey" in m for m in markdowns))
+        self.assertFalse(any("pyst-border-none" in m for m in markdowns))
+
     def test_code_block_dedents_and_renders_output(self) -> None:
         fake_st = FakeStreamlit()
         renderer = CodeRenderer(fake_st, PresentationConfig())
@@ -129,6 +193,34 @@ class TestMediaAndCodeComponents(unittest.TestCase):
         self.assertEqual(cleaned, "x = 1 + 1\nprint(x)")
         self.assertEqual(fake_st.calls_named("code")[0].args[0], "x = 1 + 1\nprint(x)")
         self.assertEqual(fake_st.calls_named("write")[0].args[0], 2)
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertTrue(any("pyst-code-marker pyst-border-black" in m for m in markdowns))
+        self.assertTrue(any("pyst-container-marker pyst-border-black" in m for m in markdowns))
+
+    def test_code_and_data_border_variants_and_validation(self) -> None:
+        fake_st = FakeStreamlit()
+        code_renderer = CodeRenderer(fake_st, PresentationConfig())
+        data_renderer = DataRenderer(fake_st, PresentationConfig())
+
+        code_renderer.code_block("x = 1", output=1, border="grey", output_border="none")
+        code_renderer.output_box("ok", border="grey")
+
+        table_grey = data_renderer.styled_table({"A": [1]}, border="grey")
+        table_none = data_renderer.styled_table({"A": [1]}, border="none")
+        card_none = data_renderer.highlighted_text("Texto", border="none")
+        metrics_grey = data_renderer.metrics([("KPI", "10")], border="grey")
+
+        self.assertIn('class="pyst-table pyst-border-grey"', table_grey)
+        self.assertIn('class="pyst-table pyst-border-none"', table_none)
+        self.assertIn('class="pyst-card pyst-border-none"', card_none)
+        self.assertIn('class="pyst-metric-card pyst-border-grey"', metrics_grey)
+
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertTrue(any("pyst-code-marker pyst-border-grey" in m for m in markdowns))
+        self.assertTrue(any("pyst-container-marker pyst-border-grey" in m for m in markdowns))
+
+        with self.assertRaises(ValueError):
+            data_renderer.styled_table({"A": [1]}, border="red")  # type: ignore[arg-type]
 
     def test_live_code_returns_echo_context_directly(self) -> None:
         fake_st = FakeStreamlit()

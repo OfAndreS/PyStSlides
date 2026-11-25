@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from pystslides.config import PresentationTheme
+from pystslides.config import BorderStyle, PresentationTheme
 
 
 class StyleInjector:
@@ -19,12 +19,107 @@ class StyleInjector:
         """Indica se o CSS global já foi injetado."""
         return self._injected
 
+    def _border_tokens(self, style: BorderStyle) -> tuple[str, str]:
+        """Retorna `(border_css, border_radius_css)` para `black`, `grey` ou `none`."""
+        t = self._theme
+        if style == "black":
+            return f"{t.card_border_width} solid {t.card_border_color}", t.card_border_radius
+        if style == "grey":
+            return f"{t.grey_border_width} solid {t.grey_border_color}", t.card_border_radius
+        return "none", "0"
+
+    def _table_border_override_css(self, style: BorderStyle) -> str:
+        """Gera regras de sobrescrita de borda para `.pyst-table.pyst-border-<style>`."""
+        t = self._theme
+        cls = f".pyst-border-{style}"
+        border_val, radius_val = self._border_tokens(style)
+        if t.table_rounded:
+            if style == "black":
+                th_bottom = f"{t.card_border_width} solid {t.table_rule_color}"
+            elif style == "grey":
+                th_bottom = f"{t.grey_border_width} solid {t.grey_border_color}"
+            else:
+                th_bottom = f"1px solid {t.table_border_color}"
+            return f"""
+.stMarkdown table.pyst-table{cls},
+table.pyst-table{cls} {{
+    border: {border_val} !important;
+    border-radius: {radius_val} !important;
+}}
+
+.stMarkdown table.pyst-table{cls} th,
+table.pyst-table{cls} th {{
+    border-bottom: {th_bottom} !important;
+}}"""
+        if style == "black":
+            return f"""
+.stMarkdown table.pyst-table{cls},
+table.pyst-table{cls} {{
+    border: none !important;
+}}
+
+.stMarkdown table.pyst-table{cls} th,
+table.pyst-table{cls} th {{
+    border-top: 1.5px solid {t.table_rule_color} !important;
+    border-bottom: 1.5px solid {t.table_rule_color} !important;
+}}
+
+.stMarkdown table.pyst-table{cls} tr:last-child td,
+table.pyst-table{cls} tr:last-child td {{
+    border-bottom: 1.5px solid {t.table_rule_color} !important;
+}}"""
+        if style == "grey":
+            return f"""
+.stMarkdown table.pyst-table{cls},
+table.pyst-table{cls} {{
+    border: {border_val} !important;
+}}
+
+.stMarkdown table.pyst-table{cls} th,
+table.pyst-table{cls} th {{
+    border-top: 1px solid {t.grey_border_color} !important;
+    border-bottom: 1px solid {t.grey_border_color} !important;
+}}
+
+.stMarkdown table.pyst-table{cls} tr:last-child td,
+table.pyst-table{cls} tr:last-child td {{
+    border-bottom: 1px solid {t.grey_border_color} !important;
+}}"""
+        return f"""
+.stMarkdown table.pyst-table{cls},
+table.pyst-table{cls} {{
+    border: none !important;
+}}
+
+.stMarkdown table.pyst-table{cls} th,
+table.pyst-table{cls} th {{
+    border-top: none !important;
+    border-bottom: 1px solid {t.table_border_color} !important;
+}}
+
+.stMarkdown table.pyst-table{cls} tr:last-child td,
+table.pyst-table{cls} tr:last-child td {{
+    border-bottom: none !important;
+}}"""
+
     def build_css(self) -> str:
         """Gera o bloco `<style>` completo baseado no `PresentationTheme`."""
         t = self._theme
         font_import = f"@import url('{t.google_font_url}');\n" if t.google_font_url else ""
         card_font_size = t.card_font_size or t.paragraph_font_size
         font_stack = f"'{t.font_family}', -apple-system, BlinkMacSystemFont, sans-serif"
+        default_border_val, default_radius_val = self._border_tokens(t.default_border)
+        black_border_val, black_radius_val = self._border_tokens("black")
+        grey_border_val, grey_radius_val = self._border_tokens("grey")
+        default_table_th_bottom = (
+            f"{t.card_border_width} solid {t.table_rule_color}"
+            if t.default_border == "black"
+            else (
+                f"{t.grey_border_width} solid {t.grey_border_color}"
+                if t.default_border == "grey"
+                else f"1px solid {t.table_border_color}"
+            )
+        )
         chrome_css = (
             """
 #MainMenu,
@@ -51,8 +146,8 @@ table.pyst-table {{
     letter-spacing: {t.paragraph_letter_spacing} !important;
     text-align: left !important;
     background-color: {t.card_background} !important;
-    border: {t.card_border_width} solid {t.card_border_color} !important;
-    border-radius: {t.card_border_radius} !important;
+    border: {default_border_val} !important;
+    border-radius: {default_radius_val} !important;
     margin: 0 0 24px 0 !important;
     overflow: hidden;
 }}
@@ -69,7 +164,7 @@ table.pyst-table th {{
     color: {t.table_header_color} !important;
     padding: 15px 16px !important;
     border: none !important;
-    border-bottom: {t.card_border_width} solid {t.table_rule_color} !important;
+    border-bottom: {default_table_th_bottom} !important;
     font-weight: 500 !important;
     text-align: left !important;
 }}
@@ -124,7 +219,7 @@ table.pyst-table {{
     letter-spacing: {t.paragraph_letter_spacing} !important;
     text-align: left !important;
     background-color: {t.card_background} !important;
-    border: none !important;
+    border: {default_border_val if t.default_border == "grey" else "none"} !important;
     margin: 0 0 24px 0 !important;
 }}
 
@@ -140,8 +235,8 @@ table.pyst-table th {{
     color: {t.table_header_color} !important;
     padding: 14px 16px !important;
     border: none !important;
-    border-top: 1.5px solid {t.table_rule_color} !important;
-    border-bottom: 1.5px solid {t.table_rule_color} !important;
+    border-top: {"none" if t.default_border == "none" else (f"1px solid {t.grey_border_color}" if t.default_border == "grey" else f"1.5px solid {t.table_rule_color}")} !important;
+    border-bottom: {f"1px solid {t.table_border_color}" if t.default_border == "none" else (f"1px solid {t.grey_border_color}" if t.default_border == "grey" else f"1.5px solid {t.table_rule_color}")} !important;
     font-weight: 500 !important;
     text-align: left !important;
 }}
@@ -157,13 +252,16 @@ table.pyst-table td {{
 
 .stMarkdown table.pyst-table tr:last-child td,
 table.pyst-table tr:last-child td {{
-    border-bottom: 1.5px solid {t.table_rule_color} !important;
+    border-bottom: {"none" if t.default_border == "none" else (f"1px solid {t.grey_border_color}" if t.default_border == "grey" else f"1.5px solid {t.table_rule_color}")} !important;
 }}
 
 .stMarkdown table.pyst-table tr:hover td,
 table.pyst-table tr:hover td {{
     background-color: {t.table_hover_bg} !important;
 }}"""
+        )
+        table_border_overrides = "".join(
+            self._table_border_override_css(style) for style in ("black", "grey", "none")
         )
 
         return f"""<style>
@@ -324,10 +422,59 @@ h1.pyst-topic-title {{
     padding: 24px 26px;
     background-color: {t.card_background};
     color: {t.card_text_color};
-    border: {t.card_border_width} solid {t.card_border_color};
-    border-radius: {t.card_border_radius};
+    border: {default_border_val};
+    border-radius: {default_radius_val};
     white-space: pre-wrap;
     margin-bottom: 22px;
+}}
+
+.stMarkdown .pyst-card.pyst-border-black,
+.pyst-card.pyst-border-black {{
+    border: {black_border_val} !important;
+    border-radius: {black_radius_val} !important;
+}}
+
+.stMarkdown .pyst-card.pyst-border-grey,
+.pyst-card.pyst-border-grey {{
+    border: {grey_border_val} !important;
+    border-radius: {grey_radius_val} !important;
+}}
+
+.stMarkdown .pyst-card.pyst-border-none,
+.pyst-card.pyst-border-none {{
+    border: none !important;
+}}
+
+[data-testid="stCode"],
+.stCode {{
+    border: {default_border_val} !important;
+    border-radius: {default_radius_val if t.default_border != "none" else "0.5rem"} !important;
+    overflow: hidden !important;
+}}
+
+[data-testid="stCode"] > pre,
+.stCode > pre {{
+    border: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-code-marker.pyst-border-black) [data-testid="stCode"],
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-code-marker.pyst-border-black) .stCode {{
+    border: {black_border_val} !important;
+    border-radius: {black_radius_val} !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-code-marker.pyst-border-grey) [data-testid="stCode"],
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-code-marker.pyst-border-grey) .stCode {{
+    border: {grey_border_val} !important;
+    border-radius: {grey_radius_val} !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-code-marker.pyst-border-none) [data-testid="stCode"],
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-code-marker.pyst-border-none) .stCode {{
+    border: none !important;
+    border-radius: 0.5rem !important;
 }}
 
 [data-testid="stCode"] pre,
@@ -340,8 +487,8 @@ h1.pyst-topic-title {{
 
 .pyst-callout {{
     padding: 20px 24px;
-    border-radius: {t.card_border_radius};
-    border: {t.card_border_width} solid {t.card_border_color};
+    border-radius: {default_radius_val};
+    border: {default_border_val};
     background-color: {t.card_background};
     color: {t.text_color};
     margin: 22px 0;
@@ -350,6 +497,20 @@ h1.pyst-topic-title {{
     line-height: 1.55;
     letter-spacing: {t.paragraph_letter_spacing};
     max-width: {t.paragraph_max_width};
+}}
+
+.pyst-callout.pyst-border-black {{
+    border: {black_border_val} !important;
+    border-radius: {black_radius_val} !important;
+}}
+
+.pyst-callout.pyst-border-grey {{
+    border: {grey_border_val} !important;
+    border-radius: {grey_radius_val} !important;
+}}
+
+.pyst-callout.pyst-border-none {{
+    border: none !important;
 }}
 
 .pyst-callout-header {{
@@ -397,6 +558,7 @@ h1.pyst-topic-title {{
     padding-top: 6px;
 }}
 {table_css}
+{table_border_overrides}
 .pyst-table td .pyst-mark {{
     font-size: 0.88em;
     padding: 1px 6px;
@@ -408,17 +570,53 @@ h1.pyst-topic-title {{
 .pyst-quiz-marker,
 .pyst-stepper-marker,
 .pyst-compare-marker,
-.pyst-checklist-marker {{
+.pyst-checklist-marker,
+.pyst-code-marker,
+.pyst-container-marker {{
     display: none;
+}}
+
+[data-testid="stElementContainer"]:has(> [data-testid="stMarkdown"] :is(.pyst-code-marker, .pyst-container-marker)),
+[data-testid="stElementContainer"]:has(> .stMarkdown :is(.pyst-code-marker, .pyst-container-marker)) {{
+    display: none !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-container-marker.pyst-border-black),
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] .pyst-container-marker.pyst-border-black) {{
+    border: {black_border_val} !important;
+    border-radius: {black_radius_val} !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .pyst-container-marker.pyst-border-grey),
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] .pyst-container-marker.pyst-border-grey) {{
+    border: {grey_border_val} !important;
+    border-radius: {grey_radius_val} !important;
 }}
 
 [data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker)),
 [data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker)) {{
     background-color: {t.card_background} !important;
-    border: {t.card_border_width} solid {t.card_border_color} !important;
-    border-radius: {t.card_border_radius} !important;
+    border: {default_border_val} !important;
+    border-radius: {default_radius_val} !important;
     padding: 22px 24px !important;
     margin: 20px 0 24px 0 !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker).pyst-border-black),
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker).pyst-border-black) {{
+    border: {black_border_val} !important;
+    border-radius: {black_radius_val} !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker).pyst-border-grey),
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker).pyst-border-grey) {{
+    border: {grey_border_val} !important;
+    border-radius: {grey_radius_val} !important;
+}}
+
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker).pyst-border-none),
+[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVerticalBlock"] > [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker).pyst-border-none) {{
+    border: none !important;
 }}
 
 [data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] :is(.pyst-reveal-marker, .pyst-quiz-marker, .pyst-stepper-marker, .pyst-compare-marker, .pyst-checklist-marker)) [data-testid="stButton"] button,
@@ -661,9 +859,23 @@ ul.pyst-bullets {{
 
 .pyst-metric-card {{
     background-color: {t.card_background};
-    border: {t.card_border_width} solid {t.card_border_color};
-    border-radius: {t.card_border_radius};
+    border: {default_border_val};
+    border-radius: {default_radius_val};
     padding: 18px 20px;
+}}
+
+.pyst-metric-card.pyst-border-black {{
+    border: {black_border_val} !important;
+    border-radius: {black_radius_val} !important;
+}}
+
+.pyst-metric-card.pyst-border-grey {{
+    border: {grey_border_val} !important;
+    border-radius: {grey_radius_val} !important;
+}}
+
+.pyst-metric-card.pyst-border-none {{
+    border: none !important;
 }}
 
 .pyst-metric-accent {{

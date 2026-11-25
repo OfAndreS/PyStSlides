@@ -5,8 +5,14 @@ from __future__ import annotations
 import html
 from typing import Any, Callable, Literal, Sequence
 
-from pystslides.components.base import BaseComponent, create_columns, create_container
+from pystslides.components.base import (
+    BaseComponent,
+    create_columns,
+    create_container,
+    resolve_border_style,
+)
 from pystslides.components.typography import _build_asterisk_svg
+from pystslides.config import BorderStyle
 
 
 ContentBlock = str | Sequence[str] | Callable[[], None]
@@ -33,8 +39,10 @@ class InteractiveRenderer(BaseComponent):
         kicker: str | None = None,
         prompt: str | None = None,
         escape_html: bool = False,
+        border_style: BorderStyle | None = None,
     ) -> str:
-        parts = [f'<span class="{marker_class}" aria-hidden="true"></span>']
+        full_marker = f"{marker_class} pyst-border-{border_style}" if border_style else marker_class
+        parts = [f'<span class="{full_marker}" aria-hidden="true"></span>']
         header_text = title or kicker
         if header_text:
             icon_svg = _build_asterisk_svg(accent_color, size=15)
@@ -121,11 +129,13 @@ class InteractiveRenderer(BaseComponent):
         accent_color: str | None = None,
         key: str | None = None,
         escape_html: bool = False,
+        border: BorderStyle | None = None,
     ) -> bool:
         """Renderiza um cartão de revelação (flashcard) com estado persistente em `session_state`."""
         self._reveal_counter += 1
         state_key = f"pyst_reveal_{key}" if key else f"pyst_reveal_{self._reveal_counter}"
         chosen_accent = accent_color or self._next_accent_color()
+        resolved_border = resolve_border_style(border, theme=self.theme)
 
         session_state = getattr(self._st, "session_state", None)
         if session_state is not None and state_key not in session_state:
@@ -137,7 +147,7 @@ class InteractiveRenderer(BaseComponent):
             else initially_revealed
         )
 
-        with create_container(self._st, border=True):
+        with create_container(self._st, border=(resolved_border != "none")):
             markup = self._build_header_markup(
                 "pyst-reveal-marker",
                 accent_color=chosen_accent,
@@ -145,6 +155,7 @@ class InteractiveRenderer(BaseComponent):
                 kicker=kicker,
                 prompt=prompt,
                 escape_html=escape_html,
+                border_style=resolved_border if border is not None else None,
             )
             self._st.markdown(markup, unsafe_allow_html=True)
 
@@ -176,6 +187,7 @@ class InteractiveRenderer(BaseComponent):
         accent_color: str | None = None,
         key: str | None = None,
         escape_html: bool = False,
+        border: BorderStyle | None = None,
     ) -> bool | None:
         """Renderiza um questionário de múltipla escolha com verificação imediata e placar."""
         if not options:
@@ -186,6 +198,7 @@ class InteractiveRenderer(BaseComponent):
         self._quiz_counter += 1
         state_key = f"pyst_quiz_{key}" if key else f"pyst_quiz_{self._quiz_counter}"
         chosen_accent = accent_color or self._next_accent_color()
+        resolved_border = resolve_border_style(border, theme=self.theme)
 
         if all(existing_key != state_key for existing_key, _ in self._quiz_entries):
             self._quiz_entries.append((state_key, question))
@@ -195,7 +208,7 @@ class InteractiveRenderer(BaseComponent):
         submitted_key = f"{state_key}_submitted"
         result_key = f"{state_key}_correct"
 
-        with create_container(self._st, border=True):
+        with create_container(self._st, border=(resolved_border != "none")):
             markup = self._build_header_markup(
                 "pyst-quiz-marker",
                 accent_color=chosen_accent,
@@ -203,6 +216,7 @@ class InteractiveRenderer(BaseComponent):
                 kicker=kicker,
                 prompt=question,
                 escape_html=escape_html,
+                border_style=resolved_border if border is not None else None,
             )
             self._st.markdown(markup, unsafe_allow_html=True)
 
@@ -256,9 +270,11 @@ class InteractiveRenderer(BaseComponent):
         kicker: str | None = "Desempenho",
         empty_message: str = "Nenhum questionário foi registrado ainda nesta apresentação.",
         accent_color: str | None = None,
+        border: BorderStyle | None = None,
     ) -> tuple[int, int]:
         """Exibe o placar consolidado de todos os quizzes respondidos na apresentação."""
         chosen_accent = accent_color or self._next_accent_color()
+        resolved_border = resolve_border_style(border, theme=self.theme)
         session_state = getattr(self._st, "session_state", None) or {}
         total = len(self._quiz_entries)
         correct_count = 0
@@ -286,12 +302,13 @@ class InteractiveRenderer(BaseComponent):
             )
 
         pct = int(round((correct_count / total) * 100)) if total else 0
-        with create_container(self._st, border=True):
+        with create_container(self._st, border=(resolved_border != "none")):
             header = self._build_header_markup(
                 "pyst-reveal-marker",
                 accent_color=chosen_accent,
                 title=title,
                 kicker=kicker,
+                border_style=resolved_border if border is not None else None,
             )
             if total == 0:
                 self._st.markdown(
@@ -323,6 +340,7 @@ class InteractiveRenderer(BaseComponent):
         accent_color: str | None = None,
         key: str | None = None,
         escape_html: bool = False,
+        border: BorderStyle | None = None,
     ) -> int:
         """Renderiza um seletor horizontal de etapas (stepper) dentro de um card editorial."""
         if not steps:
@@ -331,6 +349,7 @@ class InteractiveRenderer(BaseComponent):
         self._stepper_counter += 1
         state_key = f"pyst_stepper_{key}" if key else f"pyst_stepper_{self._stepper_counter}"
         chosen_accent = accent_color or self._next_accent_color()
+        resolved_border = resolve_border_style(border, theme=self.theme)
 
         session_state = getattr(self._st, "session_state", None)
         if session_state is not None and state_key not in session_state:
@@ -341,12 +360,13 @@ class InteractiveRenderer(BaseComponent):
         )
         active_idx = min(max(active_idx, 0), len(steps) - 1)
 
-        with create_container(self._st, border=True):
+        with create_container(self._st, border=(resolved_border != "none")):
             header = self._build_header_markup(
                 "pyst-stepper-marker",
                 accent_color=chosen_accent,
                 title=title,
                 kicker=kicker,
+                border_style=resolved_border if border is not None else None,
             )
             self._st.markdown(header, unsafe_allow_html=True)
 
@@ -390,11 +410,13 @@ class InteractiveRenderer(BaseComponent):
         accent_color: str | None = None,
         key: str | None = None,
         escape_html: bool = False,
+        border: BorderStyle | None = None,
     ) -> Literal["left", "right"]:
         """Alterna dinamicamente entre dois cenários (ex.: Antes vs Depois) no mesmo card."""
         self._compare_counter += 1
         state_key = f"pyst_compare_{key}" if key else f"pyst_compare_{self._compare_counter}"
         chosen_accent = accent_color or self._next_accent_color()
+        resolved_border = resolve_border_style(border, theme=self.theme)
 
         session_state = getattr(self._st, "session_state", None)
         if session_state is not None and state_key not in session_state:
@@ -406,12 +428,13 @@ class InteractiveRenderer(BaseComponent):
             else ("left" if session_state is not None else default_side)
         )
 
-        with create_container(self._st, border=True):
+        with create_container(self._st, border=(resolved_border != "none")):
             header = self._build_header_markup(
                 "pyst-compare-marker",
                 accent_color=chosen_accent,
                 title=title,
                 kicker=kicker,
+                border_style=resolved_border if border is not None else None,
             )
             self._st.markdown(header, unsafe_allow_html=True)
 
@@ -461,6 +484,7 @@ class InteractiveRenderer(BaseComponent):
         default_checked: Sequence[bool] | None = None,
         accent_color: str | None = None,
         key: str | None = None,
+        border: BorderStyle | None = None,
     ) -> list[bool]:
         """Renderiza uma lista de verificação interativa com barra de progresso editorial."""
         if not items:
@@ -469,13 +493,15 @@ class InteractiveRenderer(BaseComponent):
         self._checklist_counter += 1
         state_key = f"pyst_check_{key}" if key else f"pyst_check_{self._checklist_counter}"
         chosen_accent = accent_color or self._next_accent_color()
+        resolved_border = resolve_border_style(border, theme=self.theme)
 
-        with create_container(self._st, border=True):
+        with create_container(self._st, border=(resolved_border != "none")):
             header = self._build_header_markup(
                 "pyst-checklist-marker",
                 accent_color=chosen_accent,
                 title=title,
                 kicker=kicker,
+                border_style=resolved_border if border is not None else None,
             )
             self._st.markdown(header, unsafe_allow_html=True)
 

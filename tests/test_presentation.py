@@ -247,6 +247,26 @@ class TestPresentationFacade(unittest.TestCase):
         self.assertEqual(checks, [True])
         self.assertEqual(summary, (1, 1))
 
+    def test_border_parameter_across_facade_secondary_elements(self) -> None:
+        fake_st = FakeStreamlit()
+        with Presentation(title="Bordas", auto_number=False, st_module=fake_st) as deck:
+            deck.callout("Nota", border="grey")
+            deck.code_block("a = 1", output=1, border="grey", output_border="none")
+            deck.styled_table({"Col": ["Val"]}, border="none")
+            deck.highlighted_text("Texto", border="grey")
+            deck.metrics([("SLA", "99%")], border="none")
+            deck.mermaid("graph BT\n    A --> B", border="grey")
+            deck.reveal_card("Pergunta", "Resposta", border="none", key="b_rev")
+
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertTrue(any('class="pyst-callout pyst-border-grey"' in m for m in markdowns))
+        self.assertTrue(any("pyst-code-marker pyst-border-grey" in m for m in markdowns))
+        self.assertTrue(any('<table class="pyst-table pyst-border-none">' in m for m in markdowns))
+        self.assertTrue(any('class="pyst-card pyst-border-grey"' in m for m in markdowns))
+        self.assertTrue(any('class="pyst-metric-card pyst-border-none"' in m for m in markdowns))
+        self.assertTrue(any("pyst-container-marker pyst-border-grey" in m for m in markdowns))
+        self.assertTrue(any("pyst-reveal-marker pyst-border-none" in m for m in markdowns))
+
 
 if __name__ == "__main__":
     unittest.main()

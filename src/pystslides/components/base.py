@@ -3,9 +3,29 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import Any
+from contextlib import contextmanager
+from typing import Any, Iterator
 
-from pystslides.config import PresentationConfig, PresentationTheme
+from pystslides.config import BorderStyle, PresentationConfig, PresentationTheme
+
+
+def resolve_border_style(
+    border: BorderStyle | None,
+    *,
+    theme: PresentationTheme,
+    bordered: bool = True,
+) -> BorderStyle:
+    """Resolve o estilo categórico de borda (`black`, `grey`, `none`) com fallback no tema."""
+    if border is None:
+        return theme.default_border if bordered else "none"
+    normalized = border.strip().lower()
+    if normalized == "gray":
+        normalized = "grey"
+    if normalized not in ("black", "grey", "none"):
+        raise ValueError(
+            f"Tipo de borda inválido: {border!r}. Use 'black', 'grey' ou 'none'."
+        )
+    return normalized  # type: ignore[return-value]
 
 
 def create_columns(
@@ -31,6 +51,25 @@ def create_container(st_module: Any, *, border: bool = False, center: bool = Fal
         except TypeError:
             return st_module.container(border=border)
     return st_module.container(border=border)
+
+
+@contextmanager
+def create_bordered_container(
+    st_module: Any,
+    *,
+    border_style: BorderStyle,
+    marker_class: str = "pyst-container-marker",
+    center: bool = False,
+) -> Iterator[Any]:
+    """Abre um `st.container` aplicando marcador CSS para o estilo de borda escolhido."""
+    use_border = border_style != "none"
+    with create_container(st_module, border=use_border, center=center) as container:
+        if use_border:
+            st_module.markdown(
+                f'<span class="{marker_class} pyst-border-{border_style}" aria-hidden="true"></span>',
+                unsafe_allow_html=True,
+            )
+        yield container
 
 
 class BaseComponent(ABC):
