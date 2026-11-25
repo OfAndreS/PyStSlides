@@ -14,18 +14,18 @@ CalloutVariant = Literal["info", "success", "warning", "danger", "neutral"]
 TocLocation = Literal["sidebar", "main"]
 
 _CALLOUT_STYLES: dict[CalloutVariant, tuple[str, str, str]] = {
-    "info": ("#f0f6fe", "#1e3a8a", "#3f7bde"),
-    "success": ("#f2f9f4", "#1b4332", "#579568"),
-    "warning": ("#fef8f0", "#7c4a15", "#e19b4d"),
-    "danger": ("#fef2f2", "#991b1b", "#ef4444"),
-    "neutral": ("#f8fafc", "#18181b", "#52525b"),
+    "info": ("#f4f7fe", "#1a3668", "#3f7bde"),
+    "success": ("#f3f9f5", "#1c4529", "#579568"),
+    "warning": ("#fdf7ef", "#734612", "#e19b4d"),
+    "danger": ("#fdf3f2", "#872421", "#d9534f"),
+    "neutral": ("#fafafa", "#000000", "#000000"),
 }
 
 
-def _build_asterisk_svg(color: str) -> str:
+def _build_asterisk_svg(color: str, *, size: int = 18) -> str:
     """Gera o ícone geométrico de asterisco de 8 pontas característico dos slides."""
     return (
-        f'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" '
+        f'<svg width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" '
         f'xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
         f'<g stroke="{html.escape(color)}" stroke-width="3.2" stroke-linecap="round">'
         f'<line x1="12" y1="2.5" x2="12" y2="21.5"/>'
@@ -222,26 +222,38 @@ class TypographyRenderer(BaseComponent):
     ) -> None:
         """Renderiza uma caixa de destaque estilizada para notas, alertas ou dicas."""
         bg_color, text_color, accent_color = _CALLOUT_STYLES[variant]
+        icon_svg = _build_asterisk_svg(accent_color, size=15)
         if self.theme.callout_minimal:
             header_html = (
                 f'<div class="pyst-callout-header">'
-                f'<span class="pyst-callout-dot" style="background-color: {accent_color};"></span>'
+                f'<span class="pyst-callout-icon">{icon_svg}</span>'
+                f"<span>{html.escape(title)}</span></div>"
+                if title
+                else ""
+            )
+            body_html = (
+                f"<div>{html.escape(message)}</div>"
+                if title
+                else (
+                    f'<div style="display:flex;align-items:flex-start;gap:10px;">'
+                    f'<span class="pyst-callout-icon" style="margin-top:4px;">{icon_svg}</span>'
+                    f"<span>{html.escape(message)}</span></div>"
+                )
+            )
+            markup = f'<div class="pyst-callout">{header_html}{body_html}</div>'
+        else:
+            title_html = (
+                f'<div class="pyst-callout-header" style="color: {text_color};">'
+                f'<span class="pyst-callout-icon">{icon_svg}</span>'
                 f"<span>{html.escape(title)}</span></div>"
                 if title
                 else ""
             )
             markup = (
-                f'<div class="pyst-callout">'
-                f"{header_html}"
-                f"<div>{html.escape(message)}</div></div>"
-            )
-        else:
-            title_html = f"<strong>{html.escape(title)}</strong><br>" if title else ""
-            markup = (
                 f'<div class="pyst-callout" '
                 f'style="background-color: {bg_color}; color: {text_color}; '
                 f'border: none; border-left: 4px solid {accent_color};">'
-                f"{title_html}{html.escape(message)}</div>"
+                f"{title_html}<div>{html.escape(message)}</div></div>"
             )
         self._st.markdown(markup, unsafe_allow_html=True)
 

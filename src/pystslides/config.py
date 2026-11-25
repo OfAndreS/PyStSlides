@@ -47,22 +47,25 @@ class PresentationTheme:
     code_font_size: str = "16px"
     code_line_height: float = 1.55
     card_font_size: str | None = None
-    table_font_size: str = "16px"
+    table_font_size: str = "18px"
     divider_color: str = "#e5e7eb"
     divider_thickness: str = "1px"
     default_subtopic_spacing_px: int = 48
     default_media_vertical_align: VerticalAlign = "top"
     paragraph_max_width: str = "62ch"
     callout_minimal: bool = True
+    table_rounded: bool = True
     clean_chrome: bool = True
     card_background: str = "#ffffff"
     card_text_color: str = "#000000"
-    card_border_color: str = "#e5e7eb"
+    card_border_color: str = "#000000"
+    card_border_width: str = "1.5px"
     card_border_radius: str = "12px"
-    table_header_bg: str = "#f8fafc"
-    table_header_color: str = "#18181b"
+    table_header_bg: str = "#ffffff"
+    table_header_color: str = "#000000"
     table_border_color: str = "#e5e7eb"
-    table_hover_bg: str = "#f9fafb"
+    table_rule_color: str = "#000000"
+    table_hover_bg: str = "#fafafa"
     column_ratios: tuple[float, float, float] = (0.75, 8.5, 0.75)
 
 

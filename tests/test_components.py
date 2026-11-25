@@ -48,10 +48,20 @@ class TestStyleInjector(unittest.TestCase):
         self.assertIn('[data-testid="stToolbar"]', css)
 
     def test_custom_code_and_card_font_sizes(self) -> None:
-        theme = PresentationTheme(code_font_size="22px", card_font_size="20px")
+        theme = PresentationTheme(code_font_size="22px", card_font_size="20px", table_rounded=False)
         css = StyleInjector(theme).build_css()
         self.assertIn("font-size: 22px !important;", css)
         self.assertIn("font-size: 20px !important;", css)
+        self.assertIn("border-collapse: collapse !important;", css)
+
+    def test_editorial_secondary_styles_in_default_css(self) -> None:
+        css = StyleInjector(PresentationTheme()).build_css()
+        self.assertIn("border-collapse: separate !important;", css)
+        self.assertIn("border-radius: 12px !important;", css)
+        self.assertIn("border: 1.5px solid #000000 !important;", css)
+        self.assertIn("border-bottom: 1.5px solid #000000 !important;", css)
+        self.assertIn("font-size: 18px !important;", css)
+        self.assertIn(".pyst-mark {", css)
 
 
 class TestMediaAndCodeComponents(unittest.TestCase):
@@ -123,9 +133,10 @@ class TestDataComponent(unittest.TestCase):
         ]
         rendered = apply_highlights(text, spans)
 
-        self.assertIn('&lt;admin@site.com&gt;<span class="pyst-mark-badge">[EMAIL : 0.90]</span>', rendered)
+        self.assertIn('&lt;admin@site.com&gt;<span class="pyst-mark-badge">EMAIL · 0.90</span>', rendered)
         self.assertNotIn("OVERLAP", rendered)
-        self.assertIn('123<span class="pyst-mark-badge">[DOC]</span>', rendered)
+        self.assertIn('123<span class="pyst-mark-badge">DOC</span>', rendered)
+        self.assertIn('class="pyst-mark"', rendered)
 
     def test_highlighted_text_supports_custom_font_size(self) -> None:
         fake_st = FakeStreamlit()
@@ -143,7 +154,7 @@ class TestDataComponent(unittest.TestCase):
         )
         self.assertIn('<table class="pyst-table">', html_table)
         self.assertIn("<th>Nome</th>", html_table)
-        self.assertIn('Ana<span class="pyst-mark-badge">[PERSON]</span>', html_table)
+        self.assertIn('Ana<span class="pyst-mark-badge">PERSON</span>', html_table)
 
     def test_styled_table_accepts_dataframe_like_object(self) -> None:
         class FakeDataFrame:
@@ -191,7 +202,7 @@ class TestTypographyComponent(unittest.TestCase):
         self.assertTrue(any("#3f7bde" in m and "Data Discovery" in m for m in markdowns))
         self.assertTrue(any("#579568" in m and "Data Discovery" in m for m in markdowns))
         self.assertTrue(any('<h1 class="pyst-topic-title">Amplitude de cobertura</h1>' == m for m in markdowns))
-        self.assertTrue(any('class="pyst-callout-dot"' in m for m in markdowns))
+        self.assertTrue(any('class="pyst-callout-icon"' in m and "<svg" in m for m in markdowns))
         self.assertFalse(any('<hr class="pyst-divider">' in m for m in markdowns))
 
 

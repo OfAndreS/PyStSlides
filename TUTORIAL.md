@@ -403,7 +403,8 @@ with Presentation(title="Minha Apresentação", theme=tema_customizado) as deck:
 | `paragraph_font_size` | `"24px"` | Tamanho base do texto corrido e cards. |
 | `paragraph_max_width` | `"62ch"` | Limita a largura da linha para leitura confortável. |
 | `topic_dividers` | `False` | Adiciona divisores horizontais acima e abaixo de cada tópico. |
-| `callout_minimal` | `True` | Usa card neutro `#fafafa` com ponto colorido em vez de barra grossa lateral. |
+| `callout_minimal` | `True` | Usa card branco com borda `#000000` (`1.5px`) e asterisco colorido em vez de barra lateral. |
+| `table_rounded` | `True` | Renderiza tabela editorial com bordas arredondadas `#000000` (`12px`) em vez de tabela aberta. |
 | `clean_chrome` | `True` | Oculta toolbar, botão Deploy e rodapé padrão do Streamlit. |
 | `default_media_vertical_align` | `"top"` | Alinhamento vertical padrão da mídia (`"top"`, `"center"`, `"bottom"`) em `cover` e `split_slide`. |
 

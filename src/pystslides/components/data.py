@@ -11,13 +11,14 @@ from pystslides.components.base import BaseComponent
 
 
 class HighlightLevel(Enum):
-    """Níveis semânticos de destaque com paleta de cores acessível."""
+    """Níveis semânticos de destaque alinhados à paleta editorial do PyStSlides."""
 
-    LOW = ("#fee2e2", "#991b1b")
-    MEDIUM = ("#fef08a", "#854d0e")
-    HIGH = ("#dcfce7", "#166534")
-    INFO = ("#dbeafe", "#1e40af")
-    NEUTRAL = ("#f1f5f9", "#334155")
+    LOW = ("#fdf0ef", "#8c2623", "#d9534f")
+    MEDIUM = ("#fdf6ec", "#734612", "#e19b4d")
+    HIGH = ("#eef6f0", "#1c4529", "#579568")
+    INFO = ("#eef4fd", "#1a3668", "#3f7bde")
+    ACCENT = ("#f3f0fe", "#4c2da6", "#8461f0")
+    NEUTRAL = ("#f4f4f5", "#18181b", "#71717a")
 
     @property
     def bg_color(self) -> str:
@@ -26,6 +27,10 @@ class HighlightLevel(Enum):
     @property
     def text_color(self) -> str:
         return self.value[1]
+
+    @property
+    def accent_color(self) -> str:
+        return self.value[2]
 
 
 @dataclass(frozen=True)
@@ -68,14 +73,21 @@ class HighlightSpan:
         level = self.level or HighlightLevel.INFO
         return self.bg_color or level.bg_color, self.text_color or level.text_color
 
+    def resolve_accent_color(self) -> str:
+        """Retorna a cor de acento para a linha inferior editorial do destaque."""
+        if self.text_color:
+            return self.text_color
+        level = self.level or HighlightLevel.INFO
+        return level.accent_color
+
     def format_badge(self) -> str:
         """Formata o sufixo de etiqueta/pontuação exibido ao lado do trecho marcado."""
         if self.label and self.score is not None:
-            return f" [{self.label} : {self.score:.2f}]"
+            return f"{self.label} · {self.score:.2f}"
         if self.label:
-            return f" [{self.label}]"
+            return self.label
         if self.score is not None:
-            return f" [{self.score:.2f}]"
+            return f"{self.score:.2f}"
         return ""
 
 
@@ -100,12 +112,13 @@ def apply_highlights(text: str, spans: Sequence[HighlightSpan]) -> str:
             chunks.append(html.escape(text[cursor : span.start]))
 
         bg, fg = span.resolve_colors()
+        accent = span.resolve_accent_color()
         snippet = html.escape(text[span.start : span.end])
         badge_text = html.escape(span.format_badge().strip())
         badge_html = f'<span class="pyst-mark-badge">{badge_text}</span>' if badge_text else ""
         chunks.append(
-            f'<mark style="background-color: {bg}; color: {fg}; '
-            f'padding: 3px 7px; border-radius: 6px; text-decoration: none;">'
+            f'<mark class="pyst-mark" style="background-color: {bg}; color: {fg}; '
+            f'border-bottom: 2px solid {accent};">'
             f"{snippet}{badge_html}</mark>"
         )
         cursor = span.end

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pystslides"
-version = "0.1.0"
+version = "1.2.0"
 description = "Pacote orientado a objetos sobre Streamlit para automatizar apresentações técnicas em código."
 readme = "README.md"
 license = { file = "LICENSE" }

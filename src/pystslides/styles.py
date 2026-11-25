@@ -38,6 +38,133 @@ footer {
             if t.clean_chrome
             else ""
         )
+        table_css = (
+            f"""
+.stMarkdown table.pyst-table,
+table.pyst-table {{
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    font-family: {font_stack} !important;
+    font-size: {t.table_font_size} !important;
+    line-height: 1.5 !important;
+    letter-spacing: {t.paragraph_letter_spacing} !important;
+    text-align: left !important;
+    background-color: {t.card_background} !important;
+    border: {t.card_border_width} solid {t.card_border_color} !important;
+    border-radius: {t.card_border_radius} !important;
+    margin: 0 0 24px 0 !important;
+    overflow: hidden;
+}}
+
+.stMarkdown table.pyst-table tr,
+table.pyst-table tr {{
+    border: none !important;
+    background-color: transparent !important;
+}}
+
+.stMarkdown table.pyst-table th,
+table.pyst-table th {{
+    background-color: {t.table_header_bg} !important;
+    color: {t.table_header_color} !important;
+    padding: 15px 16px !important;
+    border: none !important;
+    border-bottom: {t.card_border_width} solid {t.table_rule_color} !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+}}
+
+.stMarkdown table.pyst-table th:first-child,
+table.pyst-table th:first-child {{
+    border-top-left-radius: 10px;
+}}
+
+.stMarkdown table.pyst-table th:last-child,
+table.pyst-table th:last-child {{
+    border-top-right-radius: 10px;
+}}
+
+.stMarkdown table.pyst-table td,
+table.pyst-table td {{
+    padding: 16px !important;
+    border: none !important;
+    border-bottom: 1px solid {t.table_border_color} !important;
+    color: {t.text_color} !important;
+    vertical-align: middle !important;
+}}
+
+.stMarkdown table.pyst-table tr:last-child td,
+table.pyst-table tr:last-child td {{
+    border-bottom: none !important;
+}}
+
+.stMarkdown table.pyst-table tr:last-child td:first-child,
+table.pyst-table tr:last-child td:first-child {{
+    border-bottom-left-radius: 10px;
+}}
+
+.stMarkdown table.pyst-table tr:last-child td:last-child,
+table.pyst-table tr:last-child td:last-child {{
+    border-bottom-right-radius: 10px;
+}}
+
+.stMarkdown table.pyst-table tr:hover td,
+table.pyst-table tr:hover td {{
+    background-color: {t.table_hover_bg} !important;
+}}"""
+            if t.table_rounded
+            else f"""
+.stMarkdown table.pyst-table,
+table.pyst-table {{
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-family: {font_stack} !important;
+    font-size: {t.table_font_size} !important;
+    line-height: 1.5 !important;
+    letter-spacing: {t.paragraph_letter_spacing} !important;
+    text-align: left !important;
+    background-color: {t.card_background} !important;
+    border: none !important;
+    margin: 0 0 24px 0 !important;
+}}
+
+.stMarkdown table.pyst-table tr,
+table.pyst-table tr {{
+    border: none !important;
+    background-color: transparent !important;
+}}
+
+.stMarkdown table.pyst-table th,
+table.pyst-table th {{
+    background-color: {t.table_header_bg} !important;
+    color: {t.table_header_color} !important;
+    padding: 14px 16px !important;
+    border: none !important;
+    border-top: 1.5px solid {t.table_rule_color} !important;
+    border-bottom: 1.5px solid {t.table_rule_color} !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+}}
+
+.stMarkdown table.pyst-table td,
+table.pyst-table td {{
+    padding: 16px !important;
+    border: none !important;
+    border-bottom: 1px solid {t.table_border_color} !important;
+    color: {t.text_color} !important;
+    vertical-align: middle !important;
+}}
+
+.stMarkdown table.pyst-table tr:last-child td,
+table.pyst-table tr:last-child td {{
+    border-bottom: 1.5px solid {t.table_rule_color} !important;
+}}
+
+.stMarkdown table.pyst-table tr:hover td,
+table.pyst-table tr:hover td {{
+    background-color: {t.table_hover_bg} !important;
+}}"""
+        )
 
         return f"""<style>
 {font_import}html, body, .stApp, [data-testid="stAppViewContainer"] {{
@@ -192,15 +319,15 @@ h1.pyst-topic-title {{
 .stMarkdown .pyst-card,
 .pyst-card {{
     font-size: {card_font_size} !important;
-    line-height: 1.6 !important;
+    line-height: 1.85 !important;
     letter-spacing: {t.paragraph_letter_spacing} !important;
-    padding: 24px;
+    padding: 24px 26px;
     background-color: {t.card_background};
     color: {t.card_text_color};
-    border: 1px solid {t.card_border_color};
+    border: {t.card_border_width} solid {t.card_border_color};
     border-radius: {t.card_border_radius};
     white-space: pre-wrap;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }}
 
 [data-testid="stCode"] pre,
@@ -212,42 +339,55 @@ h1.pyst-topic-title {{
 }}
 
 .pyst-callout {{
-    padding: 18px 22px;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    background-color: #fafafa;
-    color: #18181b;
-    margin: 20px 0;
+    padding: 20px 24px;
+    border-radius: {t.card_border_radius};
+    border: {t.card_border_width} solid {t.card_border_color};
+    background-color: {t.card_background};
+    color: {t.text_color};
+    margin: 22px 0;
     font-size: 18px;
+    font-weight: 400;
     line-height: 1.55;
+    letter-spacing: {t.paragraph_letter_spacing};
     max-width: {t.paragraph_max_width};
 }}
 
 .pyst-callout-header {{
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 9px;
     font-size: 15px;
     font-weight: 500;
+    letter-spacing: -0.01em;
     color: {t.text_color};
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }}
 
-.pyst-callout-dot {{
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
-    display: inline-block;
+.pyst-callout-icon {{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
 }}
 
+.pyst-mark {{
+    display: inline;
+    padding: 2px 8px;
+    border-radius: 6px;
+    text-decoration: none;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}}
+
 .pyst-mark-badge {{
-    font-size: 0.62em;
+    font-size: 0.56em;
     font-weight: 500;
-    letter-spacing: 0.02em;
-    opacity: 0.85;
-    margin-left: 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.82;
+    margin-left: 6px;
     vertical-align: middle;
+    white-space: nowrap;
 }}
 
 .pyst-nav-indicator {{
@@ -256,57 +396,12 @@ h1.pyst-topic-title {{
     color: {t.muted_text_color};
     padding-top: 6px;
 }}
-
-.pyst-table {{
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    font-family: {font_stack};
-    font-size: {t.table_font_size};
-    text-align: left;
-    background-color: {t.card_background};
-    border: 1px solid {t.table_border_color};
-    border-radius: {t.card_border_radius};
-    margin-bottom: 20px;
-}}
-
-.pyst-table th {{
-    background-color: {t.table_header_bg};
-    color: {t.table_header_color};
-    padding: 16px;
-    border-bottom: 1px solid {t.table_border_color};
-    font-weight: 500;
-}}
-
-.pyst-table th:first-child {{
-    border-top-left-radius: 11px;
-}}
-
-.pyst-table th:last-child {{
-    border-top-right-radius: 11px;
-}}
-
-.pyst-table td {{
-    padding: 16px;
-    border-bottom: 1px solid {t.table_border_color};
-    color: {t.text_color};
-    vertical-align: middle;
-}}
-
-.pyst-table tr:last-child td {{
-    border-bottom: none;
-}}
-
-.pyst-table tr:last-child td:first-child {{
-    border-bottom-left-radius: 11px;
-}}
-
-.pyst-table tr:last-child td:last-child {{
-    border-bottom-right-radius: 11px;
-}}
-
-.pyst-table tr:hover td {{
-    background-color: {t.table_hover_bg};
+{table_css}
+.pyst-table td .pyst-mark {{
+    font-size: 0.88em;
+    padding: 1px 6px;
+    line-height: 1.75;
+    white-space: nowrap;
 }}
 </style>"""
 
