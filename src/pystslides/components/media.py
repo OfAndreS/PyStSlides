@@ -204,6 +204,8 @@ class MediaRenderer(BaseComponent):
     const autoHeight = {auto_height_js};
     const wrap = document.getElementById('pyst-mermaid-wrap');
     let applyingResize = false;
+    let lastAppliedHeight = 0;
+    let mo = null;
 
     function measureHeight() {{
       const svg = wrap.querySelector('svg');
@@ -227,6 +229,57 @@ class MediaRenderer(BaseComponent):
       }}
     }}
 
+    function isElementContainer(el) {{
+      if (!el || !el.getAttribute) return false;
+      const testId = el.getAttribute('data-testid');
+      if (testId === 'stElementContainer' || testId === 'element-container') return true;
+      return Boolean(
+        el.classList &&
+        (el.classList.contains('stElementContainer') || el.classList.contains('element-container'))
+      );
+    }}
+
+    function isLayoutBoundary(el) {{
+      if (!el) return true;
+      const tag = el.tagName ? el.tagName.toUpperCase() : '';
+      if (tag === 'SECTION' || tag === 'MAIN' || tag === 'BODY' || tag === 'HTML') return true;
+      const testId = el.getAttribute ? el.getAttribute('data-testid') : '';
+      return (
+        testId === 'stVerticalBlock' ||
+        testId === 'stVerticalBlockBorderWrapper' ||
+        testId === 'stHorizontalBlock' ||
+        testId === 'stColumn' ||
+        testId === 'column' ||
+        testId === 'stMain' ||
+        testId === 'stMainBlockContainer' ||
+        testId === 'stAppViewContainer'
+      );
+    }}
+
+    function findInnerWrappersAndContainer(frame) {{
+      const wrappers = [];
+      let container = null;
+      let parent = frame.parentElement;
+      for (let i = 0; i < 6 && parent; i++) {{
+        if (isElementContainer(parent)) {{
+          container = parent;
+          break;
+        }}
+        if (isLayoutBoundary(parent)) {{
+          return {{ wrappers: [], container: null }};
+        }}
+        wrappers.push(parent);
+        parent = parent.parentElement;
+      }}
+      return container ? {{ wrappers, container }} : {{ wrappers: [], container: null }};
+    }}
+
+    function observeFrame() {{
+      if (mo && window.frameElement) {{
+        mo.observe(window.frameElement, {{ attributes: true, attributeFilter: ['height', 'style'] }});
+      }}
+    }}
+
     function fitFrame() {{
       if (!autoHeight) {{
         scaleSvgToViewportIfClipped();
@@ -234,6 +287,7 @@ class MediaRenderer(BaseComponent):
       }}
       if (applyingResize) return;
       applyingResize = true;
+      if (mo) mo.disconnect();
       try {{
         const svg = wrap.querySelector('svg');
         if (svg) {{
@@ -241,36 +295,45 @@ class MediaRenderer(BaseComponent):
           svg.style.removeProperty('width');
         }}
         const h = measureHeight();
+        const targetPx = h + 'px';
+        const targetAttr = String(h);
         let resized = false;
-        if (window.frameElement) {{
-          window.frameElement.style.height = h + 'px';
-          window.frameElement.style.minHeight = '0px';
-          window.frameElement.height = String(h);
-          let parent = window.frameElement.parentElement;
-          for (let i = 0; i < 8 && parent; i++) {{
-            if (parent.getAttribute && parent.getAttribute('data-testid') === 'stElementContainer') {{
-              parent.style.height = 'auto';
-              parent.style.minHeight = '0px';
-              break;
+        const frame = window.frameElement;
+        if (frame) {{
+          if (
+            frame.style.height !== targetPx ||
+            frame.style.minHeight !== '0px' ||
+            frame.getAttribute('height') !== targetAttr ||
+            lastAppliedHeight !== h
+          ) {{
+            frame.style.height = targetPx;
+            frame.style.minHeight = '0px';
+            frame.height = targetAttr;
+            const {{ wrappers, container }} = findInnerWrappersAndContainer(frame);
+            for (const wrapper of wrappers) {{
+              if (wrapper.style) {{
+                wrapper.style.height = targetPx;
+                wrapper.style.minHeight = '0px';
+              }}
             }}
-            if (parent.style) {{
-              parent.style.height = h + 'px';
-              parent.style.minHeight = '0px';
+            if (container && container.style) {{
+              container.style.height = 'auto';
+              container.style.minHeight = '0px';
             }}
-            parent = parent.parentElement;
+            lastAppliedHeight = h;
           }}
           resized = true;
         }}
         if (!resized) {{
           scaleSvgToViewportIfClipped();
-        }} else {{
-          requestAnimationFrame(() => {{
-            scaleSvgToViewportIfClipped();
-          }});
         }}
       }} catch (_) {{
         scaleSvgToViewportIfClipped();
       }} finally {{
+        if (mo) {{
+          mo.takeRecords();
+          observeFrame();
+        }}
         applyingResize = false;
       }}
     }}
@@ -293,10 +356,10 @@ class MediaRenderer(BaseComponent):
         ro.observe(wrap);
       }}
       if (autoHeight && window.frameElement && typeof MutationObserver !== 'undefined') {{
-        const mo = new MutationObserver(() => {{
+        mo = new MutationObserver(() => {{
           if (!applyingResize) fitFrame();
         }});
-        mo.observe(window.frameElement, {{ attributes: true, attributeFilter: ['height', 'style'] }});
+        observeFrame();
       }}
       window.addEventListener('resize', fitFrame);
       if (document.fonts && document.fonts.ready) {{

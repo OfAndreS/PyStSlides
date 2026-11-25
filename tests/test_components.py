@@ -175,6 +175,10 @@ class TestMediaAndCodeComponents(unittest.TestCase):
         self.assertIn("const autoHeight = false;", fixed_doc)
         self.assertIn("ResizeObserver", short_doc)
         self.assertIn("MutationObserver", short_doc)
+        self.assertIn("mo.disconnect()", short_doc)
+        self.assertIn("mo.takeRecords()", short_doc)
+        self.assertIn("isLayoutBoundary", short_doc)
+        self.assertIn("element-container", short_doc)
 
         markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
         self.assertTrue(any("pyst-container-marker pyst-border-grey" in m for m in markdowns))
