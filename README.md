@@ -70,6 +70,7 @@
 ```bash
 PyStSlides/
 ├── assets/
+│   ├── tutorial/                    # Screenshots de cada módulo do TUTORIAL.md.
 │   ├── architecture.svg             # Diagrama visual da arquitetura POO do pacote.
 │   └── banner.svg                   # Banner principal do repositório.
 ├── examples/

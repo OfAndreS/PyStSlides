@@ -97,6 +97,10 @@ with Presentation(
 streamlit run app.py
 ```
 
+<div align="center">
+  <img width="880" alt="Resultado do primeiro exemplo no PyStSlides" src="./assets/tutorial/step_01_primeira_apresentacao.png" />
+</div>
+
 </details>
 
 <br>
@@ -149,6 +153,10 @@ deck.split_slide(
 )
 ```
 
+<div align="center">
+  <img width="880" alt="Layout editorial em duas colunas com split_slide" src="./assets/tutorial/step_02_split_slide.png" />
+</div>
+
 3 ) **Modo apresentação paginado (`paginated=True`):**
 
 Por padrão, o conteúdo é exibido em fluxo vertical contínuo (ideal para rolagem e leitura). Ative `paginated=True` para renderizar **um slide por tela** com barra `← Anterior | X / N | Próximo →`:
@@ -163,6 +171,10 @@ with Presentation(
 ) as deck:
     ...
 ```
+
+<div align="center">
+  <img width="880" alt="Modo apresentação paginado slide a slide" src="./assets/tutorial/step_02_paginado.png" />
+</div>
 
 | Parâmetro de `Presentation` | Padrão | Descrição |
 |---|---|---|
@@ -221,6 +233,10 @@ deck.mermaid(
 )
 ```
 
+<div align="center">
+  <img width="880" alt="Diagrama Mermaid, callout e galeria em duas colunas" src="./assets/tutorial/step_03_mermaid_galeria.png" />
+</div>
+
 3 ) **Blocos de código e demonstração ao vivo (`code_block` e `live_code`):**
 
 ```python
@@ -260,6 +276,10 @@ deck.styled_table(
     highlights={("Exemplo", 0): [HighlightSpan.from_score(0, 15, "EMAIL", 0.98)]},
 )
 ```
+
+<div align="center">
+  <img width="880" alt="Texto marcado, callout, tabela estilizada e live_code" src="./assets/tutorial/step_03_dados_codigo.png" />
+</div>
 
 </details>
 
@@ -316,6 +336,10 @@ with Presentation(title="Workshop", assets_dir="assets") as deck:
 
 Quando `assets_dir` é configurado em `Presentation`, você passa apenas o nome do arquivo (`"discovery_cover.png"`). Se precisar validar ou listar imagens fora da fachada, use `AssetManager.from_file(__file__, "assets")`.
 
+<div align="center">
+  <img width="880" alt="Exemplo de seção modularizada com SlideSection" src="./assets/tutorial/step_04_modularizacao.png" />
+</div>
+
 </details>
 
 <br>
@@ -362,5 +386,9 @@ with Presentation(title="Minha Apresentação", theme=tema_customizado) as deck:
 | `topic_dividers` | `False` | Adiciona divisores horizontais acima e abaixo de cada tópico. |
 | `callout_minimal` | `True` | Usa card neutro `#fafafa` com ponto colorido em vez de barra grossa lateral. |
 | `clean_chrome` | `True` | Oculta toolbar, botão Deploy e rodapé padrão do Streamlit. |
+
+<div align="center">
+  <img width="880" alt="Tema customizado com Plus Jakarta Sans e divisores" src="./assets/tutorial/step_05_tema.png" />
+</div>
 
 </details>
