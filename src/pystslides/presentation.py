@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager, nullcontext
 from pathlib import Path
-from typing import Any, Iterable, Iterator, Literal, Mapping, Sequence
+from typing import Any, Callable, Iterable, Iterator, Literal, Mapping, Sequence
 
 from pystslides.assets import AssetManager
 from pystslides.components.base import create_container
@@ -24,6 +24,57 @@ def _load_streamlit() -> Any:
     return st
 
 
+class _NoOpColumn:
+    def __enter__(self) -> _NoOpColumn:
+        return self
+
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        return None
+
+
+class _GatedStreamlit:
+    """Proxy que suprime chamadas de renderização fora do slide ativo no modo paginado."""
+
+    def __init__(self, st_module: Any, is_active: Callable[[], bool]) -> None:
+        self._st = st_module
+        self._is_active = is_active
+
+    @property
+    def sidebar(self) -> Any:
+        return self._st.sidebar
+
+    def columns(self, spec: Any, **kwargs: Any) -> list[Any]:
+        if self._is_active():
+            return self._st.columns(spec, **kwargs)
+        count = spec if isinstance(spec, int) else len(spec)
+        return [_NoOpColumn() for _ in range(count)]
+
+    def container(self, **kwargs: Any) -> Any:
+        if self._is_active():
+            return self._st.container(**kwargs)
+        return nullcontext()
+
+    @contextmanager
+    def echo(self, **kwargs: Any) -> Iterator[None]:
+        if self._is_active():
+            with self._st.echo(**kwargs):
+                yield
+        else:
+            yield
+
+    def __getattr__(self, name: str) -> Any:
+        target = getattr(self._st, name)
+        if not callable(target):
+            return target
+
+        def _guarded(*args: Any, **kwargs: Any) -> Any:
+            if self._is_active():
+                return target(*args, **kwargs)
+            return None
+
+        return _guarded
+
+
 class Presentation:
     """Fachada orientada a objetos para criar apresentações estruturadas no Streamlit.
 
@@ -40,10 +91,13 @@ class Presentation:
         self,
         title: str = "Apresentação",
         *,
-        page_icon: str = "📊",
+        page_icon: str | None = None,
         layout: PageLayout = "wide",
         assets_dir: str | Path | None = None,
         auto_number: bool = True,
+        brand_label: str | None = None,
+        repeat_brand_kicker: bool = False,
+        paginated: bool = False,
         show_toc: bool = False,
         toc_title: str = "Sumário",
         theme: PresentationTheme | None = None,
@@ -59,12 +113,24 @@ class Presentation:
                 layout=layout,
                 assets_dir=assets_dir,
                 auto_number=auto_number,
+                brand_label=brand_label,
+                repeat_brand_kicker=repeat_brand_kicker,
+                paginated=paginated,
                 show_toc=show_toc,
                 toc_title=toc_title,
                 theme=theme or PresentationTheme(),
             )
 
         self._st = st_module if st_module is not None else _load_streamlit()
+        self._slide_index = -1
+        self._active_slide = 0
+        self._in_split_slide = False
+        self._render_st = (
+            _GatedStreamlit(self._st, self._is_active_slide)
+            if self._config.paginated
+            else self._st
+        )
+
         self._assets = (
             AssetManager(self._config.assets_dir)
             if self._config.assets_dir is not None
@@ -77,13 +143,23 @@ class Presentation:
         )
         self._styles = StyleInjector(self._config.theme)
 
-        self._typography = TypographyRenderer(self._st, self._config, self._tracker)
-        self._media = MediaRenderer(self._st, self._config, self._assets)
-        self._code = CodeRenderer(self._st, self._config)
-        self._data = DataRenderer(self._st, self._config)
+        self._typography = TypographyRenderer(self._render_st, self._config, self._tracker)
+        self._media = MediaRenderer(self._render_st, self._config, self._assets)
+        self._code = CodeRenderer(self._render_st, self._config)
+        self._data = DataRenderer(self._render_st, self._config)
 
         self._initialized = False
         self._context_stack: ExitStack | None = None
+
+    def _is_active_slide(self) -> bool:
+        if not self._config.paginated:
+            return True
+        current = max(self._slide_index, 0)
+        return current == self._active_slide
+
+    def _advance_slide(self) -> None:
+        if self._config.paginated and not self._in_split_slide:
+            self._slide_index += 1
 
     # ------------------------------------------------------------------
     # Propriedades de acesso controlado
@@ -131,6 +207,8 @@ class Presentation:
 
     def __enter__(self) -> Presentation:
         self.setup()
+        if self._config.paginated and hasattr(self._st, "session_state"):
+            self._active_slide = int(self._st.session_state.get("pyst_slide_index", 0))
         stack = ExitStack()
         _, center_col, _ = self._st.columns(list(self._config.theme.column_ratios))
         stack.enter_context(center_col)
@@ -139,15 +217,54 @@ class Presentation:
         return self
 
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        if exc_type is None and self._config.paginated:
+            self._render_pagination_bar()
         if self._context_stack is not None:
             self._context_stack.close()
             self._context_stack = None
         if exc_type is None and self._config.show_toc and self._tracker.entries:
             self.render_toc(location="sidebar")
 
+    def _render_pagination_bar(self) -> None:
+        total_slides = max(self._slide_index + 1, 1)
+        if total_slides <= 1 or not hasattr(self._st, "button"):
+            return
+        self._active_slide = min(max(self._active_slide, 0), total_slides - 1)
+        self._st.markdown('<hr class="pyst-divider">', unsafe_allow_html=True)
+        prev_col, info_col, next_col = self._st.columns([1.0, 2.0, 1.0])
+        with prev_col:
+            if self._st.button(
+                "← Anterior",
+                disabled=self._active_slide <= 0,
+                key="pyst_slide_prev",
+                use_container_width=True,
+            ):
+                self._st.session_state["pyst_slide_index"] = self._active_slide - 1
+                if hasattr(self._st, "rerun"):
+                    self._st.rerun()
+        with info_col:
+            self._st.markdown(
+                f'<div class="pyst-nav-indicator">{self._active_slide + 1} / {total_slides}</div>',
+                unsafe_allow_html=True,
+            )
+        with next_col:
+            if self._st.button(
+                "Próximo →",
+                disabled=self._active_slide >= total_slides - 1,
+                key="pyst_slide_next",
+                use_container_width=True,
+            ):
+                self._st.session_state["pyst_slide_index"] = self._active_slide + 1
+                if hasattr(self._st, "rerun"):
+                    self._st.rerun()
+
     # ------------------------------------------------------------------
     # Tipografia, estrutura e navegação
     # ------------------------------------------------------------------
+    def kicker(self, label: str, *, accent_color: str | None = None) -> None:
+        """Renderiza o cabeçalho discreto de marca/seção com ícone geométrico."""
+        self._typography.kicker(label, accent_color=accent_color)
+
     def cover(
         self,
         *,
@@ -158,14 +275,35 @@ class Presentation:
         image: Any | None = None,
         caption: str = "",
         image_width: int | None = None,
+        image_position: Literal["below", "right"] = "below",
+        kicker: str | None = None,
     ) -> None:
-        """Renderiza o slide de capa com imagem e/ou cabeçalho tipográfico."""
+        """Renderiza o slide de capa com imagem abaixo ou em coluna lateral à direita."""
+        self._advance_slide()
+        if image is not None and image_position == "right" and title:
+            effective_kicker = kicker if kicker is not None else self._config.brand_label
+            if effective_kicker:
+                self._typography.kicker(effective_kicker)
+            left_col, right_col = self._render_st.columns([1.2, 0.8])
+            with left_col:
+                self._typography.cover_header(
+                    title=title,
+                    subtitle=subtitle,
+                    author=author,
+                    date=date,
+                    kicker="",
+                )
+            with right_col:
+                self._media.image(image, caption=caption, width=image_width)
+            return
+
         if title:
             self._typography.cover_header(
                 title=title,
                 subtitle=subtitle,
                 author=author,
                 date=date,
+                kicker=kicker,
             )
         if image is not None:
             self._media.image(image, caption=caption, width=image_width)
@@ -176,13 +314,82 @@ class Presentation:
         *,
         numbered: bool | None = None,
         spacing_after_px: int = 0,
+        kicker: str | None = None,
     ) -> SectionEntry:
-        """Renderiza um tópico principal numerado automaticamente."""
+        """Renderiza um tópico principal em estilo editorial limpo."""
+        self._advance_slide()
         return self._typography.topic(
             title,
             numbered=numbered,
             spacing_after_px=spacing_after_px,
+            kicker=kicker,
         )
+
+    def split_slide(
+        self,
+        title: str | None = None,
+        body: str | Sequence[str] | Callable[[], None] | None = None,
+        *,
+        media: Any | Callable[[], None] | None = None,
+        media_position: Literal["left", "right"] = "right",
+        title_bottom: bool = False,
+        numbered: bool | None = None,
+        kicker: str | None = None,
+        ratio: tuple[float, float] = (1.15, 0.85),
+        media_caption: str = "",
+        media_width: int | None = None,
+    ) -> SectionEntry | None:
+        """Renderiza um slide editorial de duas colunas (texto e ilustração/mídia)."""
+        self._advance_slide()
+        self._in_split_slide = True
+        try:
+            effective_kicker = (
+                kicker
+                if kicker is not None
+                else (
+                    self._config.brand_label
+                    if (self._config.repeat_brand_kicker or self._config.paginated)
+                    else None
+                )
+            )
+            if effective_kicker:
+                self._typography.kicker(effective_kicker)
+
+            entry: SectionEntry | None = None
+            if media_position == "left":
+                left_ratio, right_ratio = ratio[1], ratio[0]
+                media_col, text_col = self._render_st.columns([left_ratio, right_ratio])
+            else:
+                text_col, media_col = self._render_st.columns(list(ratio))
+
+            def _render_body() -> None:
+                if body is None:
+                    return
+                if callable(body):
+                    body()
+                elif isinstance(body, str):
+                    self._typography.paragraph(body)
+                else:
+                    for paragraph_text in body:
+                        self._typography.paragraph(paragraph_text)
+
+            with text_col:
+                if not title_bottom and title:
+                    entry = self._typography.topic(title, numbered=numbered, kicker="")
+                _render_body()
+                if title_bottom and title:
+                    self._typography.spacer(24)
+                    entry = self._typography.topic(title, numbered=numbered, kicker="")
+
+            with media_col:
+                if callable(media):
+                    media()
+                elif media is not None:
+                    self._media.image(media, caption=media_caption, width=media_width)
+
+            return entry
+        finally:
+            self._in_split_slide = False
 
     def subtopic(
         self,

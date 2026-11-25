@@ -1,24 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="360" viewBox="0 0 1080 360">
-  <defs>
-    <linearGradient id="pitchBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#312e81"/>
-      <stop offset="55%" stop-color="#4338ca"/>
-      <stop offset="100%" stop-color="#0f172a"/>
-    </linearGradient>
-  </defs>
-  <rect width="1080" height="360" rx="20" fill="url(#pitchBg)"/>
-  <circle cx="920" cy="95" r="120" fill="#a78bfa" fill-opacity="0.18"/>
-  <circle cx="990" cy="290" r="85" fill="#38bdf8" fill-opacity="0.16"/>
-  <rect x="64" y="64" width="186" height="32" rx="16" fill="#ffffff" fill-opacity="0.14" stroke="#c7d2fe" stroke-width="1"/>
-  <text x="157" y="85" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#e0e7ff">PRODUCT PITCH • Q4</text>
-  <text x="64" y="168" font-family="Inter, Arial, sans-serif" font-size="52" font-weight="700" fill="#ffffff">PulseOps AI</text>
-  <text x="64" y="218" font-family="Inter, Arial, sans-serif" font-size="22" fill="#e0e7ff">Observabilidade preditiva para reduzir incidentes em produção em até 60%</text>
-  <g transform="translate(64, 264)">
-    <rect x="0" y="0" width="160" height="38" rx="10" fill="#ffffff" fill-opacity="0.15"/>
-    <text x="80" y="24" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff">99.98% Uptime</text>
-    <rect x="178" y="0" width="180" height="38" rx="10" fill="#ffffff" fill-opacity="0.15"/>
-    <text x="268" y="24" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff">&lt; 2 min MTTR</text>
-    <rect x="376" y="0" width="190" height="38" rx="10" fill="#ffffff" fill-opacity="0.15"/>
-    <text x="471" y="24" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff">Alertas Sem Ruído</text>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="380" viewBox="0 0 520 380" fill="none">
+  <!-- Ilustração editorial flat: Telemetria e detecção de anomalias -->
+  <rect x="64" y="64" width="380" height="236" rx="14" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
+  <rect x="96" y="180" width="44" height="84" rx="6" fill="#3f7bde"/>
+  <rect x="156" y="142" width="44" height="122" rx="6" fill="#579568"/>
+  <rect x="216" y="102" width="44" height="162" rx="6" fill="#e19b4d"/>
+  <rect x="276" y="160" width="44" height="104" rx="6" fill="#8461f0"/>
+  <rect x="336" y="122" width="44" height="142" rx="6" fill="#3f7bde"/>
+
+  <polyline points="92,158 178,120 238,84 298,136 376,94" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="238" cy="84" r="9" fill="#e19b4d" stroke="#000000" stroke-width="2.2"/>
+  <circle cx="376" cy="94" r="9" fill="#579568" stroke="#000000" stroke-width="2.2"/>
+
+  <!-- Card flutuante -->
+  <rect x="294" y="238" width="176" height="88" rx="12" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <circle cx="332" cy="282" r="18" fill="#579568"/>
+  <path d="M324 282l6 6 12-12" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="366" y="268" width="76" height="10" rx="5" fill="#000000"/>
+  <rect x="366" y="288" width="52" height="10" rx="5" fill="#e5e7eb"/>
 </svg>

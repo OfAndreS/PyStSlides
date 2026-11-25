@@ -33,8 +33,19 @@ class TestStyleInjector(unittest.TestCase):
         self.assertIn("#123456", css)
         self.assertIn(".pyst-table", css)
         self.assertIn('[data-testid="stCode"] code', css)
-        # card_font_size=None herda paragraph_font_size por padrão
-        self.assertIn("font-size: 25px !important;", css)
+        # card_font_size=None herda paragraph_font_size por padrão (24px)
+        self.assertIn("font-size: 24px !important;", css)
+
+    def test_default_editorial_theme_values_and_css(self) -> None:
+        css = StyleInjector(PresentationTheme()).build_css()
+        self.assertIn("DM Sans", css)
+        self.assertIn("background-color: #ffffff !important;", css)
+        self.assertIn("font-size: 76px !important;", css)
+        self.assertIn("font-size: 54px !important;", css)
+        self.assertIn("letter-spacing: -0.03em !important;", css)
+        self.assertIn("text-align: left !important;", css)
+        self.assertIn("max-width: 62ch !important;", css)
+        self.assertIn('[data-testid="stToolbar"]', css)
 
     def test_custom_code_and_card_font_sizes(self) -> None:
         theme = PresentationTheme(code_font_size="22px", card_font_size="20px")
@@ -112,9 +123,9 @@ class TestDataComponent(unittest.TestCase):
         ]
         rendered = apply_highlights(text, spans)
 
-        self.assertIn("&lt;admin@site.com&gt; [EMAIL : 0.90]", rendered)
+        self.assertIn('&lt;admin@site.com&gt;<span class="pyst-mark-badge">[EMAIL : 0.90]</span>', rendered)
         self.assertNotIn("OVERLAP", rendered)
-        self.assertIn("123 [DOC]", rendered)
+        self.assertIn('123<span class="pyst-mark-badge">[DOC]</span>', rendered)
 
     def test_highlighted_text_supports_custom_font_size(self) -> None:
         fake_st = FakeStreamlit()
@@ -132,7 +143,7 @@ class TestDataComponent(unittest.TestCase):
         )
         self.assertIn('<table class="pyst-table">', html_table)
         self.assertIn("<th>Nome</th>", html_table)
-        self.assertIn("Ana [PERSON]", html_table)
+        self.assertIn('Ana<span class="pyst-mark-badge">[PERSON]</span>', html_table)
 
     def test_styled_table_accepts_dataframe_like_object(self) -> None:
         class FakeDataFrame:
@@ -161,6 +172,27 @@ class TestTypographyComponent(unittest.TestCase):
         self.assertIn("- [01 ) - Fundamentos](#pyst-01-fundamentos)", toc)
         self.assertIn("  - [1.1 ) Conceitos](#pyst-1-1-conceitos)", toc)
         self.assertEqual(len(fake_st.calls_named("sidebar.markdown")), 1)
+
+    def test_kicker_rotates_accent_colors_and_topic_renders_clean_heading(self) -> None:
+        fake_st = FakeStreamlit()
+        config = PresentationConfig(
+            brand_label="Data Discovery",
+            repeat_brand_kicker=True,
+            auto_number=False,
+        )
+        tracker = SectionTracker(auto_number=False)
+        renderer = TypographyRenderer(fake_st, config, tracker)
+
+        renderer.topic("Amplitude de cobertura")
+        renderer.topic("Precisão da Classificação")
+        renderer.callout("Texto limpo.", title="Nota", variant="info")
+
+        markdowns = [call.args[0] for call in fake_st.calls_named("markdown")]
+        self.assertTrue(any("#3f7bde" in m and "Data Discovery" in m for m in markdowns))
+        self.assertTrue(any("#579568" in m and "Data Discovery" in m for m in markdowns))
+        self.assertTrue(any('<h1 class="pyst-topic-title">Amplitude de cobertura</h1>' == m for m in markdowns))
+        self.assertTrue(any('class="pyst-callout-dot"' in m for m in markdowns))
+        self.assertFalse(any('<hr class="pyst-divider">' in m for m in markdowns))
 
 
 if __name__ == "__main__":

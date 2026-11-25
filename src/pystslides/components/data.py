@@ -101,11 +101,12 @@ def apply_highlights(text: str, spans: Sequence[HighlightSpan]) -> str:
 
         bg, fg = span.resolve_colors()
         snippet = html.escape(text[span.start : span.end])
-        badge = html.escape(span.format_badge())
+        badge_text = html.escape(span.format_badge().strip())
+        badge_html = f'<span class="pyst-mark-badge">{badge_text}</span>' if badge_text else ""
         chunks.append(
             f'<mark style="background-color: {bg}; color: {fg}; '
-            f'padding: 4px 8px; border-radius: 6px; text-decoration: none;">'
-            f"{snippet}{badge}</mark>"
+            f'padding: 3px 7px; border-radius: 6px; text-decoration: none;">'
+            f"{snippet}{badge_html}</mark>"
         )
         cursor = span.end
 

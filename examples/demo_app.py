@@ -10,57 +10,63 @@ from pathlib import Path
 
 from sections.demo_section import ArchitectureDemoSection
 
-from pystslides import Presentation, PresentationTheme
+from pystslides import Presentation
 
 
-ASSETS_DIR = Path(__file__).resolve().parent / "assets"
+ASSETS_DIR = Path(__file__).resolve().parent / "assets" / "editorial"
 
 
 def main() -> None:
-    theme = PresentationTheme(
-        font_family="Inter",
-        paragraph_font_size="22px",
-        default_subtopic_spacing_px=64,
-    )
-
     with Presentation(
         title="PyStSlides — Apresentação de Exemplo",
-        page_icon="🎬",
         assets_dir=ASSETS_DIR,
+        auto_number=False,
+        brand_label="PyStSlides",
         show_toc=True,
-        theme=theme,
     ) as deck:
         deck.cover(
             title="PyStSlides",
             subtitle="Apresentações em código organizadas com POO sobre Streamlit",
             author="André",
             date="2026",
-            image="sample_cover.svg",
-            caption="Imagem de capa carregada via AssetManager",
+            image="discovery_analytics.svg",
+            image_position="right",
         )
 
-        deck.topic("Visão Geral do Pacote")
-        deck.paragraph(
+        deck.split_slide(
+            "Visão Geral do Pacote",
             "O PyStSlides elimina a repetição de HTML, CSS inline, controle manual de "
             "numeração e manipulação de caminhos de imagem em apresentações criadas "
-            "com Streamlit."
+            "com Streamlit.",
+            media="coverage_workspace.svg",
+            media_position="left",
+            kicker="Visão Geral",
+        )
+        deck.split_slide(
+            "Composição Editorial",
+            "Combine texto alinhado à esquerda, ilustrações flat e alternância de "
+            "colunas com ou sem título invertido.",
+            media="remediation_automation.svg",
+            media_position="right",
+            title_bottom=True,
+            kicker="Layout",
         )
         deck.callout(
             "Use o sumário na barra lateral para navegar diretamente entre os tópicos.",
-            title="Dica de navegação",
+            title="Navegação",
             variant="info",
         )
 
-        deck.subtopic("Hierarquia automática")
+        deck.topic("Hierarquia e Estrutura", kicker="Estrutura")
         deck.paragraph(
-            "Os tópicos e sub-tópicos são numerados automaticamente em múltiplos níveis, "
-            "evitando duplicidades e facilitando reordenar slides."
+            "Os tópicos e sub-tópicos suportam numeração automática ou títulos editoriais "
+            "limpos, facilitando reordenar slides sem quebrar a apresentação."
         )
 
-        deck.subtopic("Sub-nível detalhado", level=3)
+        deck.subtopic("Exemplo de código em bloco")
         deck.code_block(
             """
-            with Presentation(title="Minha Palestra", assets_dir="data") as deck:
+            with Presentation(title="Minha Palestra", brand_label="Palestra") as deck:
                 deck.topic("Introdução")
                 deck.paragraph("Conteúdo limpo e padronizado.")
             """,

@@ -10,37 +10,68 @@ from pathlib import Path
 
 from sections.deteccao_pii import PiiDetectionSection
 
-from pystslides import Presentation, PresentationTheme
+from pystslides import Presentation
 
 
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
 
 
 def main() -> None:
-    theme = PresentationTheme(
-        font_family="Inter",
-        paragraph_font_size="22px",
-        divider_color="#1e3a8a",
-        default_subtopic_spacing_px=56,
-    )
-
     with Presentation(
         title="Workshop Data Discovery & LGPD",
-        page_icon="🛡️",
         assets_dir=ASSETS_DIR,
+        auto_number=False,
+        brand_label="Data Discovery",
         show_toc=True,
         toc_title="Tópicos do Workshop",
-        theme=theme,
     ) as deck:
         deck.cover(
             title="Data Discovery & Governança de Dados",
             subtitle="Como detectar e anonimizar informações sensíveis em pipelines corporativos",
             author="Workshop Técnico",
             date="2026",
-            image="cover_privacy.svg",
+            image="discovery_cover.png",
+            image_position="right",
         )
 
-        deck.topic("Pipeline de Proteção no Uso de LLMs")
+        deck.split_slide(
+            "Amplitude de cobertura",
+            "A solução deve mapear todos os ambientes da empresa, incluindo bancos de "
+            "dados, pastas compartilhadas, armazenamento em nuvem e estações locais.",
+            media="coverage_laptop.png",
+            media_position="left",
+            kicker="Cobertura",
+        )
+
+        deck.split_slide(
+            "Precisão da Classificação",
+            "O uso de aprendizado de máquina e reconhecimento óptico de caracteres "
+            "reduz alertas falsos e melhora a detecção em documentos digitalizados.",
+            media="classification_network.png",
+            media_position="right",
+            kicker="Classificação",
+        )
+
+        deck.split_slide(
+            "Visibilidade de Acesso",
+            "A governança de acesso revela quem possui permissão para abrir cada "
+            "documento, permitindo medir e priorizar os riscos mais urgentes.",
+            media="access_desk.png",
+            media_position="left",
+            kicker="Governança",
+        )
+
+        deck.split_slide(
+            "Capacidade de Correção",
+            "Sistemas modernos isolam arquivos, aplicam rótulos ou bloqueiam acessos "
+            "automaticamente assim que detectam uma exposição.",
+            media="remediation_analytics.png",
+            media_position="right",
+            title_bottom=True,
+            kicker="Automação",
+        )
+
+        deck.topic("Pipeline de Proteção no Uso de LLMs", kicker="Privacidade")
         deck.paragraph(
             "Antes que prompts contendo dados de clientes saiam da infraestrutura "
             "interna para APIs externas de Inteligência Artificial, um motor de "

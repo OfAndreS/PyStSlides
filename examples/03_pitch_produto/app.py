@@ -8,31 +8,20 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pystslides import Presentation, PresentationTheme
+from pystslides import Presentation
 
 
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
 
 
 def main() -> None:
-    theme = PresentationTheme(
-        font_family="Plus Jakarta Sans",
-        google_font_url=(
-            "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
-        ),
-        paragraph_font_size="22px",
-        divider_color="#4f46e5",
-        divider_thickness="3px",
-        default_subtopic_spacing_px=52,
-    )
-
     with Presentation(
         title="PulseOps AI — Pitch Executivo",
-        page_icon="🚀",
         assets_dir=ASSETS_DIR,
+        auto_number=False,
+        brand_label="PulseOps AI",
         show_toc=True,
         toc_title="Roteiro do Pitch",
-        theme=theme,
     ) as deck:
         deck.cover(
             title="PulseOps AI",
@@ -40,9 +29,10 @@ def main() -> None:
             author="Apresentação Comercial",
             date="2026",
             image="cover_pitch.svg",
+            image_position="right",
         )
 
-        deck.topic("O Desafio da Operação em Escala")
+        deck.topic("O Desafio da Operação em Escala", kicker="Contexto")
         deck.paragraph(
             "Times de SRE recebem milhares de alertas por semana, mas menos de 15% "
             "exigem intervenção humana real. O PulseOps AI correlaciona métricas, logs "
@@ -51,11 +41,11 @@ def main() -> None:
         deck.callout(
             "Clientes piloto reduziram o tempo médio de recuperação (MTTR) de 42 minutos "
             "para menos de 7 minutos nos primeiros 60 dias de adoção.",
-            title="Impacto Comprovado",
+            title="Resultados em piloto",
             variant="success",
         )
 
-        deck.topic("Principais Recursos da Plataforma")
+        deck.topic("Principais Recursos da Plataforma", kicker="Plataforma")
         deck.image_gallery(
             [
                 ("feat_dashboard.svg", "Detecção preditiva de anomalias"),
@@ -65,7 +55,7 @@ def main() -> None:
             bordered=True,
         )
 
-        deck.topic("Planos e Roadmap de Evolução")
+        deck.topic("Planos e Roadmap de Evolução", kicker="Planos & Roadmap")
         deck.subtopic("Comparativo de planos")
         deck.styled_table(
             {

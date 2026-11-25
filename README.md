@@ -22,6 +22,7 @@
 <br>
 
 <p align="center">
+  <a href="./TUTORIAL.md">Tutorial</a> •
   <a href="#estrutura-do-projeto">Estrutura do Projeto</a> •
   <a href="#tecnologias">Tecnologias</a> •
   <a href="#como-executar">Como Executar</a>
@@ -77,6 +78,7 @@ PyStSlides/
 │   ├── 03_pitch_produto/            # Exemplo completo: Pitch Executivo SaaS.
 │   ├── screenshots/                 # Prints reais das apresentações renderizadas no Streamlit.
 │   ├── assets/
+│   │   ├── editorial/               # Ilustrações PNG e SVG no padrão editorial flat.
 │   │   └── sample_cover.svg         # Asset de exemplo carregado pelo AssetManager.
 │   ├── sections/
 │   │   ├── __init__.py
@@ -110,6 +112,7 @@ PyStSlides/
 ├── LICENSE
 ├── pyproject.toml                   # Configuração PEP 621 para empacotamento e instalação.
 ├── README.md
+├── TUTORIAL.md                      # Tutorial passo a passo no padrão visual do projeto.
 └── requirements.txt                 # Dependências mínimas de execução.
 ```
 

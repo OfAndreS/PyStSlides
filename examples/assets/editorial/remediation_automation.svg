@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <!-- Gráfico de barras ascendente + seta preta -->
+  <rect x="72" y="128" width="24" height="58" rx="4" fill="#8461f0"/>
+  <rect x="110" y="96" width="24" height="90" rx="4" fill="#3f7bde"/>
+  <rect x="148" y="64" width="24" height="122" rx="4" fill="#e19b4d"/>
+  <line x1="68" y1="110" x2="176" y2="38" stroke="#000000" stroke-width="2.2"/>
+  <path d="M168 35l12-2-4 12-8-10z" fill="#000000"/>
+
+  <!-- Sliders horizontais de automação -->
+  <line x1="252" y1="118" x2="342" y2="118" stroke="#8461f0" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="316" cy="118" r="6" fill="#000000"/>
+
+  <line x1="252" y1="142" x2="342" y2="142" stroke="#e19b4d" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="294" cy="142" r="6" fill="#000000"/>
+
+  <line x1="252" y1="166" x2="342" y2="166" stroke="#3f7bde" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="272" cy="166" r="6" fill="#000000"/>
+
+  <!-- Gráfico de pizza limpo -->
+  <circle cx="404" cy="96" r="38" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <path d="M404 96V58a38 38 0 0 1 32 18L404 96z" fill="#e19b4d"/>
+  <path d="M404 96l32-20a38 38 0 0 1-5 47L404 96z" fill="#3f7bde"/>
+
+  <!-- Estrelas 4 pontas -->
+  <path d="M260 66l4 9 9 4-9 4-4 9-4-9-9-4 9-4 4-9z" stroke="#e19b4d" stroke-width="1.8" fill="none"/>
+  <path d="M342 204l3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7z" stroke="#e19b4d" stroke-width="1.8" fill="none"/>
+
+  <!-- Laptop azul na base -->
+  <path d="M164 218h154l-24 94H140l24-94z" fill="#3f7bde"/>
+  <circle cx="229" cy="265" r="9" fill="#ffffff"/>
+  <line x1="126" y1="312" x2="296" y2="312" stroke="#3f7bde" stroke-width="6" stroke-linecap="round"/>
+</svg>

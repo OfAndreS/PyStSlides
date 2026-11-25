@@ -10,27 +10,20 @@ from pathlib import Path
 
 from sections.microsservicos import MicroservicesPracticeSection
 
-from pystslides import Presentation, PresentationTheme
+from pystslides import Presentation
 
 
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
 
 
 def main() -> None:
-    theme = PresentationTheme(
-        font_family="Inter",
-        paragraph_font_size="22px",
-        divider_color="#0f172a",
-        default_subtopic_spacing_px=56,
-    )
-
     with Presentation(
         title="Arquitetura de Microsserviços",
-        page_icon="🏗️",
         assets_dir=ASSETS_DIR,
+        auto_number=False,
+        brand_label="Arquitetura de Software",
         show_toc=True,
         toc_title="Navegação",
-        theme=theme,
     ) as deck:
         deck.cover(
             title="Arquitetura de Microsserviços na Prática",
@@ -38,9 +31,10 @@ def main() -> None:
             author="Equipe de Engenharia",
             date="2026",
             image="cover_arch.svg",
+            image_position="right",
         )
 
-        deck.topic("Fluxo de Requisições e Desacoplamento")
+        deck.topic("Fluxo de Requisições e Desacoplamento", kicker="Topologia")
         deck.paragraph(
             "Em arquiteturas distribuídas, o API Gateway centraliza autenticação, "
             "rate limiting e roteamento, enquanto o barramento de eventos permite "
@@ -65,13 +59,13 @@ def main() -> None:
         )
 
         deck.callout(
-            "Comece sempre definindo fronteiras claras de domínio (Bounded Contexts) "
+            "Defina fronteiras claras de domínio (Bounded Contexts) "
             "antes de separar repositórios e bancos de dados.",
-            title="Regra de Ouro",
+            title="Fronteiras de domínio",
             variant="info",
         )
 
-        deck.topic("Padrões Fundamentais")
+        deck.topic("Padrões Fundamentais", kicker="Padrões")
         deck.paragraph(
             "Dois padrões frequentemente combinados em sistemas de alta escala são "
             "a separação entre escrita/leitura (CQRS) e a comunicação orientada a eventos."

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360" fill="none">
+  <!-- Cantoneiras geométricas -->
+  <path d="M36 48v34h46V68H50V48H36z" fill="#3f7bde"/>
+  <path d="M444 48h-36v14h22v20h14V48z" fill="#579568"/>
+
+  <!-- Balão âmbar -->
+  <rect x="136" y="72" width="128" height="58" rx="29" fill="#e19b4d"/>
+  <path d="M168 128l-6 18 22-18" fill="#e19b4d"/>
+  <circle cx="178" cy="101" r="6" fill="#ffffff"/>
+  <circle cx="200" cy="101" r="6" fill="#ffffff"/>
+  <circle cx="222" cy="101" r="6" fill="#ffffff"/>
+
+  <!-- Ícone de usuário verde -->
+  <circle cx="298" cy="144" r="34" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+  <circle cx="298" cy="133" r="9" fill="#579568"/>
+  <path d="M282 162c0-9 7-15 16-15s16 6 16 15" fill="#579568"/>
+
+  <!-- Check violeta -->
+  <circle cx="110" cy="176" r="24" fill="#8461f0"/>
+  <path d="M100 176l7 7 13-14" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Telefone âmbar -->
+  <circle cx="332" cy="212" r="24" fill="#e19b4d"/>
+  <path d="M324 202c3-2 7-1 9 2l2 4c1 2 0 5-2 6l4 6c2-1 5 0 6 2l2 4c1 3 0 7-3 8-7 3-17-5-22-14-4-8-3-16 4-18z" fill="#ffffff"/>
+
+  <!-- Laptop + caneca + mesa verde -->
+  <rect x="76" y="256" width="44" height="44" rx="8" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <path d="M120 268h8c5 0 9 4 9 9s-4 9-9 9h-8" stroke="#000000" stroke-width="2"/>
+  <line x1="98" y1="256" x2="98" y2="274" stroke="#000000" stroke-width="1.8"/>
+  <rect x="92" y="274" width="12" height="14" rx="2" fill="#e19b4d"/>
+
+  <path d="M214 218h148l-20 82H194l20-82z" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+  <circle cx="278" cy="259" r="7" fill="#e19b4d"/>
+
+  <rect x="52" y="300" width="376" height="14" rx="7" fill="#579568"/>
+</svg>

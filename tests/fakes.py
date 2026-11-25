@@ -43,6 +43,7 @@ class FakeStreamlit:
     def __init__(self) -> None:
         self.calls: list[RecordedCall] = []
         self.sidebar = _FakeSidebar(self.calls)
+        self.session_state: dict[str, Any] = {}
 
     def set_page_config(self, **kwargs: Any) -> None:
         self.calls.append(RecordedCall("set_page_config", (), kwargs))
@@ -61,6 +62,13 @@ class FakeStreamlit:
 
     def caption(self, body: str, **kwargs: Any) -> None:
         self.calls.append(RecordedCall("caption", (body,), kwargs))
+
+    def button(self, label: str, **kwargs: Any) -> bool:
+        self.calls.append(RecordedCall("button", (label,), kwargs))
+        return False
+
+    def rerun(self) -> None:
+        self.calls.append(RecordedCall("rerun"))
 
     def columns(self, spec: Any) -> list[_DummyContext]:
         self.calls.append(RecordedCall("columns", (spec,)))

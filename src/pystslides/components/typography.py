@@ -14,12 +14,26 @@ CalloutVariant = Literal["info", "success", "warning", "danger", "neutral"]
 TocLocation = Literal["sidebar", "main"]
 
 _CALLOUT_STYLES: dict[CalloutVariant, tuple[str, str, str]] = {
-    "info": ("#eff6ff", "#1e40af", "#3b82f6"),
-    "success": ("#f0fdf4", "#166534", "#22c55e"),
-    "warning": ("#fefce8", "#854d0e", "#eab308"),
+    "info": ("#f0f6fe", "#1e3a8a", "#3f7bde"),
+    "success": ("#f2f9f4", "#1b4332", "#579568"),
+    "warning": ("#fef8f0", "#7c4a15", "#e19b4d"),
     "danger": ("#fef2f2", "#991b1b", "#ef4444"),
-    "neutral": ("#f8fafc", "#334155", "#94a3b8"),
+    "neutral": ("#f8fafc", "#18181b", "#52525b"),
 }
+
+
+def _build_asterisk_svg(color: str) -> str:
+    """Gera o ícone geométrico de asterisco de 8 pontas característico dos slides."""
+    return (
+        f'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" '
+        f'xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+        f'<g stroke="{html.escape(color)}" stroke-width="3.2" stroke-linecap="round">'
+        f'<line x1="12" y1="2.5" x2="12" y2="21.5"/>'
+        f'<line x1="2.5" y1="12" x2="21.5" y2="12"/>'
+        f'<line x1="5.3" y1="5.3" x2="18.7" y2="18.7"/>'
+        f'<line x1="18.7" y1="5.3" x2="5.3" y2="18.7"/>'
+        f"</g></svg>"
+    )
 
 
 class TypographyRenderer(BaseComponent):
@@ -33,6 +47,27 @@ class TypographyRenderer(BaseComponent):
     ) -> None:
         super().__init__(st_module, config)
         self._tracker = tracker
+        self._kicker_index = 0
+
+    def _next_accent_color(self) -> str:
+        palette = self.theme.accent_colors or (self.theme.primary_color,)
+        color = palette[self._kicker_index % len(palette)]
+        self._kicker_index += 1
+        return color
+
+    def kicker(self, label: str, *, accent_color: str | None = None) -> None:
+        """Renderiza o cabeçalho discreto no topo esquerdo com ícone geométrico colorido."""
+        if not label:
+            return
+        color = accent_color or self._next_accent_color()
+        icon_svg = _build_asterisk_svg(color)
+        markup = (
+            f'<div class="pyst-kicker">'
+            f'<span class="pyst-kicker-icon">{icon_svg}</span>'
+            f"<span>{html.escape(label)}</span>"
+            f"</div>"
+        )
+        self._st.markdown(markup, unsafe_allow_html=True)
 
     def divider(
         self,
@@ -67,9 +102,22 @@ class TypographyRenderer(BaseComponent):
         subtitle: str | None = None,
         author: str | None = None,
         date: str | None = None,
+        kicker: str | None = None,
     ) -> None:
-        """Renderiza um cabeçalho de capa padronizado com título, subtítulo e metadados."""
-        parts = [f'<div class="pyst-cover-title">{html.escape(title)}</div>']
+        """Renderiza um cabeçalho de capa editorial com título, subtítulo e metadados."""
+        effective_kicker = (
+            kicker
+            if kicker is not None
+            else (
+                self._config.brand_label
+                if (self._config.repeat_brand_kicker or self._config.paginated)
+                else None
+            )
+        )
+        if effective_kicker:
+            self.kicker(effective_kicker)
+
+        parts = [f'<h1 class="pyst-cover-title">{html.escape(title)}</h1>']
         if subtitle:
             parts.append(f'<div class="pyst-cover-subtitle">{html.escape(subtitle)}</div>')
 
@@ -88,13 +136,32 @@ class TypographyRenderer(BaseComponent):
         *,
         numbered: bool | None = None,
         spacing_after_px: int = 0,
+        kicker: str | None = None,
     ) -> SectionEntry:
-        """Renderiza um tópico principal com divisores e numeração automática."""
+        """Renderiza um tópico principal em estilo editorial limpo com numeração opcional."""
         entry = self._tracker.register_topic(title, numbered=numbered)
         self._st.markdown(f'<div id="{entry.anchor}"></div>', unsafe_allow_html=True)
-        self.divider()
-        self._st.markdown(f"# **| {entry.formatted_title}**")
-        self.divider()
+
+        effective_kicker = (
+            kicker
+            if kicker is not None
+            else (
+                self._config.brand_label
+                if (self._config.repeat_brand_kicker or self._config.paginated)
+                else None
+            )
+        )
+        if effective_kicker:
+            self.kicker(effective_kicker)
+
+        if self.theme.topic_dividers:
+            self.divider()
+        self._st.markdown(
+            f'<h1 class="pyst-topic-title">{html.escape(entry.formatted_title)}</h1>',
+            unsafe_allow_html=True,
+        )
+        if self.theme.topic_dividers:
+            self.divider()
         if spacing_after_px > 0:
             self.spacer(spacing_after_px)
         return entry
@@ -116,8 +183,12 @@ class TypographyRenderer(BaseComponent):
             self.spacer(effective_spacing)
 
         self._st.markdown(f'<div id="{entry.anchor}"></div>', unsafe_allow_html=True)
-        heading_hashes = "#" * min(level, 6)
-        self._st.markdown(f"{heading_hashes} **{entry.formatted_title}**")
+        tag_level = min(max(level, 2), 6)
+        self._st.markdown(
+            f'<h{tag_level} class="pyst-subtopic-title pyst-subtopic-level-{tag_level}">'
+            f"{html.escape(entry.formatted_title)}</h{tag_level}>",
+            unsafe_allow_html=True,
+        )
         return entry
 
     def paragraph(
@@ -150,14 +221,28 @@ class TypographyRenderer(BaseComponent):
         variant: CalloutVariant = "info",
     ) -> None:
         """Renderiza uma caixa de destaque estilizada para notas, alertas ou dicas."""
-        bg_color, text_color, border_color = _CALLOUT_STYLES[variant]
-        title_html = f"<strong>{html.escape(title)}</strong><br>" if title else ""
-        markup = (
-            f'<div class="pyst-callout" '
-            f'style="background-color: {bg_color}; color: {text_color}; '
-            f'border-left-color: {border_color};">'
-            f"{title_html}{html.escape(message)}</div>"
-        )
+        bg_color, text_color, accent_color = _CALLOUT_STYLES[variant]
+        if self.theme.callout_minimal:
+            header_html = (
+                f'<div class="pyst-callout-header">'
+                f'<span class="pyst-callout-dot" style="background-color: {accent_color};"></span>'
+                f"<span>{html.escape(title)}</span></div>"
+                if title
+                else ""
+            )
+            markup = (
+                f'<div class="pyst-callout">'
+                f"{header_html}"
+                f"<div>{html.escape(message)}</div></div>"
+            )
+        else:
+            title_html = f"<strong>{html.escape(title)}</strong><br>" if title else ""
+            markup = (
+                f'<div class="pyst-callout" '
+                f'style="background-color: {bg_color}; color: {text_color}; '
+                f'border: none; border-left: 4px solid {accent_color};">'
+                f"{title_html}{html.escape(message)}</div>"
+            )
         self._st.markdown(markup, unsafe_allow_html=True)
 
     def render_toc(
